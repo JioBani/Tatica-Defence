@@ -22,7 +22,7 @@ namespace Common.ObjectPool
         
         [SerializeField] private Transform poolParent;
         
-        public GameObject Spawn(GameObject prefab, Vector2? position = null)
+        public GameObject Spawn(GameObject prefab, Transform parent, Vector2? position = null)
         {
             string poolId = prefab.name + prefab.GetInstanceID();
 
@@ -51,13 +51,16 @@ namespace Common.ObjectPool
 
                 pool.objects.Add(target);
             }
-
+            
+            target.transform.SetParent(parent);
+            
             if (position.HasValue)
             {
                 target.transform.position = position.Value;
             }
             
             target.SetActive(true);
+            
             return target;
         }
 
