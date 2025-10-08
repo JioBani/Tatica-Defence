@@ -1,25 +1,55 @@
 using System.Collections.Generic;
+using Common.SceneSingleton;
 using UnityEngine;
 
 namespace Common.ObjectPool
 {
-    public class ObjectPooler : MonoBehaviour
+    struct Pair
     {
-        [SerializeField] private GameObject prefab;
+        public Transform transform;
+        public List<GameObject> objects;
 
-        [SerializeField] private List<GameObject> poolableObjects;
-
-        public GameObject Spawn(Vector2? position = null)
+        public Pair(Transform transform, List<GameObject> objects)
         {
-            GameObject target = poolableObjects.Find(poolable => !poolable.activeSelf);
+            this.transform = transform;
+            this.objects = objects;
+        }
+    }
+    
+    public class ObjectPooler : SceneSingleton<ObjectPooler>
+    {
+        private Dictionary<string, Pair> poolingObjects = new();
+        
+        [SerializeField] private Transform poolParent;
+        
+        public GameObject Spawn(GameObject prefab, Vector2? position = null)
+        {
+            string poolId = prefab.name + prefab.GetInstanceID();
+
+            bool isExists = poolingObjects.TryGetValue(poolId, out var pool);
+
+            if (!isExists)
+            {
+                GameObject newPool = new GameObject(poolId);
+
+                newPool.transform.position = poolParent.position;
+
+                pool = new Pair(newPool.transform, new List<GameObject>());
+                newPool.transform.SetParent(poolParent);
+                
+                poolingObjects.Add(poolId, pool);
+            }
+            
+            GameObject target = pool.objects.Find(poolable => !poolable.activeSelf);
 
             if (target == null)
             {
-                target = Instantiate(prefab, transform, true);
+                target = Instantiate(prefab, pool.transform, true);
 
-                target.AddComponent<Poolable>();
+                Poolable poolable = target.AddComponent<Poolable>();
+                poolable.SetPoolId(poolId);
 
-                poolableObjects.Add(target);
+                pool.objects.Add(target);
             }
 
             if (position.HasValue)
@@ -33,15 +63,15 @@ namespace Common.ObjectPool
 
         public void DeSpawn(Poolable poolable)
         {
-            if (poolableObjects.Contains(poolable.gameObject))
+            if (poolingObjects[poolable.poolId].objects.Contains(poolable.gameObject))
             {
                 Debug.LogError("Poolable 이 해당 부모의 자식이 아닙니다.");
                 return;
             }
 
             poolable.gameObject.SetActive(false);
-            poolable.transform.SetParent(transform);
-            poolable.transform.position = transform.position;
+            poolable.transform.SetParent(poolParent);
+            poolable.transform.position = poolParent.position;
         }
     }   
 }

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6336723785988438599}
   - component: {fileID: 7228315515101810788}
   - component: {fileID: 4157034298238127128}
-  - component: {fileID: 4375643860260506283}
   - component: {fileID: 6735251810909554157}
+  - component: {fileID: 4375643860260506283}
   - component: {fileID: -3120676249159589805}
   m_Layer: 0
   m_Name: Unit
@@ -127,18 +127,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &4375643860260506283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714470639557013153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea37cb3106c1b224dae1b70c16438892, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6735251810909554157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +172,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &4375643860260506283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714470639557013153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea37cb3106c1b224dae1b70c16438892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-3120676249159589805
 MonoBehaviour:
   m_ObjectHideFlags: 0
