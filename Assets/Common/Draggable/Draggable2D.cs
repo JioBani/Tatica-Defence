@@ -5,35 +5,35 @@ namespace Common.Draggable
 {
     public class Draggable2D : MonoBehaviour
     {
-        bool isDragging = false;
+        private bool _isDragging = false;
 
-        private Camera camera;
-        private Vector2 startPostion;
+        private Camera _camera;
+        private Vector2 _startPosition;
         public DropZone2D thisDropZone;
     
         void Awake()
         {
-            camera = Camera.main;
+            _camera = Camera.main;
         }
 
         public void BeginDrag()
         {
-            startPostion = transform.position;
-            isDragging = true;
+            _startPosition = transform.position;
+            _isDragging = true;
         }
 
         public void EndDrag()
         {
-            isDragging = false;
+            _isDragging = false;
         
             TryDrop();
         }
 
         void Update()
         {
-            if (isDragging)
+            if (_isDragging)
             {
-                transform.position = camera.ScreenToWorldPoint(Input.mousePosition);
+                transform.position = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Common.Draggable
             
             if (hit == null)
             {
-                transform.position = startPostion;
+                transform.position = _startPosition;
                 return;
             }
         
@@ -52,13 +52,13 @@ namespace Common.Draggable
 
             if (zone == null)
             {
-                transform.position = startPostion;
+                transform.position = _startPosition;
                 return; 
             }
 
             if (!zone.CanAccept(this,thisDropZone))
             {
-                transform.position = startPostion;
+                transform.position = _startPosition;
                 return; 
             }
             
@@ -73,7 +73,7 @@ namespace Common.Draggable
                 transform.position.z
             );
             
-            startPostion = transform.position;
+            _startPosition = transform.position;
             
             if (thisDropZone != null)
             {

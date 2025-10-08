@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6735251810909554157}
   - component: {fileID: 4375643860260506283}
   - component: {fileID: -3120676249159589805}
+  - component: {fileID: 6465798290088026175}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea37cb3106c1b224dae1b70c16438892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisDropZone: {fileID: 0}
 --- !u!114 &-3120676249159589805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,4 +198,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93a2cbf26cb7bc64d864ae3a69726c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pooler: {fileID: 0}
+--- !u!114 &6465798290088026175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714470639557013153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a1ba9e1e0ddc224a80021c31891e474, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  draggable: {fileID: 4375643860260506283}

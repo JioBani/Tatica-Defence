@@ -46,7 +46,7 @@ namespace Common.ObjectPool
             {
                 target = Instantiate(prefab, pool.transform, true);
 
-                Poolable poolable = target.AddComponent<Poolable>();
+                Poolable poolable = target.GetComponent<Poolable>();
                 poolable.SetPoolId(poolId);
 
                 pool.objects.Add(target);
