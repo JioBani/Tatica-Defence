@@ -9,6 +9,7 @@ namespace Common.Draggable
 
         private Camera camera;
         private Vector2 startPostion;
+        [SerializeField] private DropZone2D thisDropZone;
     
         void Awake()
         {
@@ -46,8 +47,8 @@ namespace Common.Draggable
                 return;
             }
         
-            IDropZone2D zone = null;
-            zone = hit.GetComponent<IDropZone2D>();
+            DropZone2D zone = null;
+            zone = hit.GetComponent<DropZone2D>();
 
             if (zone == null)
             {
@@ -66,7 +67,13 @@ namespace Common.Draggable
                 hit.gameObject.transform.position.y,
                 transform.position.z
             );
+
+            if (thisDropZone != null)
+            {
+                thisDropZone.OnDragOut(this);
+            }
         
+            thisDropZone = zone;
             zone.OnDrop(this);
             
             startPostion = transform.position;

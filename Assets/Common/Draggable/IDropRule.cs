@@ -1,0 +1,17 @@
+using UnityEngine;
+
+namespace Common.Draggable
+{
+    /// <summary>
+    /// Drop Zone 에 Drop 할 수 있는지에 대한 규칙
+    /// </summary>
+    public interface IDropRule
+    {
+        bool CanAccept(Draggable2D item, DropZone2D zone);
+
+        void OnDropped(Draggable2D item, DropZone2D zone);
+        
+        void OnDragOut(Draggable2D item, DropZone2D zone);
+    }
+}
+
