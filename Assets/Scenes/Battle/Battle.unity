@@ -346,7 +346,7 @@ Transform:
   m_GameObject: {fileID: 38857622}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 151.47545, y: 53.97889, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -772,6 +772,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3100621209870035149, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
   m_PrefabInstance: {fileID: 191852656}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &238958325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 238958326}
+  - component: {fileID: 238958327}
+  m_Layer: 5
+  m_Name: UiEventHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &238958326
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238958325}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1344341594}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &238958327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238958325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb664cdefb821934db0c1e91c08850ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleField: {fileID: 111035655}
 --- !u!1001 &252090312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -926,6 +975,7 @@ GameObject:
   m_Component:
   - component: {fileID: 379441940}
   - component: {fileID: 379441943}
+  - component: {fileID: 379441944}
   m_Layer: 0
   m_Name: ObjectPoolers
   m_TagString: Untagged
@@ -942,7 +992,7 @@ Transform:
   m_GameObject: {fileID: 379441939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 151.47545, y: 53.97889, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -962,6 +1012,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 1
   poolParent: {fileID: 38857623}
+--- !u!114 &379441944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379441939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7448f37c6f9d018439ee4bfe50ac5bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dontDestroyOnLoad: 1
+  unitPrefab: {fileID: 714470639557013153, guid: 55f271110f86e19488c6665236798e12, type: 3}
 --- !u!1 &408344673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,7 +1989,7 @@ GameObject:
   - component: {fileID: 813049839}
   - component: {fileID: 813049838}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Buy2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1994,7 +2058,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 813049839}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238958327}
+        m_TargetAssemblyTypeName: Scenes.Battle.Scripts.Ui.Shop.ShopUiEventHandler,
+          Assembly-CSharp
+        m_MethodName: OnClickDefenderBuyButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &813049839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3337,6 +3414,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1548314845}
+  - {fileID: 238958326}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4640,7 +4718,7 @@ GameObject:
   - component: {fileID: 1882676659}
   - component: {fileID: 1882676658}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Buy1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4709,7 +4787,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1882676659}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238958327}
+        m_TargetAssemblyTypeName: Scenes.Battle.Scripts.Ui.Shop.ShopUiEventHandler,
+          Assembly-CSharp
+        m_MethodName: OnClickDefenderBuyButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1882676659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4761,7 +4852,7 @@ GameObject:
   - component: {fileID: 1895823608}
   - component: {fileID: 1895823607}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Buy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4830,7 +4921,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1895823608}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238958327}
+        m_TargetAssemblyTypeName: Scenes.Battle.Scripts.Ui.Shop.ShopUiEventHandler,
+          Assembly-CSharp
+        m_MethodName: OnClickDefenderBuyButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1895823608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5113,7 +5217,7 @@ GameObject:
   - component: {fileID: 1978908487}
   - component: {fileID: 1978908486}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Buy3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5182,7 +5286,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1978908487}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 238958327}
+        m_TargetAssemblyTypeName: Scenes.Battle.Scripts.Ui.Shop.ShopUiEventHandler,
+          Assembly-CSharp
+        m_MethodName: OnClickDefenderBuyButton
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1978908487
 MonoBehaviour:
   m_ObjectHideFlags: 0
