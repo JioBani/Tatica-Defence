@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Common.Draggable
@@ -10,32 +11,24 @@ namespace Common.Draggable
         public string requiredTag = "";
         public bool snapToCenter = true;
 
-        private List<IDropRule> rules = new List<IDropRule>();
+        private readonly List<IDropRule> rules = new();
 
-        public bool CanAccept(Draggable2D item)
+        public bool CanAccept(Draggable2D item, DropZone2D before)
         {
-            if (requiredTag != "" && !item.CompareTag(requiredTag))
-            {
-                return false;
-            }
-
-            return !rules.Exists(rule => !rule.CanAccept(item, this));
+            if (requiredTag != "" && !item.CompareTag(requiredTag)) return false;
+            return !rules.Exists(rule => !rule.CanAccept(item, before,this));
         }
 
-        public void OnDrop(Draggable2D item)
+        public virtual void OnDrop(Draggable2D draggable, DropZone2D before)
         {
-            rules.ForEach(rule => rule.OnDropped(item, this));
+            rules.ForEach(rule => rule.OnDropped(draggable, before, this));
         }
 
-        public void OnDragOut(Draggable2D item)
+        public virtual void OnDragOut(Draggable2D item)
         {
             rules.ForEach(rule => rule.OnDragOut(item, this));
         }
 
-        public void AddRule(IDropRule rule)
-        {
-            rules.Add(rule);
-        }
+        public void AddRule(IDropRule rule) => rules.Add(rule);
     }
 }
-

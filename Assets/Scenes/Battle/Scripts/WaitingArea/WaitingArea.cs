@@ -21,14 +21,14 @@ namespace Scenes.Battle.Scripts.WaitingArea
             dropZone.AddRule(this);
         }
 
-        public bool CanAccept(Draggable2D item, DropZone2D zone)
+        public bool CanAccept(Draggable2D _, DropZone2D before, DropZone2D after)
         {
-            return occupantUnit == null;
+            return true;
         }
 
-        public void OnDropped(Draggable2D item, DropZone2D zone)
+        public void OnDropped(Draggable2D _draggable, DropZone2D before, DropZone2D after)
         {
-            occupantUnit = item.gameObject; //TODO: 이후 Unit 으로 변경
+            occupantUnit = _draggable.gameObject; //TODO: 이후 Unit 으로 변경
         }
 
         public void OnDragOut(Draggable2D item, DropZone2D zone)

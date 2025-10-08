@@ -9,7 +9,7 @@ namespace Common.Draggable
 
         private Camera camera;
         private Vector2 startPostion;
-        [SerializeField] private DropZone2D thisDropZone;
+        public DropZone2D thisDropZone;
     
         void Awake()
         {
@@ -26,7 +26,7 @@ namespace Common.Draggable
         {
             isDragging = false;
         
-            FindDropZone();
+            TryDrop();
         }
 
         void Update()
@@ -37,7 +37,7 @@ namespace Common.Draggable
             }
         }
 
-        private void FindDropZone()
+        private void TryDrop()
         {
             Collider2D hit = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("DropZone"));
             
@@ -56,27 +56,35 @@ namespace Common.Draggable
                 return; 
             }
 
-            if (!zone.CanAccept(this))
+            if (!zone.CanAccept(this,thisDropZone))
             {
                 transform.position = startPostion;
                 return; 
             }
+            
+            MoveToDropZone(zone);
+        }
 
+        public void MoveToDropZone(DropZone2D newZone)
+        {
             transform.position = new Vector3(
-                hit.gameObject.transform.position.x, 
-                hit.gameObject.transform.position.y,
+                newZone.transform.position.x, 
+                newZone.transform.position.y,
                 transform.position.z
             );
-
+            
+            startPostion = transform.position;
+            
             if (thisDropZone != null)
             {
                 thisDropZone.OnDragOut(this);
             }
-        
-            thisDropZone = zone;
-            zone.OnDrop(this);
             
-            startPostion = transform.position;
+            DropZone2D oldZone = thisDropZone;
+            
+            thisDropZone = newZone;
+            
+            newZone.OnDrop(this, oldZone);
         }
     }
 }

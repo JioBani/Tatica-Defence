@@ -68,10 +68,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.7735849
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1221762032246660213, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4171522275278736330}
     - targetCorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6389191517721112361}
@@ -81,6 +85,21 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
   m_PrefabInstance: {fileID: 1286619947060849021}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4171522275278736330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6308496208087043998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ed072504d51754cbc54ca4efb5fc53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredTag: 
+  snapToCenter: 1
+  occupant: {fileID: 0}
 --- !u!114 &6389191517721112361
 MonoBehaviour:
   m_ObjectHideFlags: 0

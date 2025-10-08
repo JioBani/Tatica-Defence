@@ -7,9 +7,9 @@ namespace Common.Draggable
     /// </summary>
     public interface IDropRule
     {
-        bool CanAccept(Draggable2D item, DropZone2D zone);
+        bool CanAccept(Draggable2D draggable, DropZone2D before, DropZone2D after);
 
-        void OnDropped(Draggable2D item, DropZone2D zone);
+        void OnDropped(Draggable2D draggable, DropZone2D before, DropZone2D after);
         
         void OnDragOut(Draggable2D item, DropZone2D zone);
     }
