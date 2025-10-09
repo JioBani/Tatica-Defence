@@ -1,0 +1,159 @@
+{
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.vs": true,
+    "**/.gitmodules": true,
+    "**/.vsconfig": true,
+    "**/*.booproj": true,
+    "**/*.pidb": true,
+    "**/*.suo": true,
+    "**/*.user": true,
+    "**/*.userprefs": true,
+    "**/*.unityproj": true,
+    "**/*.dll": true,
+    "**/*.exe": true,
+    "**/*.pdf": true,
+    "**/*.mid": true,
+    "**/*.midi": true,
+    "**/*.wav": true,
+    "**/*.gif": true,
+    "**/*.ico": true,
+    "**/*.jpg": true,
+    "**/*.jpeg": true,
+    "**/*.png": true,
+    "**/*.psd": true,
+    "**/*.tga": true,
+    "**/*.tif": true,
+    "**/*.tiff": true,
+    "**/*.3ds": true,
+    "**/*.3DS": true,
+    "**/*.fbx": true,
+    "**/*.FBX": true,
+    "**/*.lxo": true,
+    "**/*.LXO": true,
+    "**/*.ma": true,
+    "**/*.MA": true,
+    "**/*.obj": true,
+    "**/*.OBJ": true,
+    "**/*.asset": true,
+    "**/*.cubemap": true,
+    "**/*.flare": true,
+    "**/*.mat": true,
+    "**/*.meta": true,
+    "**/*.prefab": true,
+    "**/*.unity": true,
+    "build/": true,
+    "Build/": true,
+    "Library/": true,
+    "library/": true,
+    "obj/": true,
+    "Obj/": true,
+    "Logs/": true,
+    "logs/": true,
+    "ProjectSettings/": true,
+    "UserSettings/": true,
+    "temp/": true,
+    "Temp/": true
+  },
+  "files.associations": {
+    "*.asset": "yaml",
+    "*.meta": "yaml",
+    "*.prefab": "yaml",
+    "*.unity": "yaml",
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.sln": "*.csproj",
+    "*.slnx": "*.csproj"
+  },
+  "dotnet.defaultSolution": "Tatica Defence.slnx",
+  "editor.semanticHighlighting.enabled": true,
+  "editor.semanticTokenColorCustomizations": {
+    "[Fluffy Dark Theme]": {
+      "enabled": true,
+      "rules": {
+        // 타입 계열 — 기준색: #E6ADCB
+        "class": {
+          "foreground": "#E6ADCB",
+          "fontStyle": "bold"
+        }, // 기준
+        "type": {
+          "foreground": "#E6ADCB"
+        }, // class와 동일
+        // 같은 계열에서 미세 변주 (명도/채도 ±3~5%)
+        "interface": {
+          "foreground": "#EDB8D3",
+          "fontStyle": "bold"
+        }, // 약간 더 밝게
+        "struct": {
+          "foreground": "#DFA2C4",
+          "fontStyle": "bold"
+        }, // 약간 더 어둡게
+        "enum": {
+          "foreground": "#E3A6C4",
+          "fontStyle": "bold"
+        }, // 미세하게 따뜻하게
+        "typeParameter": {
+          "foreground": "#EAB3D0",
+          "fontStyle": "italic"
+        }, // 같은 톤, 기울임
+        // === 기타 ===
+        "namespace": {
+          "foreground": "#B2CCD6"
+        },
+        // 덜 탁하고 더 맑은 핑크 톤으로 개선
+        "property": {
+          "foreground": "#ffe6f4"
+        },
+        "field": {
+          "foreground": "#fceef6",
+          "fontStyle": ""
+        },
+        "enumMember": {
+          "foreground": "#FFB955"
+        },
+        "variable": {
+          "foreground": "#B2C7FF"
+        },
+        "parameter": {
+          "foreground": "#C5B5FF",
+          "fontStyle": "italic"
+        },
+        "method": {
+          "foreground": "#7CF2E1"
+        },
+        "function": {
+          "foreground": "#7CF2E1"
+        },
+        "modifier": {
+          "foreground": "#C5B5FF",
+          "fontStyle": "italic"
+        }, // public/private/protected/internal/static/readonly...
+        "keyword": {
+          "foreground": "#C5B5FF"
+        }, // void 포함(일부 확장에선 키워드로 분류)
+        "type:defaultLibrary": {
+          "foreground": "#C5B5FF"
+        }, // int, string, bool 같은 기본형
+        "string": {
+          "foreground": "#FFB26B"
+        },
+      }
+    }
+  },
+  "workbench.colorCustomizations": {
+    "[Fluffy Dark Theme]": {
+      // 선택된 아이템(한 줄) — 배경은 테마 기준색(#E6ADCB), 글자는 진한 먹색으로 대비↑
+      "editorSuggestWidget.selectedBackground": "#E6ADCB",
+      "editorSuggestWidget.selectedForeground": "#1B1F23",
+      "editorSuggestWidget.selectedIconForeground": "#1B1F23",
+      // (선택) 위젯 전반 톤 정리 — 필요 없으면 지워도 됨
+      "editorSuggestWidget.background": "#263238",
+      "editorSuggestWidget.foreground": "#CFE3F5",
+      "editorSuggestWidget.border": "#E6ADCB",
+      "editorSuggestWidget.highlightForeground": "#E6ADCB",
+      "editorSuggestWidget.focusHighlightForeground": "#ffffff"
+    }
+  }
+}

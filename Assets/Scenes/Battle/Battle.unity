@@ -941,6 +941,7 @@ GameObject:
   m_Component:
   - component: {fileID: 238958326}
   - component: {fileID: 238958327}
+  - component: {fileID: 238958328}
   m_Layer: 5
   m_Name: UiEventHandler
   m_TagString: Untagged
@@ -980,6 +981,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleField: {fileID: 111035655}
+--- !u!114 &238958328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238958325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46afcec70478b0b45ae284917f02635a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &325629261
 GameObject:
   m_ObjectHideFlags: 0
@@ -5252,6 +5265,7 @@ GameObject:
   - component: {fileID: 1506345216}
   - component: {fileID: 1506345215}
   - component: {fileID: 1506345214}
+  - component: {fileID: 1506345217}
   m_Layer: 5
   m_Name: ShowEnemyButton
   m_TagString: Untagged
@@ -5322,7 +5336,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1506345215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1506345217}
+        m_TargetAssemblyTypeName: Scenes.Battle.Scripts.Ui.SwichViewButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1506345215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5361,6 +5387,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506345212}
   m_CullTransparentMesh: 1
+--- !u!114 &1506345217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506345212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad05b23ee04e504183e509f77de8bde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnemySideView: 0
+  buttonText: {fileID: 752671449}
 --- !u!1001 &1518790824
 PrefabInstance:
   m_ObjectHideFlags: 0
