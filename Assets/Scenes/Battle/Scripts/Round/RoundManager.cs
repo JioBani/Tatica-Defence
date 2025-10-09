@@ -10,20 +10,10 @@ namespace Scenes.Battle.Scripts.Round
     {
         public int RoundIndex { get; private set; } = 0;
         private Phase _currentPhase; 
-        private Dictionary<PhaseType, PhaseEvent> _phaseEvents;
         private Dictionary<PhaseType, Phase> _phases;
 
         private void Awake()
         {
-            _phaseEvents = new Dictionary<PhaseType, PhaseEvent>();
-
-            foreach (PhaseType phaseType in (PhaseType[])Enum.GetValues(typeof(PhaseType)))
-            {
-                _phaseEvents[phaseType] = new PhaseEvent(phaseType);
-            }
-            
-            _phases =  new Dictionary<PhaseType, Phase>();
-
             _phases = new()
             {
                 { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
@@ -48,11 +38,7 @@ namespace Scenes.Battle.Scripts.Round
                 _currentPhase.Run();
             }
         }
-
-        /// <summary>
-        /// 라운드 시작: 원하는 페이즈 타입과 구현을 함께 넘겨주세요.
-        /// Enter → (이벤트 발행) → Run → Exit → (이벤트 발행) 순서.
-        /// </summary>
+        
         public void StartRound()
         {
             RoundIndex++;
