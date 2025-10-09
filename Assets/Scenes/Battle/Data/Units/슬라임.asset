@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1cfc1bb03c8ddc42b51bc67686568ce, type: 3}
+  m_Name: "\uC2AC\uB77C\uC784"
+  m_EditorClassIdentifier: 
+  displayName: New Unit
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
+  level: 1
+  maxHP: 100
+  attack: 10
+  defense: 5
+  abilityPower: 0
+  attackSpeed: 1
+  moveSpeed: 3.5
+  critChance: 0.05
+  critDamage: 1.5
+  armorPenetration: 0
+  magicPenetration: 0
+  lifeSteal: 0
+  energyMax: 100
+  energyRegen: 5
+  skills: 
