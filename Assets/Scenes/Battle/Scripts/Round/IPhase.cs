@@ -4,11 +4,29 @@ using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round
 {
-    public interface IPhase
+    public abstract class Phase
     {
-        string Name { get; }
-        void Enter();
-        void Run();
-        void Exit();
+        PhaseType PhaseType { get; }
+        public abstract void OnEnter();
+        public abstract void OnRun();
+        public abstract void OnExit();
+        protected abstract PhaseType GetNextPhase();
+
+        public void Enter()
+        {
+            OnEnter();
+        }
+
+        public void Run()
+        {
+            OnRun();
+        }
+        
+        public PhaseType Exit()
+        {
+            OnExit();
+
+            return GetNextPhase();
+        }
     }
 }

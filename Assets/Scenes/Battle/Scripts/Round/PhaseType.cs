@@ -2,9 +2,9 @@
 {
     public enum PhaseType
     {
-        Preparation,
-        Ready,
-        Combat,
-        End
+        Maintenance, // 정비
+        Ready, // 전투 준비
+        Combat, // 전투
+        End // 전투 종료
     }
 }

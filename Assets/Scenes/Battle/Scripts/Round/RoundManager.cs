@@ -7,8 +7,9 @@ namespace Scenes.Battle.Scripts.Round
     public class RoundManager : MonoBehaviour
     {
         public int RoundIndex { get; private set; } = 0;
-        private IPhase _currentPhase; 
+        private Phase _currentPhase; 
         private Dictionary<PhaseType, PhaseEvent> _phaseEvents;
+        private Dictionary<PhaseType, Phase> _phases;
 
         private void Awake()
         {
@@ -18,26 +19,38 @@ namespace Scenes.Battle.Scripts.Round
             {
                 _phaseEvents[phaseType] = new PhaseEvent(phaseType);
             }
+            
+            _phases =  new Dictionary<PhaseType, Phase>();
+        }
+
+        private void Start()
+        {
+        }
+
+        private void Update()
+        {
+            if (_currentPhase is not null)
+            {
+                _currentPhase.Run();
+            }
         }
 
         /// <summary>
         /// 라운드 시작: 원하는 페이즈 타입과 구현을 함께 넘겨주세요.
         /// Enter → (이벤트 발행) → Run → Exit → (이벤트 발행) 순서.
         /// </summary>
-        public void StartRound(PhaseType phaseType, IPhase phase)
+        public void StartRound(PhaseType phaseType, Phase phase)
         {
             RoundIndex++;
             
-            _currentPhase = phase;
+            
+        }
+
+        public void StartPhase(PhaseType phaseType)
+        {
+            _currentPhase = _phases[phaseType];
 
             _currentPhase.Enter();
-            _phaseEvents[phaseType].Invoke(PhaseEventType.Enter);
-
-            _currentPhase.Run();
-
-            _currentPhase.Exit();
-            _phaseEvents[phaseType].Invoke(PhaseEventType.Exit);
-            
         }
 
         /// <summary>
