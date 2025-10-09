@@ -6,15 +6,25 @@ namespace Scenes.Battle.Scripts.Round
 {
     public abstract class Phase
     {
-        PhaseType PhaseType { get; }
+        public PhaseType PhaseType { get; private set; }
+        public PhaseEvent phaseEvent;
+
+        public Phase(PhaseType phaseType)
+        {
+            PhaseType = phaseType;
+            
+            phaseEvent = new PhaseEvent(phaseType);
+        }
+        
         public abstract void OnEnter();
         public abstract void OnRun();
         public abstract void OnExit();
-        protected abstract PhaseType GetNextPhase();
+        public abstract PhaseType GetNextPhase();
 
         public void Enter()
         {
             OnEnter();
+            phaseEvent.Invoke(PhaseEventType.Enter);
         }
 
         public void Run()
@@ -25,6 +35,7 @@ namespace Scenes.Battle.Scripts.Round
         public PhaseType Exit()
         {
             OnExit();
+            phaseEvent.Invoke(PhaseEventType.Exit);
 
             return GetNextPhase();
         }

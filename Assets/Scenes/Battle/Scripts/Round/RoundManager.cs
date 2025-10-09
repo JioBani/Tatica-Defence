@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Common.SceneSingleton;
+using Scenes.Battle.Scripts.Round.Phases;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round
 {
-    public class RoundManager : MonoBehaviour
+    public class RoundManager : SceneSingleton<RoundManager>
     {
         public int RoundIndex { get; private set; } = 0;
         private Phase _currentPhase; 
@@ -21,10 +23,22 @@ namespace Scenes.Battle.Scripts.Round
             }
             
             _phases =  new Dictionary<PhaseType, Phase>();
+
+            _phases = new()
+            {
+                { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
+            };
+            
+            // 한 페이즈 종료시 다음 페이즈 호출하는 콜백 등록
+            foreach (var pair in _phases)
+            {
+                pair.Value.phaseEvent.Add(PhaseEventType.Exit, (_,_) => StartNextPhase());
+            }
         }
 
         private void Start()
         {
+            StartRound();
         }
 
         private void Update()
@@ -39,31 +53,19 @@ namespace Scenes.Battle.Scripts.Round
         /// 라운드 시작: 원하는 페이즈 타입과 구현을 함께 넘겨주세요.
         /// Enter → (이벤트 발행) → Run → Exit → (이벤트 발행) 순서.
         /// </summary>
-        public void StartRound(PhaseType phaseType, Phase phase)
+        public void StartRound()
         {
             RoundIndex++;
             
-            
-        }
-
-        public void StartPhase(PhaseType phaseType)
-        {
-            _currentPhase = _phases[phaseType];
-
+            _currentPhase = _phases[PhaseType.Maintenance];
             _currentPhase.Enter();
         }
 
-        /// <summary>
-        /// Action 콜백 등록. (phaseType, eventType) 컨텍스트를 함께 전달.
-        /// </summary>
-        public void AddAction(PhaseType phaseType, PhaseEventType phaseEvent, Action<PhaseType, PhaseEventType> action)
+        private void StartNextPhase()
         {
-            _phaseEvents[phaseType].Add(phaseEvent, action);
-        }
-
-        public void RemoveAction(PhaseType phaseType, PhaseEventType phaseEvent, Action<PhaseType, PhaseEventType> action)
-        {
-            _phaseEvents[phaseType].Remove(phaseEvent, action);
+            _currentPhase = _phases[_currentPhase.GetNextPhase()];
+            
+            _currentPhase.Enter();
         }
     }
 }
