@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Scenes.Battle.Data.Units
 {
-    [CreateAssetMenu(menuName = "Units/Unit Archetype", fileName = "Unit_Archetype")]
-    public class UnitArchetype : ScriptableObject
+    [CreateAssetMenu(menuName = "Units/Unit Data", fileName = "UnitData")]
+    public class UnitData : ScriptableObject
     {
         [Header("표시 정보 (Identity)")]
         [Tooltip("게임 내에 표시될 유닛 이름")]
