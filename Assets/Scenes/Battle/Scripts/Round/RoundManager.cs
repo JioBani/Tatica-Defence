@@ -12,8 +12,10 @@ namespace Scenes.Battle.Scripts.Round
         private Phase _currentPhase; 
         private Dictionary<PhaseType, Phase> _phases;
 
-        private void Awake()
+        protected override void OnAwakeSingleton()
         {
+            base.OnAwakeSingleton();
+            
             _phases = new()
             {
                 { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
