@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Common.SceneSingleton;
+using Scenes.Battle.Data.Rounds;
 using Scenes.Battle.Scripts.Round.Phases;
 using UnityEngine;
 
@@ -10,16 +11,17 @@ namespace Scenes.Battle.Scripts.Round
     {
         public int RoundIndex { get; private set; } = 0;
         private Phase _currentPhase; 
-        private Dictionary<PhaseType, Phase> _phases;
+        
+        public Dictionary<PhaseType, Phase> _phases = new()
+        {
+            { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
+        };
+
+        public List<RoundInfoData> rounds;
 
         protected override void OnAwakeSingleton()
         {
             base.OnAwakeSingleton();
-            
-            _phases = new()
-            {
-                { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
-            };
             
             // 한 페이즈 종료시 다음 페이즈 호출하는 콜백 등록
             foreach (var pair in _phases)
@@ -54,6 +56,16 @@ namespace Scenes.Battle.Scripts.Round
             _currentPhase = _phases[_currentPhase.GetNextPhase()];
             
             _currentPhase.Enter();
+        }
+
+        public RoundInfoData GetCurrentRoundData()
+        {
+            return rounds[RoundIndex];
+        }
+
+        public Phase GetPhase(PhaseType type)
+        {
+            return _phases[type];
         }
     }
 }
