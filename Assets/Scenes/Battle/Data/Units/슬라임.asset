@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cfc1bb03c8ddc42b51bc67686568ce, type: 3}
   m_Name: "\uC2AC\uB77C\uC784"
   m_EditorClassIdentifier: 
-  displayName: New Unit
+  displayName: "\uC2AC\uB77C\uC784"
   icon: {fileID: 0}
-  prefab: {fileID: 0}
   level: 1
   maxHP: 100
   attack: 10

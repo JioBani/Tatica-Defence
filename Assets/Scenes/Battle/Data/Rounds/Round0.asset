@@ -10,7 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d4e819f2bceb4479355db5892fd61d, type: 3}
-  m_Name: RoundDefinition
+  m_Name: Round0
   m_EditorClassIdentifier: 
   round: 1
-  waves: []
+  waves:
+  - spawns:
+    - unit: {fileID: 11400000, guid: f61db38ed1a1f3e40afc3acc56b3f4a3, type: 2}
+      count: 1
+    - unit: {fileID: 0}
+      count: 1
+  - spawns: []
+  - spawns: []
