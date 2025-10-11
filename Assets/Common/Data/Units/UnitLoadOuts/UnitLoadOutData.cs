@@ -1,5 +1,6 @@
 ﻿using Common.Data.Skills;
-using Data.Units;
+using Common.Data.Skills.SkillDefinitions;
+using Common.Data.Units.UnitDefinitions;
 using UnityEngine;
 
 namespace Common.Data.Units.UnitLoadOuts

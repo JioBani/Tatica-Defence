@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Common.Draggable
+namespace Common.Scripts.Draggable
 {
     [RequireComponent(typeof(Collider2D))]
     public class DropZone2D : MonoBehaviour

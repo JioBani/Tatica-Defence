@@ -1,4 +1,4 @@
-using Common.ObjectPool;
+using Common.Scripts.ObjectPool;
 using Scenes.Battle.Scripts.ObjectPool;
 using Scenes.Battle.Scripts.WaitingArea;
 using UnityEngine;

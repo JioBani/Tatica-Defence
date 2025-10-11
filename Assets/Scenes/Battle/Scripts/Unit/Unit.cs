@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Common.Draggable;
+using Common.Scripts.Draggable;
 using Scenes.Battle.Scripts.WaitingArea;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-namespace Common.Draggable
+namespace Common.Scripts.Draggable
 {
     public class ExclusiveDropZone2D : DropZone2D
     {

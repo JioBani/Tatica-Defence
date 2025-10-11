@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.TransformChildrenIterator
+namespace Common.Scripts.TransformChildrenIterator
 {
     public static class TransformChildrenIterator
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Common.Data.Skills
+namespace Common.Data.Skills.SkillDefinitions
 {
     [CreateAssetMenu( menuName = "Skills/SkillDefinitionData", fileName = "SkillDefinitionData", order = 0)]
     public class SkillDefinitionData : ScriptableObject

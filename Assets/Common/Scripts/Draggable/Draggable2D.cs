@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Common.Draggable
+namespace Common.Scripts.Draggable
 {
     public class Draggable2D : MonoBehaviour
     {

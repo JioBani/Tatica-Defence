@@ -1,6 +1,4 @@
-using UnityEngine;
-
-namespace Common.Draggable
+namespace Common.Scripts.Draggable
 {
     /// <summary>
     /// Drop Zone 에 Drop 할 수 있는지에 대한 규칙

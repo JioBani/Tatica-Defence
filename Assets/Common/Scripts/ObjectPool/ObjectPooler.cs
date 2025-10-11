@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Common.Scripts.SceneSingleton;
 using UnityEngine;
 
-namespace Common.ObjectPool
+namespace Common.Scripts.ObjectPool
 {
     struct Pair
     {

@@ -1,7 +1,7 @@
 ﻿using Common.Scripts.SpritePreview;
 using UnityEngine;
 
-namespace Data.Units
+namespace Common.Data.Units.UnitDefinitions
 {
     [CreateAssetMenu( menuName = "Units/UnitDefinitionData", fileName = "UnitDefinitionData", order = 0)]
     public class UnitDefinitionData : ScriptableObject

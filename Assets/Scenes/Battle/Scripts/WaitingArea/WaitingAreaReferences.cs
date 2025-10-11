@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Common.Draggable;
+using Common.Scripts.Draggable;
 using Common.Scripts.SceneSingleton;
-using Common.TransformChildrenIterator;
+using Common.Scripts.TransformChildrenIterator;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.WaitingArea
