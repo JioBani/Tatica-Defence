@@ -3780,7 +3780,6 @@ GameObject:
   - component: {fileID: 1007864556}
   - component: {fileID: 1007864559}
   - component: {fileID: 1007864560}
-  - component: {fileID: 1007864561}
   - component: {fileID: 1007864562}
   m_Layer: 0
   m_Name: Main Camera
@@ -3937,18 +3936,6 @@ MonoBehaviour:
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1007864561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1007864555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc59e7059e820bf469de1ed2e49fbd5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1007864562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5635,7 +5622,6 @@ GameObject:
   - component: {fileID: 1506345216}
   - component: {fileID: 1506345215}
   - component: {fileID: 1506345214}
-  - component: {fileID: 1506345217}
   m_Layer: 5
   m_Name: ShowEnemyButton
   m_TagString: Untagged
@@ -5757,18 +5743,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506345212}
   m_CullTransparentMesh: 1
---- !u!114 &1506345217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1506345212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ad05b23ee04e504183e509f77de8bde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1518790824
 PrefabInstance:
   m_ObjectHideFlags: 0

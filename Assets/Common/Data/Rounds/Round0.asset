@@ -15,7 +15,7 @@ MonoBehaviour:
   round: 1
   waves:
   - spawns:
-    - unitInfo: {fileID: 11400000, guid: f61db38ed1a1f3e40afc3acc56b3f4a3, type: 2}
+    - unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
       count: 1
-    - unitInfo: {fileID: 11400000, guid: f61db38ed1a1f3e40afc3acc56b3f4a3, type: 2}
+    - unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
       count: 2

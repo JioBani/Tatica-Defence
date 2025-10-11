@@ -11,7 +11,7 @@ namespace Common.Data.Skills
         [SerializeField] private int id;
         
         [Tooltip("스킬 이름")]
-        [SerializeField] private string displayName = "New Skill";
+        [SerializeField] private string displayName;
         
         [Tooltip("스킬 설명")]
         [SerializeField] private string description;

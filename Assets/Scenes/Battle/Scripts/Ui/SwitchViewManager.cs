@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Scenes.Battle.Data.Rounds;
+using Common.Data.Rounds;
 using Scenes.Battle.Scripts.Round;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Ui

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using UnityEngine;
 
-namespace Scenes.Battle.Data.Rounds
+namespace Common.Data.Rounds
 {
     [CreateAssetMenu(menuName = "Rounds/Round", fileName = "RoundData")]
     public class RoundInfoData : ScriptableObject
