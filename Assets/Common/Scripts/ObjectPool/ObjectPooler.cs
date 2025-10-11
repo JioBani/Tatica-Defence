@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Common.SceneSingleton;
+using Common.Scripts.SceneSingleton;
 using UnityEngine;
 
 namespace Common.ObjectPool

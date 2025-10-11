@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Common.SceneSingleton;
+using Common.Scripts.SceneSingleton;
 using Scenes.Battle.Data.Rounds;
 using Scenes.Battle.Scripts.Round.Phases;
 using UnityEngine;

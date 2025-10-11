@@ -1,4 +1,4 @@
-using Common.SceneSingleton;
+using Common.Scripts.SceneSingleton;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.ObjectPool

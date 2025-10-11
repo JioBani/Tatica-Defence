@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Common.Draggable;
-using Common.SceneSingleton;
+using Common.Scripts.SceneSingleton;
 using Common.TransformChildrenIterator;
 using UnityEngine;
 

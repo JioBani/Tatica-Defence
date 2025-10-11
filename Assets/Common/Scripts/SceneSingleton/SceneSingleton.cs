@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.SceneSingleton
+namespace Common.Scripts.SceneSingleton
 {
     // 씬에 하나만 존재하는 전역 접근 싱글톤 베이스
     public abstract class SceneSingleton<T> : MonoBehaviour where T : Component
