@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Common.Scripts.SpritePreview;
+using UnityEngine;
 
 namespace Data.Units
 {
@@ -29,6 +30,7 @@ namespace Data.Units
         public int Cost => cost;
 
         [Tooltip("UI 등에서 사용할 유닛 아이콘")]
+        [SpritePreview(80)]
         [SerializeField] private Sprite icon;
         public Sprite Icon => icon;
     }
