@@ -6,6 +6,7 @@ using DG.Tweening;
 using Scenes.Battle.Data.Rounds;
 using Scenes.Battle.Scripts.Round;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Ui
@@ -71,7 +72,7 @@ namespace Scenes.Battle.Scripts.Ui
 
             Dictionary<string, int> enemyInfos = roundInfoData.waves
                 .SelectMany(wave => wave.spawns)
-                .GroupBy(spawn => spawn.unitInfo.name)
+                .GroupBy(spawn => spawn.unitLoadOutData.Unit.DisplayName)
                 .ToDictionary(group => group.Key, group => group.Sum(s => s.count));
 
             roundInfoText.text = String.Empty;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Common.Data.Units.UnitLoadOuts;
 using UnityEngine;
-using Scenes.Battle.Data.Units; // UnitArchetype 참조
 
 namespace Scenes.Battle.Data.Rounds
 {
@@ -26,7 +26,7 @@ namespace Scenes.Battle.Data.Rounds
         public class SpawnEntry
         {
             [Tooltip("소환할 유닛 정의")]
-            public UnitInfoData unitInfo;
+            public UnitLoadOutData unitLoadOutData;
 
             [Tooltip("해당 유닛을 몇 마리 소환할지")]
             [Min(1)] public int count = 1;

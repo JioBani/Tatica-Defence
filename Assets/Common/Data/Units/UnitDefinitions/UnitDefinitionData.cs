@@ -1,0 +1,35 @@
+﻿using UnityEngine;
+
+namespace Data.Units
+{
+    [CreateAssetMenu( menuName = "Units/UnitDefinitionData", fileName = "UnitDefinitionData", order = 0)]
+    public class UnitDefinitionData : ScriptableObject
+    {
+        //TODO: enum 으로 변경
+        [Header("표시 정보 (Identity)")]
+        [Tooltip("유닛 ID")]
+        [SerializeField] private int id;
+        public int ID => id;
+        
+        [Tooltip("게임 내에 표시될 유닛 이름")]
+        [SerializeField] private string displayName = "New Unit";
+        public string DisplayName => displayName;
+        
+        [Tooltip("유닛 설명")]
+        [SerializeField] private string description;
+        public string Description => description;
+        
+        //TODO: enum 으로 변경
+        [Tooltip("소속")]
+        [SerializeField] private string organization;
+        public string Organization => organization;
+        
+        [Tooltip("비용")]
+        [SerializeField] private int cost;
+        public int Cost => cost;
+
+        [Tooltip("UI 등에서 사용할 유닛 아이콘")]
+        [SerializeField] private Sprite icon;
+        public Sprite Icon => icon;
+    }
+}
