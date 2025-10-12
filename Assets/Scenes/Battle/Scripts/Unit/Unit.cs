@@ -18,11 +18,6 @@ namespace Scenes.Battle.Scripts.Unit
             _draggable = GetComponent<Draggable2D>();
         }
 
-        private void OnEnable()
-        {
-            //MoveToWaitingArea();
-        }
-
         public void MoveToWaitingArea()
         {
             List<ExclusiveDropZone2D> areas = WaitingAreaReferences.Instance.waitingAreas;
@@ -41,6 +36,7 @@ namespace Scenes.Battle.Scripts.Unit
             });
         }
 
+        // UnitGenerator 에 의해 소환되었을 때
         public void OnSpawn(UnitLoadOutData unitLoadOutData)
         {
             _unitLoadOutData = unitLoadOutData;
