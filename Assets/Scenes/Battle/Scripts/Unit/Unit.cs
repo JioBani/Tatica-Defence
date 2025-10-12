@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Scenes.Battle.Scripts.WaitingArea;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Scenes.Battle.Scripts.Unit
     public class Unit : MonoBehaviour
     {
         private Draggable2D _draggable;
+        private UnitLoadOutData _unitLoadOutData;
 
         private void Awake()
         {
@@ -18,10 +20,10 @@ namespace Scenes.Battle.Scripts.Unit
 
         private void OnEnable()
         {
-            MoveToWaitingArea();
+            //MoveToWaitingArea();
         }
 
-        private void MoveToWaitingArea()
+        public void MoveToWaitingArea()
         {
             List<ExclusiveDropZone2D> areas = WaitingAreaReferences.Instance.waitingAreas;
 
@@ -37,6 +39,14 @@ namespace Scenes.Battle.Scripts.Unit
                     return false;
                 }
             });
+        }
+
+        public void OnSpawn(UnitLoadOutData unitLoadOutData)
+        {
+            _unitLoadOutData = unitLoadOutData;
+            
+            //TEMP
+            GetComponent<SpriteRenderer>().sprite = unitLoadOutData.Unit.Icon;
         }
     }
 }
