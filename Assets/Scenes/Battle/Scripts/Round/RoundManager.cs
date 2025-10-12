@@ -10,9 +10,9 @@ namespace Scenes.Battle.Scripts.Round
     public class RoundManager : SceneSingleton<RoundManager>
     {
         public int RoundIndex { get; private set; } = 0;
-        private Phase _currentPhase; 
-        
-        public Dictionary<PhaseType, Phase> _phases = new()
+        private Phase _currentPhase;
+
+        private readonly Dictionary<PhaseType, Phase> _phases = new()
         {
             { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
         };

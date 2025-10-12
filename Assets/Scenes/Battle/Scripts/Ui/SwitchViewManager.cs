@@ -67,16 +67,16 @@ namespace Scenes.Battle.Scripts.Ui
             RoundInfoData roundInfoData = RoundManager.Instance.GetCurrentRoundData();
 
             roundText.text = $"{RoundManager.Instance.RoundIndex} 라운드";
-
-            Dictionary<string, int> enemyInfos = roundInfoData.waves
-                .SelectMany(wave => wave.spawns)
+            
+            Dictionary<string, int> enemyInfos = roundInfoData.spawnEntries
                 .GroupBy(spawn => spawn.unitLoadOutData.Unit.DisplayName)
                 .ToDictionary(group => group.Key, group => group.Sum(s => s.count));
-
+            
             roundInfoText.text = String.Empty;
             
             foreach (var pair in enemyInfos)
             {
+                Debug.Log(pair.Key + " : " + pair.Value);
                 roundInfoText.text += $"{pair.Key} x {pair.Value}, ";
             }
         }
