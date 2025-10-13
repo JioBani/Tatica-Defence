@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
 using Scenes.Battle.Scripts.Round.Phases;
-using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round
 {
@@ -67,12 +64,6 @@ namespace Scenes.Battle.Scripts.Round
         public Phase GetPhase(PhaseType type)
         {
             return _phases[type];
-        }
-
-        private void SpawnEnemies(RoundInfoData data)
-        {
-            List<RoundInfoData.SpawnEntry> spawnEntries = 
-                    data.spawnEntries.ToList().OrderBy(entry => entry.spawnTime).ToList();
         }
     }
 }

@@ -16,6 +16,6 @@ MonoBehaviour:
   - spawnTime: 3
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
     count: 3
-  - spawnTime: 3
+  - spawnTime: 10
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
     count: 4

@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Common.Data.Rounds;
+using Common.Data.Units.UnitLoadOuts;
+using Scenes.Battle.Scripts.Sell;
+using Scenes.Battle.Scripts.Unit;
+using UnityEngine;
+
+namespace Scenes.Battle.Scripts.Round
+{
+    public class RoundInfoViewer : MonoBehaviour
+    {
+        [SerializeField] private UnitGenerator unitGenerator;
+        [SerializeField] private AggressorSideSellManager  aggressorSideSellManager;
+        
+        RoundInfoData _currentRoundInfo;
+
+        void Awake()
+        {
+            RoundManager.Instance
+                .GetPhase(PhaseType.Maintenance)
+                .phaseEvent
+                .Add(PhaseEventType.Enter, (_,_) => ShowRoundInfo());
+        }
+
+        void ShowRoundInfo()
+        {
+            _currentRoundInfo = RoundManager.Instance.GetCurrentRoundData();
+            
+            // 유닛 ID 로 그룹화 해서 하나의 유닛당 하나씩만 미리보기 소환
+            Dictionary<int, UnitLoadOutData> enemyInfos = _currentRoundInfo.spawnEntries
+                .GroupBy(spawn => spawn.unitLoadOutData.Unit.ID)
+                .ToDictionary(group => group.Key, group => group.First().unitLoadOutData);
+            
+            foreach (var pair in enemyInfos)
+            {
+                AggressorSideSell sell = aggressorSideSellManager.GetEmptySell();
+
+                if (sell != null)
+                {
+                    Unit.Unit unit = unitGenerator.Generate(pair.Value);
+                    
+                    sell.SetUnit(unit);
+
+                    unit.transform.position = new Vector3(
+                        sell.transform.position.x,
+                        sell.transform.position.y,
+                        unit.transform.position.z
+                    );
+                }
+            }
+        }
+    }
+}
