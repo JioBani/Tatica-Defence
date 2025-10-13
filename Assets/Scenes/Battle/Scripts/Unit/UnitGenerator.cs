@@ -10,10 +10,11 @@ namespace Scenes.Battle.Scripts.Unit
     {
         private ObjectPooler _objectPooler;
         [SerializeField] private GameObject unitPrefab;
+        [SerializeField] private GameObject aggressorSamplePrefab;
         
         [SerializeField] private Transform enemyField;
         
-        public Unit Generate(UnitLoadOutData data)
+        private Unit Generate(UnitLoadOutData data, GameObject prefab)
         {
             if (_objectPooler == null)
             {
@@ -21,16 +22,25 @@ namespace Scenes.Battle.Scripts.Unit
             }
 
             GameObject newUnit = _objectPooler.Spawn(
-                unitPrefab,
+                prefab,
                 enemyField
             );
             
             var unitComponent = newUnit.GetComponent<Unit>();
             
-            
             unitComponent.OnSpawn(data);
 
             return unitComponent;
+        }
+
+        public Unit GenerateDefender(UnitLoadOutData data)
+        {
+            return Generate(data, unitPrefab);
+        }
+
+        public Unit GenerateAggressorSample(UnitLoadOutData data)
+        {
+            return Generate(data, aggressorSamplePrefab);
         }
     }
 }

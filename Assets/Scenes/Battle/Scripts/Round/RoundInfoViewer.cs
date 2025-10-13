@@ -5,6 +5,7 @@ using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
 using Scenes.Battle.Scripts.Sell;
 using Scenes.Battle.Scripts.Unit;
+using Scenes.Battle.Scripts.Unit.Aggressor;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round
@@ -26,6 +27,7 @@ namespace Scenes.Battle.Scripts.Round
 
         void ShowRoundInfo()
         {
+            Debug.Log("gd");
             _currentRoundInfo = RoundManager.Instance.GetCurrentRoundData();
             
             // 유닛 ID 로 그룹화 해서 하나의 유닛당 하나씩만 미리보기 소환
@@ -33,13 +35,21 @@ namespace Scenes.Battle.Scripts.Round
                 .GroupBy(spawn => spawn.unitLoadOutData.Unit.ID)
                 .ToDictionary(group => group.Key, group => group.First().unitLoadOutData);
             
+            Dictionary<int, int> aggressorCounts = _currentRoundInfo.spawnEntries
+                .GroupBy(spawn => spawn.unitLoadOutData.Unit.ID)
+                .ToDictionary(group => group.Key, group => group.Sum(e => e.count));
+            
             foreach (var pair in enemyInfos)
             {
                 AggressorSideSell sell = aggressorSideSellManager.GetEmptySell();
 
                 if (sell != null)
                 {
-                    Unit.Unit unit = unitGenerator.Generate(pair.Value);
+                    Unit.Unit unit = unitGenerator.GenerateAggressorSample(pair.Value);
+
+                    AggressorSample sample = unit.GetComponent<AggressorSample>();
+                    
+                    sample.SetCount(aggressorCounts[pair.Key]);
                     
                     sell.SetUnit(unit);
 

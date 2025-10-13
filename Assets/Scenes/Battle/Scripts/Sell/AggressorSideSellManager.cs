@@ -14,7 +14,7 @@ namespace Scenes.Battle.Scripts.Sell
         {
             _sells = new List<AggressorSideSell>();
             
-            foreach (var child in sellsParents.transform.ChildrenBackward())
+            foreach (var child in sellsParents.transform.ChildrenForward())
             {
                 _sells.Add(child.GetComponent<AggressorSideSell>());
             }

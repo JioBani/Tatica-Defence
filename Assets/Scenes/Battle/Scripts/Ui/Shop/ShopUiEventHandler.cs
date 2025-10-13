@@ -18,7 +18,7 @@ namespace Scenes.Battle.Scripts.Ui.Shop
             //TODO: 대기석이 비어있지 않는지 확인하는 것을 여기서 하는것이 맞는지 고려 필요
             if (WaitingAreaReferences.Instance.waitingAreas.Find((zone) => zone.occupant == null))
             {
-                var unit = unitGenerator.Generate(tempUnitLoadOutData);
+                var unit = unitGenerator.GenerateDefender(tempUnitLoadOutData);
                 
                 unit.MoveToWaitingArea();
             }

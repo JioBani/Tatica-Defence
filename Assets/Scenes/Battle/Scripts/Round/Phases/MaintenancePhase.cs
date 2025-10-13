@@ -17,7 +17,7 @@ namespace Scenes.Battle.Scripts.Round.Phases
 
         public override void OnRun()
         {
-            Debug.Log("Maintenance Phase OnRun");
+            
         }
 
         public override void OnExit()

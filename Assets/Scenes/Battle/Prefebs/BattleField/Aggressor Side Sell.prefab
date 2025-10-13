@@ -50,10 +50,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
       propertyPath: m_Name
-      value: Sell
+      value: Aggressor Side Sell
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.b
+      value: 0.022516914
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4339623
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.r
+      value: 0.104806006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4770579769018386207}
   m_SourcePrefab: {fileID: 100100000, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+--- !u!1 &3185210687163189379 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+  m_PrefabInstance: {fileID: 7665863068985912928}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4770579769018386207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3185210687163189379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd3498caf961d24292e529497d99c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
