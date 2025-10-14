@@ -1588,7 +1588,7 @@ PrefabInstance:
     - target: {fileID: 2302034531872190602, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 309850464, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
+      objectReference: {fileID: 1198145141, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
     - target: {fileID: 3429132515120802427, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Name
       value: Defender Side Sell (4)
@@ -6611,7 +6611,7 @@ PrefabInstance:
     - target: {fileID: 2302034531872190602, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 2068743722, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
+      objectReference: {fileID: 589530592, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
     - target: {fileID: 3429132515120802427, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Name
       value: Defender Side Sell (15)
@@ -8830,7 +8830,7 @@ PrefabInstance:
     - target: {fileID: 2302034531872190602, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1897183204, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
+      objectReference: {fileID: 536963467, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
     - target: {fileID: 3429132515120802427, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Name
       value: Defender Side Sell (11)
@@ -8900,7 +8900,7 @@ PrefabInstance:
     - target: {fileID: 2302034531872190602, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1897183204, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
+      objectReference: {fileID: 536963467, guid: 602d7f0fbab69464ea0e06988b9b03a3, type: 3}
     - target: {fileID: 3429132515120802427, guid: f3d23af669e0a8940a90a61a92697b67, type: 3}
       propertyPath: m_Name
       value: Defender Side Sell (18)
