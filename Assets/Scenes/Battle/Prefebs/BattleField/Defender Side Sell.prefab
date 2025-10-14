@@ -52,6 +52,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Defender Side Sell
       objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517001827978050578, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
