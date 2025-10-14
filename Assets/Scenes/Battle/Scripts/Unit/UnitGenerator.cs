@@ -10,6 +10,7 @@ namespace Scenes.Battle.Scripts.Unit
     {
         private ObjectPooler _objectPooler;
         [SerializeField] private GameObject unitPrefab;
+        [SerializeField] private GameObject aggressorPrefab;
         [SerializeField] private GameObject aggressorSamplePrefab;
         
         [SerializeField] private Transform enemyField;
@@ -36,6 +37,12 @@ namespace Scenes.Battle.Scripts.Unit
         public Unit GenerateDefender(UnitLoadOutData data)
         {
             return Generate(data, unitPrefab);
+        }
+
+        
+        public Unit GenerateAggressor(UnitLoadOutData data)
+        {
+            return Generate(data, aggressorPrefab);
         }
 
         public Unit GenerateAggressorSample(UnitLoadOutData data)

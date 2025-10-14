@@ -66,15 +66,15 @@ namespace Common.Scripts.ObjectPool
 
         public void DeSpawn(Poolable poolable)
         {
-            if (poolingObjects[poolable.poolId].objects.Contains(poolable.gameObject))
+            if (!poolingObjects[poolable.poolId].objects.Contains(poolable.gameObject))
             {
                 Debug.LogError("Poolable 이 해당 부모의 자식이 아닙니다.");
                 return;
             }
 
             poolable.gameObject.SetActive(false);
-            poolable.transform.SetParent(poolParent);
-            poolable.transform.position = poolParent.position;
+            poolable.transform.SetParent(poolingObjects[poolable.poolId].transform);
+            poolable.transform.position = poolingObjects[poolable.poolId].transform.position;
         }
     }   
 }

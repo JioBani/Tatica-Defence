@@ -1,18 +1,23 @@
+using System;
 using System.Collections.Generic;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
 using Scenes.Battle.Scripts.Round.Phases;
+using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round
 {
     public class RoundManager : SceneSingleton<RoundManager>
     {
+        
         public int RoundIndex { get; private set; } = 0;
         private Phase _currentPhase;
 
         private readonly Dictionary<PhaseType, Phase> _phases = new()
         {
-            { PhaseType.Maintenance, new MaintenancePhase(PhaseType.Maintenance) }
+            { PhaseType.Maintenance, new MaintenancePhase() },
+            { PhaseType.Ready, new ReadyPhase() },
+            { PhaseType.Combat, new CombatPhase() },
         };
 
         public List<RoundInfoData> rounds;
@@ -65,5 +70,15 @@ namespace Scenes.Battle.Scripts.Round
         {
             return _phases[type];
         }
+
+        public void SetReady()
+        {
+            if (_currentPhase.PhaseType == PhaseType.Maintenance)
+            {
+                GetPhase(PhaseType.Maintenance).Exit();
+            }
+        }
     }
 }
+
+

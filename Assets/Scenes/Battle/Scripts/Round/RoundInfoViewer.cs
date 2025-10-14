@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.ObjectPool;
 using Scenes.Battle.Scripts.Sell;
 using Scenes.Battle.Scripts.Unit;
 using Scenes.Battle.Scripts.Unit.Aggressor;
@@ -15,7 +16,8 @@ namespace Scenes.Battle.Scripts.Round
         [SerializeField] private UnitGenerator unitGenerator;
         [SerializeField] private AggressorSideSellManager  aggressorSideSellManager;
         
-        RoundInfoData _currentRoundInfo;
+        private RoundInfoData _currentRoundInfo;
+        private readonly List<AggressorSample> _samples = new ();
 
         void Awake()
         {
@@ -23,11 +25,15 @@ namespace Scenes.Battle.Scripts.Round
                 .GetPhase(PhaseType.Maintenance)
                 .phaseEvent
                 .Add(PhaseEventType.Enter, (_,_) => ShowRoundInfo());
+            
+            RoundManager.Instance
+                .GetPhase(PhaseType.Maintenance)
+                .phaseEvent
+                .Add(PhaseEventType.Exit, (_,_) => HideRoundInfo());
         }
 
         void ShowRoundInfo()
         {
-            Debug.Log("gd");
             _currentRoundInfo = RoundManager.Instance.GetCurrentRoundData();
             
             // 유닛 ID 로 그룹화 해서 하나의 유닛당 하나씩만 미리보기 소환
@@ -58,8 +64,20 @@ namespace Scenes.Battle.Scripts.Round
                         sell.transform.position.y,
                         unit.transform.position.z
                     );
+                    
+                    _samples.Add(sample);
                 }
             }
+        }
+
+        void HideRoundInfo()
+        {
+            foreach (var sample in _samples)
+            {
+                sample.GetComponent<Poolable>().DeSpawn();
+            }
+
+            _samples.Clear();
         }
     }
 }

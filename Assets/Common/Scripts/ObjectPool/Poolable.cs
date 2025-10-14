@@ -6,7 +6,7 @@ namespace Common.Scripts.ObjectPool
     {
         public string poolId { get; private set; }
 
-        void DeSpawn()
+        public void DeSpawn()
         {
             ObjectPooler.Instance.DeSpawn(this);
         }

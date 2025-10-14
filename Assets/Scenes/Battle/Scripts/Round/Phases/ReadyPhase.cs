@@ -1,18 +1,20 @@
 using Common.Data.Rounds;
+using Scenes.Battle.Scripts.Unit;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Round.Phases
 {
-    public class MaintenancePhase : Phase
+    public class ReadyPhase : Phase
     {
-        public MaintenancePhase() : base(PhaseType.Maintenance)
+        
+        public ReadyPhase() : base(PhaseType.Ready)
         {
             
         }
 
         public override void OnEnter()
         {
-            
+            Exit();
         }
 
         public override void OnRun()
@@ -22,21 +24,12 @@ namespace Scenes.Battle.Scripts.Round.Phases
 
         public override void OnExit()
         {
-            Debug.Log("Maintenance Phase OnExit");
+            
         }
 
         public override PhaseType GetNextPhase()
         {
-            return PhaseType.Ready;
-        }
-
-        /// <summary>
-        /// 전투 준비 완료
-        /// </summary>
-        public void SetReady()
-        {
-            Exit();
+            return PhaseType.Combat;
         }
     }
 }
-

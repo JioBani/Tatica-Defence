@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.SerializableTime;
 using UnityEngine;
 
 namespace Common.Data.Rounds
@@ -13,7 +15,7 @@ namespace Common.Data.Rounds
         public class SpawnEntry
         {
             [Tooltip("해당 유닛이 소환될 시간")]
-            public int spawnTime;
+            public SerializableTime spawnTime;
             
             [Tooltip("소환할 유닛 정의")]
             public UnitLoadOutData unitLoadOutData;

@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: Round1
   m_EditorClassIdentifier: 
   spawnEntries:
-  - spawnTime: 3
+  - spawnTime:
+      hours: 0
+      minutes: 0
+      seconds: 5
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
     count: 3
-  - spawnTime: 10
+  - spawnTime:
+      hours: 0
+      minutes: 0
+      seconds: 2
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
     count: 4
