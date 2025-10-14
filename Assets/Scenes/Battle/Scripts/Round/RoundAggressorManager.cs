@@ -1,16 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Common.Data.Rounds;
+using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.RepeatX;
 using Cysharp.Threading.Tasks;
 using Scenes.Battle.Scripts.Unit;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Scenes.Battle.Scripts.Round
 {
     public class RoundAggressorManager : MonoBehaviour
     {
         [SerializeField] private UnitGenerator unitGenerator;
+        [SerializeField] private List<Transform> spawnPoints;
 
         // 한 라운드(Combat 페이즈) 동안의 스폰 작업을 제어할 취소 토큰 소스
         private CancellationTokenSource _roundContext;
@@ -45,7 +49,7 @@ namespace Scenes.Battle.Scripts.Round
             // 각 스폰 엔트리별로 비동기 예약 실행 (완료를 기다리지 않음)
             foreach (var entry in roundInfo.spawnEntries)
             {
-                GenerateAggressor(entry).Forget();
+                GenerateAggressors(entry).Forget();
             }
         }
 
@@ -55,7 +59,7 @@ namespace Scenes.Battle.Scripts.Round
         /// 2) 취소되었는지 확인
         /// 3) count 만큼 유닛 생성
         /// </summary>
-        private async UniTask GenerateAggressor(RoundInfoData.SpawnEntry entry)
+        private async UniTask GenerateAggressors(RoundInfoData.SpawnEntry entry)
         {
             try
             {
@@ -68,12 +72,25 @@ namespace Scenes.Battle.Scripts.Round
                 if (token.IsCancellationRequested) return;
                 
                 // 해당 엔트리의 수량만큼 유닛 생성
-                RepeatX.Times(entry.count, _ => unitGenerator.GenerateAggressor(entry.unitLoadOutData));
+                RepeatX.Times(entry.count, _ => GenerateAggressor(entry.unitLoadOutData));
             }
             catch (OperationCanceledException)
             {
                 // 취소는 정상 흐름이므로 별도 로그 없이 무시
             }
+        }
+
+        private void GenerateAggressor(UnitLoadOutData unitLoadOutData)
+        {
+            Unit.Unit unit = unitGenerator.GenerateAggressor(unitLoadOutData);
+            
+            int spawnPointIndex = Random.Range(0, spawnPoints.Count - 1);
+
+            unit.transform.position = new Vector3(
+                spawnPoints[spawnPointIndex].position.x,
+                spawnPoints[spawnPointIndex].position.y,
+                unit.transform.position.z
+            );
         }
 
         /// <summary>
