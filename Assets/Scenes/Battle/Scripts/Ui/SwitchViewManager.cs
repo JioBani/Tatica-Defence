@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Common.Data.Rounds;
+using Scenes.Battle.Scripts.CameraControl;
 using Scenes.Battle.Scripts.Round;
 using TMPro;
 using UnityEngine;
@@ -16,15 +17,14 @@ namespace Scenes.Battle.Scripts.Ui
         [SerializeField] private GameObject roundPanel;
         [SerializeField] private TextMeshProUGUI roundText;
         [SerializeField] private TextMeshProUGUI roundInfoText;
+        [SerializeField] private CameraControlManager cameraControlManager;
 
         public Action<bool> switchViewEvent;
 
-        Camera _mainCamera;
         Phase _maintenancePhase;
         
         private void Awake()
         {
-            _mainCamera = Camera.main;
             RoundManager.Instance
                 .GetPhase(PhaseType.Maintenance)
                 .phaseEvent
@@ -39,19 +39,13 @@ namespace Scenes.Battle.Scripts.Ui
 
             if (isEnemySideView)
             {
-                _mainCamera.transform.DOMoveY(6, 0.5f)
-                    .SetEase(Ease.InOutSine)
-                    .SetUpdate(UpdateType.Late, isIndependentUpdate: false);
-                
+                cameraControlManager.ShowAggressorSide();
                 buttonText.text = "아군 진영";
                 roundPanel.SetActive(true);
             }
             else
             {
-                _mainCamera.transform.DOMoveY(0, 0.5f)
-                    .SetEase(Ease.InOutSine)
-                    .SetUpdate(UpdateType.Late, isIndependentUpdate: false);
-
+                cameraControlManager.ShowDefenderSide();
                 buttonText.text = "적 진영";
                 roundPanel.SetActive(false);
             }
