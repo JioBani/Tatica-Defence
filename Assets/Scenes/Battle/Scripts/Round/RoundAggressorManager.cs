@@ -62,8 +62,7 @@ namespace Scenes.Battle.Scripts.Round
                 // 라운드 공용 취소 토큰 (Exit 등 트리거 시 취소됨)
                 var token = _roundContext.Token;
 
-                // 지연 대기 (spawnTime 단위: ms 가정 / 초라면 TimeSpan 사용 권장)
-                await UniTask.Delay(entry.spawnTime, cancellationToken: token);
+                await UniTask.Delay(entry.spawnTime.ToTimeSpan(), cancellationToken: token);
 
                 // 대기 중 취소되었으면 바로 종료
                 if (token.IsCancellationRequested) return;
@@ -84,7 +83,7 @@ namespace Scenes.Battle.Scripts.Round
         {
             _roundContext?.Cancel();   // 진행 중(대기 중) 작업들 일괄 취소 신호
             _roundContext?.Dispose();  // 토큰 소스 자원 해제
-            // 필요시 _roundContext = null; 로 표시해도 됨 (재사용 방지 명시)
+            _roundContext = null;
         }
     }
 }
