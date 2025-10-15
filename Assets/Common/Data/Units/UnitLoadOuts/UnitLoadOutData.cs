@@ -1,6 +1,7 @@
 ﻿using Common.Data.Skills;
 using Common.Data.Skills.SkillDefinitions;
 using Common.Data.Units.UnitDefinitions;
+using Common.Data.Units.UnitStatsByLevel;
 using UnityEngine;
 
 namespace Common.Data.Units.UnitLoadOuts
@@ -21,5 +22,9 @@ namespace Common.Data.Units.UnitLoadOuts
         [Tooltip("스킬 정의 데이터")]
         [SerializeField] private SkillDefinitionData skill;
         public SkillDefinitionData  Skill => skill;
+        
+        [Tooltip("유닛 스탯 데이터")]
+        [SerializeField] private UnitStatsByLevelData stats;
+        public UnitStatsByLevelData  Stats => stats;
     }
 }

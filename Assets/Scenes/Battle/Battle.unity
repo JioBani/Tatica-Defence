@@ -2589,6 +2589,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      propertyPath: UnitLoadOutData
+      value: 
+      objectReference: {fileID: 11400000, guid: 88c99cd1d964d5349b40b45c03623977, type: 2}
     - target: {fileID: 7228315515101810788, guid: 55f271110f86e19488c6665236798e12, type: 3}
       propertyPath: m_Color.b
       value: 0.8396226
@@ -2667,6 +2671,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      propertyPath: UnitLoadOutData
+      value: 
+      objectReference: {fileID: 11400000, guid: 88c99cd1d964d5349b40b45c03623977, type: 2}
     - target: {fileID: 7228315515101810788, guid: 55f271110f86e19488c6665236798e12, type: 3}
       propertyPath: m_Color.b
       value: 0.013349922
@@ -2885,6 +2893,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      propertyPath: UnitLoadOutData
+      value: 
+      objectReference: {fileID: 11400000, guid: 88c99cd1d964d5349b40b45c03623977, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9934,6 +9946,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      propertyPath: UnitLoadOutData
+      value: 
+      objectReference: {fileID: 11400000, guid: 88c99cd1d964d5349b40b45c03623977, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
