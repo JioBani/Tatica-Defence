@@ -188,6 +188,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aggressor Sample
       objectReference: {fileID: 0}
+    - target: {fileID: 4259065505431623686, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6150630233295662681, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -228,11 +232,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6905028679572935155, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905028679572935155, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7420770553177359482, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 5546671543968653177, guid: 23908819e50c25e4781f07ce8e114cd4, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4472802039410466485, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
     m_RemovedGameObjects:
     - {fileID: 8467432909461063463, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
     - {fileID: 7538591050835302347, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
