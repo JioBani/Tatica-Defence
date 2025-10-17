@@ -1,20 +1,28 @@
 ﻿using Common.Scripts.StateBase;
-using Cysharp.Threading.Tasks;
+using Scenes.Battle.Scripts.Unit.Attackable;
 using UnityEngine;
 
 namespace Scenes.Battle.Scripts.Unit.ActionState.ActionStates
 {
     public class MoveState : StateBase<ActionStateType>
     {
-        public MoveState(ActionStateType type) : base(type)
+        private GameObject _self;
+        private Attacker _attacker;
+        
+        public MoveState(
+            ActionStateType type, 
+            GameObject self,
+            Attacker attacker
+        ) : base(type)
         {
+            _self = self;
+            _attacker = attacker;
+            _attacker.OnTargetEnter += DoAttack;
         }
 
         public override void OnEnter()
         {
             Debug.Log("MoveState Enter");
-
-            DoNextState();
         }
 
         public override void OnRun()
@@ -24,19 +32,17 @@ namespace Scenes.Battle.Scripts.Unit.ActionState.ActionStates
 
         public override void OnExit()
         {
-            Debug.Log("MoveState Exit");
+            
         }
 
-        public override ActionStateType GetNextStateBase()
+        public override ActionStateType GetNextStateBaseType()
         {
             Debug.Log("GetNextStateBase");
             return ActionStateType.Attack;
         }
 
-        private async UniTask DoNextState()
+        private void DoAttack(Victim victim)
         {
-            await UniTask.Delay(500);
-
             Exit();
         }
     }

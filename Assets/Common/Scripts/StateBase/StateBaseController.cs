@@ -11,10 +11,12 @@ namespace Common.Scripts.StateBase
         private StateBase<T> _currentState;
         
         protected abstract Dictionary<T, StateBase<T>> ConfigureStates();
-        
+        private event Action<Dictionary<T, StateBase<T>>> _onConfigureStates;
+            
         private void Awake()
         {
             _stateBases = ConfigureStates();
+            _onConfigureStates?.Invoke(_stateBases);
             
             foreach (var pair in _stateBases)
             {
@@ -29,6 +31,11 @@ namespace Common.Scripts.StateBase
             
         }
         
+        public void OnConfigureStatesEvent(Action<Dictionary<T, StateBase<T>>> handler)
+        {
+            _onConfigureStates += handler;
+        }
+        
         public void StartStateBase(T type)
         {
             _currentState = _stateBases[type];
@@ -37,7 +44,7 @@ namespace Common.Scripts.StateBase
 
         private void StartNextState()
         {
-            _currentState = _stateBases[_currentState.GetNextStateBase()];
+            _currentState = _stateBases[_currentState.GetNextStateBaseType()];
             
             _currentState.Enter();
         }
@@ -45,6 +52,11 @@ namespace Common.Scripts.StateBase
         public StateBase<T> GetCurrentState()
         {
             return _currentState;
+        }
+
+        public StateBase<T> GetStateBase(T type)
+        {
+            return _stateBases[type];
         }
     }
 }

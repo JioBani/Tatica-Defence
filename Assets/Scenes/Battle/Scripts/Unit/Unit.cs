@@ -20,7 +20,7 @@ namespace Scenes.Battle.Scripts.Unit
         // TODO: unit load out data 로 이동
         public Fraction fraction;
 
-        public Action onSpawnEvent;
+        public Action<Unit> onSpawnEvent;
         
         private void Awake()
         {
@@ -53,7 +53,7 @@ namespace Scenes.Battle.Scripts.Unit
             //TEMP
             GetComponent<SpriteRenderer>().sprite = unitLoadOutData.Unit.Icon;
             
-            onSpawnEvent?.Invoke();
+            onSpawnEvent?.Invoke(this);
         }
     }
 }
