@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aggressor
       objectReference: {fileID: 0}
+    - target: {fileID: 1071765619771846872, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      propertyPath: canMove
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4157034298238127128, guid: 55f271110f86e19488c6665236798e12, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -156,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attacker: {fileID: 8203008893173450104}
-  mover: {fileID: 8845014634042743821}
+  canMove: 0
 --- !u!114 &6561986962922681377 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}

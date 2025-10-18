@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4375643860260506283}
   - component: {fileID: -3120676249159589805}
   - component: {fileID: 6465798290088026175}
+  - component: {fileID: 1071765619771846872}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -216,6 +217,20 @@ MonoBehaviour:
   healthBar: {fileID: 2705233270346214916}
   UnitLoadOutData: {fileID: 0}
   fraction: 0
+--- !u!114 &1071765619771846872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714470639557013153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96e11ac455b242f49d12f3aed42e7b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attacker: {fileID: 5193920713948900330}
+  canMove: 0
 --- !u!1 &7653174561868628949
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3456320583479363228}
   - component: {fileID: 7668174282716107359}
+  - component: {fileID: 5193920713948900330}
   m_Layer: 0
   m_Name: Attacker
   m_TagString: Untagged
@@ -284,6 +300,22 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &5193920713948900330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7653174561868628949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85395ab5701f454da5f31167e751f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 0
+  attackSpeed: 0
+  _unit: {fileID: 6465798290088026175}
+  actionStateController: {fileID: 1071765619771846872}
 --- !u!1 &8586570600743916345
 GameObject:
   m_ObjectHideFlags: 0

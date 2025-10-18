@@ -12,7 +12,7 @@ namespace Scenes.Battle.Scripts.Unit.ActionState
     public class ActionStateController : StateBaseController<ActionStateType>
     {
         [SerializeField] private Attacker attacker;
-        [SerializeField] private Mover mover;
+        [SerializeField] private bool canMove;
         
         private Rigidbody2D _rigidbody2D;
         
@@ -22,14 +22,15 @@ namespace Scenes.Battle.Scripts.Unit.ActionState
             
             return new()
             {
+                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, attacker)},
                 { ActionStateType.Move , new MoveState(ActionStateType.Move, gameObject, attacker)},
-                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, gameObject, attacker)}
+                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, gameObject, attacker)},
             };
         }
 
         private void Start()
         {
-            StartStateBase(ActionStateType.Move);
+            StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
         }
     }
 }

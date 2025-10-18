@@ -2,6 +2,7 @@
 {
     public enum ActionStateType
     {
+        Idle,
         Move,
         Attack
     }
