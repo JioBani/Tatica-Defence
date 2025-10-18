@@ -29,18 +29,19 @@ namespace Common.Scripts.StateBase
         public void Enter()
         {
             OnEnter();
-            Event.Invoke(StateBaseEventType.Enter);
+            Event?.Invoke(StateBaseEventType.Enter);
         }
 
         public void Run()
         {
             OnRun();
+            Event?.Invoke(StateBaseEventType.Run);
         }
         
         public void Exit()
         {
             OnExit();
-            Event.Invoke(StateBaseEventType.Exit);
+            Event?.Invoke(StateBaseEventType.Exit);
         }
     }
 }

@@ -26,6 +26,11 @@ namespace Common.Scripts.StateBase
             StateBaseAwake();
         }
 
+        private void Update()
+        {
+            _currentState.Run();
+        }
+
         protected virtual void StateBaseAwake()
         {
             

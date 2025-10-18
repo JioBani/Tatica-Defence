@@ -26,7 +26,7 @@ namespace Scenes.Battle.Scripts.Unit.ActionState.ActionStates
 
         public override void OnRun()
         {
-            Debug.Log("AttackState Run");
+            
         }
 
         public override void OnExit()

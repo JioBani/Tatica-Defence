@@ -7,5 +7,10 @@ namespace Scenes.Battle.Scripts.Unit.Attackable
     {
         [SerializeField] private Unit _unit;
         public Unit Unit => _unit;
+
+        public void Hit(AttackContext context)
+        {
+            
+        }
     }
 }

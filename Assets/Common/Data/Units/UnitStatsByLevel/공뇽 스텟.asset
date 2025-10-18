@@ -32,7 +32,10 @@ MonoBehaviour:
     baseValuesByStar: []
     additionalPerExtraStar: 0
   attackSpeed:
-    baseValuesByStar: []
+    baseValuesByStar:
+    - 1
+    - 1
+    - 1
     additionalPerExtraStar: 0
   attackRange:
     baseValuesByStar:

@@ -3,6 +3,7 @@
     public enum StateBaseEventType
     {
         Enter,
+        Run,
         Exit,
     }
 }
