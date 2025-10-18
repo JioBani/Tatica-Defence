@@ -1,4 +1,4 @@
-﻿namespace Scenes.Battle.Feature.Units.Attackable
+﻿namespace Scenes.Battle.Feature.Units.Attackables
 {
     public class AttackContext
     {

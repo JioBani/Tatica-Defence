@@ -3,7 +3,7 @@ using Scenes.Battle.Feature.Rounds.Unit.HUDs.HealthBar;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Scenes.Battle.Feature.Units.Attackable
+namespace Scenes.Battle.Feature.Units.Attackables
 {
     public class Victim : MonoBehaviour
     {

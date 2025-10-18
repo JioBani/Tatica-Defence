@@ -1,7 +1,7 @@
 ﻿using Common.Scripts.StateBase;
 using Cysharp.Threading.Tasks;
 using Scenes.Battle.Feature.Units.Attackers;
-using Scenes.Battle.Feature.Units.Attackable;
+using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates

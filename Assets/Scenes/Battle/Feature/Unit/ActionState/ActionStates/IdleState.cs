@@ -1,6 +1,6 @@
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Units.Attackers;
-using Scenes.Battle.Feature.Units.Attackable;
+using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates

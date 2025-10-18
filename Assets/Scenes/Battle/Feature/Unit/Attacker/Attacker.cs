@@ -3,7 +3,7 @@ using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.DynamicRepeater;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds.Unit.ActionState;
-using Scenes.Battle.Feature.Units.Attackable;
+using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Units.Attackers
@@ -95,7 +95,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
         {
             if (_victim != null)
             {
-                _victim.Hit(new AttackContext(10));
+                _victim.Hit(new AttackContext(unit.StatSheet.PhysicalAttack.CurrentValue));
             }
             Debug.Log("공격");
         }
