@@ -27,7 +27,7 @@ namespace Scenes.Battle.Scripts.Unit.Attackable
         private void Awake()
         {
             _circleCollider2D = GetComponent<CircleCollider2D>();
-            _unit.onSpawnEvent += SetStats;
+            _unit.OnSpawnEvent += SetStats;
 
             var actionEvent = actionStateController
                 .GetStateBase(ActionStateType.Attack)
@@ -77,7 +77,7 @@ namespace Scenes.Battle.Scripts.Unit.Attackable
 
         private void OnDestroy()
         {
-            _unit.onSpawnEvent -= SetStats;
+            _unit.OnSpawnEvent -= SetStats;
             _attackRepeater.Dispose();
         }
 

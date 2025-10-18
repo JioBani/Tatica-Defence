@@ -15,7 +15,7 @@ namespace Scenes.Battle.Scripts.Unit
         
         private void Awake()
         {
-            unit.onSpawnEvent += SetSpeed;
+            unit.OnSpawnEvent += SetSpeed;
             _rigidbody2D = GetComponent<Rigidbody2D>();
 
             actionStateController.OnConfigureStatesEvent((states) =>
