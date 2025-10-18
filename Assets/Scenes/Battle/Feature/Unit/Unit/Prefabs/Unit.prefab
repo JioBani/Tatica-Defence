@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 0
   attackSpeed: 0
-  _unit: {fileID: 6465798290088026175}
+  unit: {fileID: 6465798290088026175}
   actionStateController: {fileID: 1071765619771846872}
 --- !u!1 &8586570600743916345
 GameObject:

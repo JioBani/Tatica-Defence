@@ -11,12 +11,12 @@ namespace Common.Scripts.StateBase
         private StateBase<T> _currentState;
         
         protected abstract Dictionary<T, StateBase<T>> ConfigureStates();
-        private event Action<Dictionary<T, StateBase<T>>> _onConfigureStates;
+        public event Action<Dictionary<T, StateBase<T>>> OnConfigureStatesEvent;
             
         private void Awake()
         {
             _stateBases = ConfigureStates();
-            _onConfigureStates?.Invoke(_stateBases);
+            OnConfigureStatesEvent?.Invoke(_stateBases);
             
             foreach (var pair in _stateBases)
             {
@@ -34,11 +34,6 @@ namespace Common.Scripts.StateBase
         protected virtual void StateBaseAwake()
         {
             
-        }
-        
-        public void OnConfigureStatesEvent(Action<Dictionary<T, StateBase<T>>> handler)
-        {
-            _onConfigureStates += handler;
         }
         
         public void StartStateBase(T type)

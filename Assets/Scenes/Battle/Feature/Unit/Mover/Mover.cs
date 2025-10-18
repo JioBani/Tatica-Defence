@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds.Unit.ActionState;
@@ -17,14 +19,14 @@ namespace Scenes.Battle.Feature.Rounds.Unit
         {
             unit.OnSpawnEvent += SetSpeed;
             _rigidbody2D = GetComponent<Rigidbody2D>();
+        }
 
-            actionStateController.OnConfigureStatesEvent((states) =>
-            {
-                var stateBaseEvent = states[ActionStateType.Move].Event;
-                
-                stateBaseEvent.Add(StateBaseEventType.Enter, (_,_) => Move());
-                stateBaseEvent.Add(StateBaseEventType.Exit, (_,_) => Stop());
-            });
+        private void Start()
+        {
+            var stateBaseEvent = actionStateController.GetStateBase(ActionStateType.Move).Event;
+            
+            stateBaseEvent.Add(StateBaseEventType.Enter, (_,_) => Move());
+            stateBaseEvent.Add(StateBaseEventType.Exit, (_,_) => Stop());
         }
 
         private void SetSpeed(Feature.Units.Unit unit)
@@ -39,6 +41,7 @@ namespace Scenes.Battle.Feature.Rounds.Unit
 
         private void Stop()
         {
+            Debug.Log("gd");
             _rigidbody2D.linearVelocity = Vector2.zero;
         }
     }
