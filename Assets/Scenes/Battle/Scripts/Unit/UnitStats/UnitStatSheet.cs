@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Common.Data.Units.UnitStatsByLevel;
 
 // 별 레벨에 따라 다시 계산 필요한 경우 설계가 변경되는지 확인 필요
@@ -13,51 +14,32 @@ namespace Scenes.Battle.Scripts.Unit.UnitStats
     public class UnitStatSheet
     {
         // 원본 데이터(별 단계별 기본값)
-        private readonly UnitStatsByLevelData _data;
+        private UnitStatsByLevelData _data;
 
         // 개별 스탯(옵저버블)
-        public UnitStats<float> MaxHealth;
-        public UnitStats<float> PhysicalAttack;
-        public UnitStats<float> MagicAttack;
-        public UnitStats<float> PhysicalDefense;
-        public UnitStats<float> MagicDefense;
-        public UnitStats<float> AttackSpeed;
-        public UnitStats<float> AttackRange;
-        public UnitStats<float> MoveSpeed;
+        public readonly UnitStats<float> MaxHealth = new();
+        public readonly UnitStats<float> Health = new();
+        public readonly UnitStats<float> PhysicalAttack = new();
+        public readonly UnitStats<float> MagicAttack = new();
+        public readonly UnitStats<float> PhysicalDefense = new();
+        public readonly UnitStats<float> MagicDefense = new();
+        public readonly UnitStats<float> AttackSpeed = new();
+        public readonly UnitStats<float> AttackRange = new();
+        public readonly UnitStats<float> MoveSpeed = new();
 
-        public UnitStats<float> CriticalChance;
-        public UnitStats<float> CriticalDamageMultiplier;
-        public UnitStats<float> CooldownReduction;
-        public UnitStats<float> StatusResistance;
-        public UnitStats<float> DamageDealtIncrease;
+        public readonly UnitStats<float> CriticalChance = new();
+        public readonly UnitStats<float> CriticalDamageMultiplier = new();
+        public readonly UnitStats<float> CooldownReduction = new();
+        public readonly UnitStats<float> StatusResistance = new();
+        public readonly UnitStats<float> DamageDealtIncrease = new();
 
-        // 생성자: 기본 1성으로 초기화
-        public UnitStatSheet(UnitStatsByLevelData data, int star = 1)
+        public void Init(UnitStatsByLevelData data, int star = 1)
         {
             _data = data;
-            ApplyStar(star);
-        }
-
-        /// <summary>
-        /// 별(스타) 단계에 맞춰 모든 스탯을 재구성.
-        /// UnitStats<T>.OriginalValue가 불변이므로, 인스턴스를 새로 만들어 교체한다.
-        /// </summary>
-        public void ApplyStar(int star)
-        {
-            MaxHealth               = new UnitStats<float>(_data.MaxHealth.GetValue(star));
-            PhysicalAttack          = new UnitStats<float>(_data.PhysicalAttack.GetValue(star));
-            MagicAttack             = new UnitStats<float>(_data.MagicAttack.GetValue(star));
-            PhysicalDefense         = new UnitStats<float>(_data.PhysicalDefense.GetValue(star));
-            MagicDefense            = new UnitStats<float>(_data.MagicDefense.GetValue(star));
-            AttackSpeed             = new UnitStats<float>(_data.AttackSpeed.GetValue(star));
-            AttackRange             = new UnitStats<float>(_data.AttackRange.GetValue(star));
-            MoveSpeed               = new UnitStats<float>(_data.MoveSpeed.GetValue(star));
-
-            CriticalChance          = new UnitStats<float>(_data.CriticalChance.GetValue(star));
-            CriticalDamageMultiplier= new UnitStats<float>(_data.CriticalDamageMultiplier.GetValue(star));
-            CooldownReduction       = new UnitStats<float>(_data.CooldownReduction.GetValue(star));
-            StatusResistance        = new UnitStats<float>(_data.StatusResistance.GetValue(star));
-            DamageDealtIncrease     = new UnitStats<float>(_data.DamageDealtIncrease.GetValue(star));
+            foreach (var stat in Enumerate())
+            {
+                stat.stat.SetInitValue(data.GetStat(stat.kind , 0));
+            }
         }
 
         /// <summary>
@@ -87,6 +69,7 @@ namespace Scenes.Battle.Scripts.Unit.UnitStats
         public IEnumerable<(UnitStatKind kind, UnitStats<float> stat)> Enumerate()
         {
             yield return (UnitStatKind.MaxHealth,                MaxHealth);
+            yield return (UnitStatKind.MaxHealth,                Health);
             yield return (UnitStatKind.PhysicalAttack,           PhysicalAttack);
             yield return (UnitStatKind.MagicAttack,              MagicAttack);
             yield return (UnitStatKind.PhysicalDefense,          PhysicalDefense);

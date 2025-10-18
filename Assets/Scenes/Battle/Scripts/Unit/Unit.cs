@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Common.Scripts.Enums;
+using Scenes.Battle.Scripts.Unit.HUDs.HealthBar;
 using Scenes.Battle.Scripts.Unit.UnitStats;
 using Scenes.Battle.Scripts.WaitingArea;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Scenes.Battle.Scripts.Unit
     // TODO: 기능이 많아지는 경우 분리
     public class Unit : MonoBehaviour
     {
+        [SerializeField] private HealthBar healthBar;
+        
         private Draggable2D _draggable;
         // private UnitLoadOutData _unitLoadOutData;
         // public UnitLoadOutData UnitLoadOutData => _unitLoadOutData;
@@ -20,13 +23,18 @@ namespace Scenes.Battle.Scripts.Unit
         
         // TODO: unit load out data 로 이동
         public Fraction fraction;
-        public UnitStatSheet StatSheet;
+        public readonly UnitStatSheet StatSheet = new();
 
         public Action<Unit> OnSpawnEvent;
         
         private void Awake()
         {
             _draggable = GetComponent<Draggable2D>();
+
+            StatSheet.Health.OnChange += (value) =>
+            {
+                healthBar.Display(value / StatSheet.MaxHealth.CurrentValue);
+            };
         }
 
         public void MoveToWaitingArea()
@@ -53,7 +61,7 @@ namespace Scenes.Battle.Scripts.Unit
         {
             //_unitLoadOutData = unitLoadOutData;
             UnitLoadOutData = unitLoadOutData;
-            StatSheet = new UnitStatSheet(unitLoadOutData.Stats);
+            StatSheet.Init(unitLoadOutData.Stats);
             //TEMP
             GetComponent<SpriteRenderer>().sprite = unitLoadOutData.Unit.Icon;
             

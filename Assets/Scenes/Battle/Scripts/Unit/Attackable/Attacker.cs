@@ -93,6 +93,10 @@ namespace Scenes.Battle.Scripts.Unit.Attackable
 
         private void Attack()
         {
+            if (_victim != null)
+            {
+                _victim.Hit(new AttackContext(10));
+            }
             Debug.Log("공격");
         }
     }

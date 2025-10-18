@@ -25,9 +25,9 @@ namespace Scenes.Battle.Scripts.Unit.UnitStats
             }
         }
         
-        public T OriginalValue { get; }
+        public T OriginalValue { get; private set; }
 
-        public UnitStats(T value)
+        public void SetInitValue(T value)
         {
             OriginalValue = value;
             CurrentValue = value;
