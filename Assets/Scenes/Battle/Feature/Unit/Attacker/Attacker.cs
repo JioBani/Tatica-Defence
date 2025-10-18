@@ -6,15 +6,15 @@ using Scenes.Battle.Feature.Rounds.Unit.ActionState;
 using Scenes.Battle.Feature.Units.Attackable;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Units.Attacker
+namespace Scenes.Battle.Feature.Units.Attackers
 {
     public class Attacker : MonoBehaviour
     {
         [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
-        [SerializeField] private Unit _unit;
+        [SerializeField] private Unit unit;
         [SerializeField] private ActionStateController actionStateController;
-        public Unit Unit => _unit;
+        public Unit Unit => unit;
         
         private CircleCollider2D _circleCollider2D;
         private Victim _victim;
@@ -27,7 +27,7 @@ namespace Scenes.Battle.Feature.Units.Attacker
         private void Awake()
         {
             _circleCollider2D = GetComponent<CircleCollider2D>();
-            _unit.OnSpawnEvent += SetStats;
+            unit.OnSpawnEvent += SetStats;
 
             var actionEvent = actionStateController
                 .GetStateBase(ActionStateType.Attack)
@@ -77,7 +77,7 @@ namespace Scenes.Battle.Feature.Units.Attacker
 
         private void OnDestroy()
         {
-            _unit.OnSpawnEvent -= SetStats;
+            unit.OnSpawnEvent -= SetStats;
             _attackRepeater.Dispose();
         }
 
