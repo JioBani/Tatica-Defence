@@ -3,6 +3,7 @@ using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.DynamicRepeater;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds.Unit.ActionState;
+using Scenes.Battle.Feature.Unit.Attackers.AttackContexts;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
             
             _attackRepeater?.Dispose();
             _attackRepeater = new DynamicRepeater(
-                intervalNow: () => TimeSpan.FromSeconds(attackSpeed), 
+                intervalNow: () => TimeSpan.FromSeconds(1 / attackSpeed), 
                 job : async () => Attack()
             );
         }
@@ -95,9 +96,14 @@ namespace Scenes.Battle.Feature.Units.Attackers
         {
             if (_victim != null)
             {
-                _victim.Hit(new AttackContext(unit.StatSheet.PhysicalAttack.CurrentValue));
+                var context = AttackContextFactory.Instance.GenerateRanged(
+                    unit.StatSheet.PhysicalAttack.CurrentValue,
+                    this,
+                    _victim
+                );
+                
+                context.TryAttack();
             }
-            Debug.Log("공격");
         }
     }
 }

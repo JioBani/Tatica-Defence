@@ -12,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Effects
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Unit
     uniqueID: 2279411183
+    locked: 0
+  - name: Effect
+    uniqueID: 3109098947
     locked: 0
   - name: Gameobject UI
     uniqueID: 1049736631

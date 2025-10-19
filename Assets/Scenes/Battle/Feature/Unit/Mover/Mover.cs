@@ -41,7 +41,6 @@ namespace Scenes.Battle.Feature.Rounds.Unit
 
         private void Stop()
         {
-            Debug.Log("gd");
             _rigidbody2D.linearVelocity = Vector2.zero;
         }
     }

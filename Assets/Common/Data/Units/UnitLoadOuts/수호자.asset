@@ -15,4 +15,4 @@ MonoBehaviour:
   id: 1
   unit: {fileID: 11400000, guid: da8761c78a447da4a8f6d692360de66b, type: 2}
   skill: {fileID: 11400000, guid: fe77c4cf241c97646a93f81ff353165b, type: 2}
-  stats: {fileID: 11400000, guid: 6e2b5155d1596544eb313d297b8642f5, type: 2}
+  stats: {fileID: 11400000, guid: a89da4d03198a174fb0c9a549f876346, type: 2}

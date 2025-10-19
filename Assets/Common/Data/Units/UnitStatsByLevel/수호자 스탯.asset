@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4372d9410aee42e3a2f8898423dee77f, type: 3}
-  m_Name: "\uACF5\uB1FD \uC2A4\uD15F"
+  m_Name: "\uC218\uD638\uC790 \uC2A4\uD0EF"
   m_EditorClassIdentifier: 
   maxHealth:
     baseValuesByStar:
@@ -37,9 +37,9 @@ MonoBehaviour:
     additionalPerExtraStar: 0
   attackSpeed:
     baseValuesByStar:
-    - 1
-    - 1
-    - 1
+    - 3
+    - 3
+    - 3
     additionalPerExtraStar: 0
   attackRange:
     baseValuesByStar:
