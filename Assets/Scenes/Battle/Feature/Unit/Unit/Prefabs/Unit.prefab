@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 2705233270346214916}
+  actionStateController: {fileID: 1071765619771846872}
   UnitLoadOutData: {fileID: 0}
   fraction: 0
 --- !u!114 &1071765619771846872
@@ -229,6 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e11ac455b242f49d12f3aed42e7b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  self: {fileID: 6465798290088026175}
   attacker: {fileID: 5193920713948900330}
   canMove: 0
 --- !u!1 &7653174561868628949

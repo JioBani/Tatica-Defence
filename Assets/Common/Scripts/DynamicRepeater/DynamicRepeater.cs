@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Common.Scripts.DynamicRepeater
 {
@@ -19,15 +21,19 @@ namespace Common.Scripts.DynamicRepeater
             _intervalNow = intervalNow ?? throw new ArgumentNullException(nameof(intervalNow));
             _job = job ?? throw new ArgumentNullException(nameof(job));
             _stopCts = externalToken.CanBeCanceled
-                ? CancellationTokenSource.CreateLinkedTokenSource(externalToken)
+                ? CancellationTokenSource.CreateLinkedTokenSource(default)
                 : new CancellationTokenSource();
         }
 
-        public void Start()
+        public void Start(CancellationToken externalToken = default)
         {
+            Debug.Log($"is running :  {_running}");
             if (_running) return;
             _running = true;
-            RunAsync(_stopCts.Token).Forget(); // fire & forget
+            _stopCts = externalToken.CanBeCanceled
+                ? CancellationTokenSource.CreateLinkedTokenSource(externalToken)
+                : new CancellationTokenSource();
+            RunAsync(_stopCts.Token).Forget();
         }
 
         public void Stop()
@@ -46,6 +52,7 @@ namespace Common.Scripts.DynamicRepeater
 
         private async UniTaskVoid RunAsync(CancellationToken stopToken)
         {
+            Debug.Log("RunAsync");
             try
             {
                 while (!stopToken.IsCancellationRequested)

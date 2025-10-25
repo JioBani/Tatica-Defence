@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.StateBase;
-using Scenes.Battle.Feature.Rounds.Unit.ActionState;
+using Scenes.Battle.Feature.Units.ActionStates;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit
+namespace Scenes.Battle.Feature.Units
 {
     public class Mover : MonoBehaviour
     {

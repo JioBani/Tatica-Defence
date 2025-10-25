@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds
+namespace Scenes.Battle.Feature.Rounds.Phases
 {
     public enum PhaseEventType
     {

@@ -1,7 +1,7 @@
 using Common.Scripts.SceneSingleton;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.ObjectPool
+namespace Scenes.Battle.Feature.ObjectPool
 {
     public class ObjectPoolingReferences : SceneSingleton<ObjectPoolingReferences>
     {

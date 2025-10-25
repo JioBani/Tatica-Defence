@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Sell
+namespace Scenes.Battle.Feature.Sells
 {
     public class AggressorSideSell : MonoBehaviour
     {

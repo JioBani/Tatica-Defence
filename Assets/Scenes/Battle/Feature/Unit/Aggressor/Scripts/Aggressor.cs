@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Units.Aggressor.Scripts
+namespace Scenes.Battle.Feature.Aggressors
 {
     public class Aggressor : MonoBehaviour
     {

@@ -9,6 +9,9 @@ namespace Common.Scripts.StateBase
         protected Dictionary<T, StateBase<T>> _stateBases;
         
         private StateBase<T> _currentState;
+        public StateBase<T> CurrentState => _currentState;
+        
+        [SerializeField] private T showState; // 인스펙터 노출용
         
         protected abstract Dictionary<T, StateBase<T>> ConfigureStates();
         public event Action<Dictionary<T, StateBase<T>>> OnConfigureStatesEvent;
@@ -28,7 +31,15 @@ namespace Common.Scripts.StateBase
 
         private void Update()
         {
+            showState = _currentState.StateType;
             _currentState.Run();
+            
+            T nextState = GlobalTransition(_currentState.StateType);
+
+            if (!nextState.Equals(_currentState.StateType))
+            {
+                _currentState.Exit(nextState);
+            }
         }
 
         protected virtual void StateBaseAwake()
@@ -57,6 +68,19 @@ namespace Common.Scripts.StateBase
         public StateBase<T> GetStateBase(T type)
         {
             return _stateBases[type];
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var pair in _stateBases)
+            {
+                pair.Value.Dispose();
+            }
+        }
+
+        protected virtual T GlobalTransition(T currentStateBase)
+        {
+            return currentStateBase;
         }
     }
 }

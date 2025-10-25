@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Common.Scripts.StateBase
 {
@@ -8,6 +9,8 @@ namespace Common.Scripts.StateBase
         private readonly T _stateBaseType;
 
         private readonly Dictionary<StateBaseEventType, Action<T, StateBaseEventType>> _events;
+        
+        public Dictionary<StateBaseEventType, Action<T, StateBaseEventType>> Events => _events;
         
         private static readonly StateBaseEventType[] AllEventTypes =
             (StateBaseEventType[])Enum.GetValues(typeof(StateBaseEventType));

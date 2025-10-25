@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds
+namespace Scenes.Battle.Feature.Rounds.Phases
 {
     public abstract class Phase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Scenes.Battle.Feature.Rounds
+namespace Scenes.Battle.Feature.Rounds.Phases
 {
     public class PhaseEvent
     {

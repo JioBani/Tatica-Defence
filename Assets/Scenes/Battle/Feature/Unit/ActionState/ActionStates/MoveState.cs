@@ -1,14 +1,15 @@
 ﻿using Common.Scripts.StateBase;
+using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
+namespace Scenes.Battle.Feature.Units.ActionStates
 {
     public class MoveState : StateBase<ActionStateType>
     {
         private GameObject _self;
-        private Attacker _attacker;
+        private readonly Attacker _attacker;
         
         public MoveState(
             ActionStateType type, 
@@ -18,17 +19,18 @@ namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
         {
             _self = self;
             _attacker = attacker;
-            _attacker.OnTargetEnter += DoAttack;
         }
 
         public override void OnEnter()
         {
-            Debug.Log("MoveState Enter");
         }
 
         public override void OnRun()
         {
-            
+            if (_attacker.Victim)
+            {
+                Exit(ActionStateType.Attack);
+            }
         }
 
         public override void OnExit()
@@ -36,15 +38,14 @@ namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
             
         }
 
-        public override ActionStateType GetNextStateBaseType()
+        public override void Dispose()
         {
-            Debug.Log("GetNextStateBase");
-            return ActionStateType.Attack;
+           //_attacker.OnTargetEnter -= DoAttack;
         }
 
         private void DoAttack(Victim victim)
         {
-            Exit();
+            Exit(ActionStateType.Attack);
         }
     }
 }

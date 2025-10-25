@@ -1,4 +1,4 @@
-﻿namespace Scenes.Battle.Feature.Rounds
+﻿namespace Scenes.Battle.Feature.Rounds.Phases
 {
     public enum PhaseType
     {

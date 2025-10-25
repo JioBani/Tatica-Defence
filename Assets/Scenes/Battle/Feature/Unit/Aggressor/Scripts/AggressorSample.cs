@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.Aggressor
+namespace Scenes.Battle.Feature.Aggressors
 {
     public class AggressorSample : MonoBehaviour
     {

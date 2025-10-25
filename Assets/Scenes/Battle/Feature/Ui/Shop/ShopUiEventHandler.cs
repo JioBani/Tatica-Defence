@@ -1,6 +1,6 @@
 using Common.Data.Units.UnitLoadOuts;
-using Scenes.Battle.Feature.Rounds.WaitingArea;
 using Scenes.Battle.Feature.Units;
+using Scenes.Battle.Feature.WaitingAreas;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Ui.Shop

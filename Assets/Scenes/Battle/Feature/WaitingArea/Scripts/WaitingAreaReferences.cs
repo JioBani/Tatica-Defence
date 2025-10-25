@@ -4,7 +4,7 @@ using Common.Scripts.SceneSingleton;
 using Common.Scripts.TransformChildrenIterator;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.WaitingArea
+namespace Scenes.Battle.Feature.WaitingAreas
 {
     public class WaitingAreaReferences : SceneSingleton<WaitingAreaReferences>
     {
