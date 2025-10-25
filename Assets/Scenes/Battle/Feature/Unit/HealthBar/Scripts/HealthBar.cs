@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.HUDs.HealthBar
+namespace Scenes.Battle.Feature.Units.HealthBars
 {
     public class HealthBar : MonoBehaviour
     {

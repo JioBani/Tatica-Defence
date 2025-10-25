@@ -1,7 +1,3 @@
-using Common.Data.Rounds;
-using Scenes.Battle.Feature.Rounds.Unit;
-using UnityEngine;
-
 namespace Scenes.Battle.Feature.Rounds.Phases
 {
     public class ReadyPhase : Phase

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.UnitStats
+namespace Scenes.Battle.Feature.Units.UnitStats
 {
     public class UnitStats<T>
     {

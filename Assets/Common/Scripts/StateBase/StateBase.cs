@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Common.Scripts.StateBase
 {
@@ -8,11 +9,13 @@ namespace Common.Scripts.StateBase
      * StateBase 에 따라 동작해야하는 것은 event 를 통해 StateBase 바깥에서 작성되어야 합니다.
      */
     
-    public abstract class StateBase<T> where T : Enum
+    public abstract class StateBase<T> : IDisposable where T : Enum
     {
         public T StateType { get; }
         
         public StateBaseEvent<T> Event;
+        
+        private T _nextStateBaseType;
         
         public StateBase(T type)
         {
@@ -23,9 +26,12 @@ namespace Common.Scripts.StateBase
         public abstract void OnEnter();
         public abstract void OnRun();
         public abstract void OnExit();
-        
-        public abstract T GetNextStateBaseType();
-        
+
+        public T GetNextStateBaseType()
+        {
+            return _nextStateBaseType;   
+        }
+
         public void Enter()
         {
             OnEnter();
@@ -38,10 +44,16 @@ namespace Common.Scripts.StateBase
             Event?.Invoke(StateBaseEventType.Run);
         }
         
-        public void Exit()
+        public void Exit(T nextStateBaseType)
         {
+            
+            _nextStateBaseType = nextStateBaseType;
+            
             OnExit();
+            
             Event?.Invoke(StateBaseEventType.Exit);
         }
+
+        public abstract void Dispose();
     }
 }

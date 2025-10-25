@@ -2,7 +2,7 @@ using System;
 using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.DynamicRepeater;
 using Common.Scripts.StateBase;
-using Scenes.Battle.Feature.Rounds.Unit.ActionState;
+using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Unit.Attackers.AttackContexts;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
@@ -19,6 +19,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
         
         private CircleCollider2D _circleCollider2D;
         private Victim _victim;
+        public Victim Victim => _victim;
 
         public Action<Victim> OnTargetEnter;
         public Action<Victim> OnTargetExit;
@@ -36,6 +37,14 @@ namespace Scenes.Battle.Feature.Units.Attackers
             
             actionEvent.Add(StateBaseEventType.Enter, (_,_) => StartRepeat());
             actionEvent.Add(StateBaseEventType.Exit, (_,_) => EndAttackRepeat());
+        }
+
+        private void Update()
+        {
+            if (_victim && _victim.Unit.ActionStateController.CurrentState.StateType == ActionStateType.Downed)
+            {
+                ReleaseVictim();
+            }
         }
 
         //TODO: 동적 스탯 변경을 적용하기
@@ -57,10 +66,12 @@ namespace Scenes.Battle.Feature.Units.Attackers
             {
                 Victim newVictim = other.GetComponent<Victim>();
 
-                if (newVictim.Unit.fraction != Unit.fraction)
+                if (
+                    newVictim.Unit.fraction != Unit.fraction && 
+                    newVictim.Unit.ActionStateController.CurrentState.StateType != ActionStateType.Downed
+                )
                 {
                     _victim = newVictim;
-                    
                     OnTargetEnter?.Invoke(_victim);
                 }
             }
@@ -68,11 +79,13 @@ namespace Scenes.Battle.Feature.Units.Attackers
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (_victim != null && other.CompareTag("Victim") && _victim == other.GetComponent<Victim>())
+            if (
+                _victim != null && 
+                other.CompareTag("Victim") && 
+                _victim == other.GetComponent<Victim>()
+            )
             {
-                Victim exitVictim = _victim;
-                _victim = null;
-                OnTargetExit.Invoke(exitVictim);
+                ReleaseVictim();
             }
         }
 
@@ -84,6 +97,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
 
         private void StartRepeat()
         {
+            Debug.Log("start repeat");
             _attackRepeater.Start();
         }
 
@@ -104,6 +118,13 @@ namespace Scenes.Battle.Feature.Units.Attackers
                 
                 context.TryAttack();
             }
+        }
+
+        private void ReleaseVictim()
+        {
+            Victim exitVictim = _victim;
+            _victim = null;
+            OnTargetExit?.Invoke(exitVictim);
         }
     }
 }

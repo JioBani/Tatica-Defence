@@ -1,10 +1,11 @@
 ﻿using Common.Scripts.StateBase;
 using Cysharp.Threading.Tasks;
+using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
+namespace Scenes.Battle.Feature.Units.ActionStates
 {
     public class AttackState : StateBase<ActionStateType>
     {
@@ -17,33 +18,42 @@ namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
         ) : base(type)
         {
             _attacker = attacker;
-            _attacker.OnTargetExit += DoMove;
         }
 
         public override void OnEnter()
         {
             Debug.Log("AttackState Enter");
+            Debug.Log($"{Event.Events[StateBaseEventType.Enter].Method.Name}");
         }
 
         public override void OnRun()
         {
+            //TODO: 다운 조건을 더 unit 으로 이동 할 필요가 있을듯
+            if (
+                !_attacker.Victim ||
+                _attacker.Victim.Unit.ActionStateController.CurrentState.StateType == ActionStateType.Downed
+            )
+            {
+                Exit(ActionStateType.Move);
+            }
             
+            // Debug.Log($"{Event.Events[StateBaseEventType.Enter].Method.Name}");
+            // Debug.Log($"{Event.Events[StateBaseEventType.Exit].Method.Name}");
         }
 
         public override void OnExit()
         {
             Debug.Log("AttackState Exit");
         }
-
-        public override ActionStateType GetNextStateBaseType()
+        
+        public override void Dispose()
         {
-            Debug.Log("GetNextStateBase");
-            return ActionStateType.Attack;
+            
         }
 
         private void DoMove(Victim victim)
         {
-            Exit();
+            Exit(ActionStateType.Move);
         }
     }
 }

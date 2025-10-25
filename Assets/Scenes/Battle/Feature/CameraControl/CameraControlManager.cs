@@ -1,8 +1,9 @@
 using DG.Tweening;
 using Scenes.Battle.Feature.Rounds;
+using Scenes.Battle.Feature.Rounds.Phases;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.CameraControl
+namespace Scenes.Battle.Feature.CameraControl
 {
     public class CameraControlManager : MonoBehaviour
     {

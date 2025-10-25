@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using Common.Data.Rounds;
-using Scenes.Battle.Feature.Rounds.CameraControl;
-using Scenes.Battle.Feature.Rounds;
+using Scenes.Battle.Feature.CameraControl;
+using Scenes.Battle.Feature.Rounds.Phases;
 using TMPro;
 using UnityEngine;
 
@@ -70,7 +69,6 @@ namespace Scenes.Battle.Feature.Rounds.Ui
             
             foreach (var pair in enemyInfos)
             {
-                Debug.Log(pair.Key + " : " + pair.Value);
                 roundInfoText.text += $"{pair.Key} x {pair.Value}, ";
             }
         }

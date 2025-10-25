@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Common.Data.Units.UnitStatsByLevel;
 
 // 별 레벨에 따라 다시 계산 필요한 경우 설계가 변경되는지 확인 필요
-namespace Scenes.Battle.Feature.Rounds.Unit.UnitStats
+namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
 {
     /// <summary>
     /// 유닛의 런타임 스탯 묶음(옵저버블).

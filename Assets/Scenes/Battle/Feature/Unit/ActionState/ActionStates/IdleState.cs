@@ -3,16 +3,21 @@ using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
+namespace Scenes.Battle.Feature.Units.ActionStates
 {
     public class IdleState : StateBase<ActionStateType>
     {
+        private Unit _self;
+        private Attacker _attacker;
+        
         public IdleState(
             ActionStateType type,
+            Unit self,
             Attacker attacker
         ) : base(type)
         {
-            attacker.OnTargetEnter += DoAttack;
+            _self = self;
+            _attacker = attacker;
         }
 
         public override void OnEnter()
@@ -22,7 +27,10 @@ namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
 
         public override void OnRun()
         {
-            
+            if (_attacker.Victim)
+            {
+                Exit(ActionStateType.Attack);
+            }
         }
 
         public override void OnExit()
@@ -30,14 +38,14 @@ namespace Scenes.Battle.Feature.Rounds.Unit.ActionState.ActionStates
             
         }
 
-        public override ActionStateType GetNextStateBaseType()
+        public override void Dispose()
         {
-            return ActionStateType.Attack;
+            
         }
         
         private void DoAttack(Victim victim)
         {
-            Exit();
+            Exit(ActionStateType.Attack);
         }
     }
 }

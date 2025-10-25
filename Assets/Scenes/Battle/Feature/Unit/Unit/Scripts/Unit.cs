@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Common.Scripts.Enums;
-using Scenes.Battle.Feature.Rounds.Unit.HUDs.HealthBar;
-using Scenes.Battle.Feature.Rounds.Unit.UnitStats;
-using Scenes.Battle.Feature.Rounds.WaitingArea;
+using Scenes.Battle.Feature.Units.ActionStates;
+using Scenes.Battle.Feature.Units.HealthBars;
+using Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets;
+using Scenes.Battle.Feature.WaitingAreas;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Units
@@ -14,10 +15,10 @@ namespace Scenes.Battle.Feature.Units
     public class Unit : MonoBehaviour
     {
         [SerializeField] private HealthBar healthBar;
+        [SerializeField] private ActionStateController actionStateController;
+        public ActionStateController ActionStateController => actionStateController;
         
         private Draggable2D _draggable;
-        // private UnitLoadOutData _unitLoadOutData;
-        // public UnitLoadOutData UnitLoadOutData => _unitLoadOutData;
 
         public UnitLoadOutData UnitLoadOutData;
         
