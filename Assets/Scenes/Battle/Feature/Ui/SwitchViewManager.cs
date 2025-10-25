@@ -69,7 +69,6 @@ namespace Scenes.Battle.Feature.Rounds.Ui
             
             foreach (var pair in enemyInfos)
             {
-                Debug.Log(pair.Key + " : " + pair.Value);
                 roundInfoText.text += $"{pair.Key} x {pair.Value}, ";
             }
         }
