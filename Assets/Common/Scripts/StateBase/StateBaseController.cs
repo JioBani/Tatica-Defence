@@ -10,6 +10,7 @@ namespace Common.Scripts.StateBase
         
         private StateBase<T> _currentState;
         public StateBase<T> CurrentState => _currentState;
+        public T CurrentStateType => _currentState.StateType;
         
         [SerializeField] private T showState; // 인스펙터 노출용
         

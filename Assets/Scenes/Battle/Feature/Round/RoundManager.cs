@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
+using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds.Phases;
+using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds
 {
+    // TODO: StateBaseController 상속으로 변경
     public class RoundManager : SceneSingleton<RoundManager>
     {
-        
         public int RoundIndex { get; private set; } = 0;
         private Phase _currentPhase;
+        [SerializeField] private RoundAggressorManager roundAggressorManager;
 
         private readonly Dictionary<PhaseType, Phase> _phases = new()
         {
@@ -42,6 +45,15 @@ namespace Scenes.Battle.Feature.Rounds
             if (_currentPhase is not null)
             {
                 _currentPhase.Run();
+                
+                // 현재 페이즈가 Combat 이고, 모든 침략자가 소환 되고 처치 되었으면 전투 페이즈 종료
+                if (
+                    _currentPhase.PhaseType == PhaseType.Combat && 
+                    roundAggressorManager.IsAllAggressorsCompleted()
+                    )
+                {
+                    _currentPhase.Exit();
+                }
             }
         }
         

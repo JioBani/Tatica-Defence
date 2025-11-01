@@ -21,8 +21,8 @@ MonoBehaviour:
     additionalPerExtraStar: 0
   physicalAttack:
     baseValuesByStar:
-    - 100
-    - 100
+    - 10
+    - 10
     - 20
     - 40
     additionalPerExtraStar: 0
@@ -43,9 +43,9 @@ MonoBehaviour:
     additionalPerExtraStar: 0
   attackRange:
     baseValuesByStar:
-    - 2
-    - 3
-    - 4
+    - 1
+    - 1
+    - 1
     additionalPerExtraStar: 0
   moveSpeed:
     baseValuesByStar:

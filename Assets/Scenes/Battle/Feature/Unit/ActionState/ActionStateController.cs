@@ -42,8 +42,8 @@ namespace Scenes.Battle.Feature.Units.ActionStates
 
         private void Start()
         {
-            //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
-            StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
+            StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
+            //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
         }
     }
 }
