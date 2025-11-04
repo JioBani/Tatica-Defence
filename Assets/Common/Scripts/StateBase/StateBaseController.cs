@@ -14,19 +14,14 @@ namespace Common.Scripts.StateBase
         
         [SerializeField] private T showState; // 인스펙터 노출용
         
+        
         protected abstract Dictionary<T, StateBase<T>> ConfigureStates();
         public event Action<Dictionary<T, StateBase<T>>> OnConfigureStatesEvent;
             
-        private void Awake()
+        protected virtual void Awake()
         {
             _stateBases = ConfigureStates();
             OnConfigureStatesEvent?.Invoke(_stateBases);
-            
-            foreach (var pair in _stateBases)
-            {
-                pair.Value.Event.Add(StateBaseEventType.Exit, (_,_) => StartNextState());
-            }
-
             StateBaseAwake();
         }
 
@@ -54,13 +49,6 @@ namespace Common.Scripts.StateBase
             _currentState.Enter();
         }
 
-        private void StartNextState()
-        {
-            _currentState = _stateBases[_currentState.GetNextStateBaseType()];
-            
-            _currentState.Enter();
-        }
-
         public StateBase<T> GetCurrentState()
         {
             return _currentState;
@@ -79,6 +67,21 @@ namespace Common.Scripts.StateBase
             }
         }
 
+        public void Exit(T nextState)
+        {
+            _currentState = _stateBases[nextState];
+            
+            Debug.Log($"exit : {nextState}");
+            
+            _currentState.Enter();
+        }
+
+        /// <summary>
+        /// 해당 StateBaseController에서 관리되는 모든 StateBase 에 대해서
+        /// 공통적인 상태 변화를 지시
+        /// </summary>
+        /// <param name="currentStateBase"></param>
+        /// <returns></returns>
         protected virtual T GlobalTransition(T currentStateBase)
         {
             return currentStateBase;

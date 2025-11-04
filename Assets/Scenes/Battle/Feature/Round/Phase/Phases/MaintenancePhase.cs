@@ -1,13 +1,18 @@
 using Common.Data.Rounds;
+using Common.Scripts.StateBase;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Phases
 {
-    public class MaintenancePhase : Phase
+    public class MaintenancePhase : StateBase<PhaseType>
     {
-        public MaintenancePhase() : base(PhaseType.Maintenance)
+        public MaintenancePhase(
+            StateBaseController<PhaseType> controller
+        ) : base(
+            PhaseType.Maintenance,
+            controller
+        )
         {
-            
         }
 
         public override void OnEnter()
@@ -25,17 +30,9 @@ namespace Scenes.Battle.Feature.Rounds.Phases
             Debug.Log("Maintenance Phase OnExit");
         }
 
-        public override PhaseType GetNextPhase()
+        public override void Dispose()
         {
-            return PhaseType.Ready;
-        }
-
-        /// <summary>
-        /// 전투 준비 완료
-        /// </summary>
-        public void SetReady()
-        {
-            Exit();
+            
         }
     }
 }

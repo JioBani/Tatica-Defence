@@ -22,11 +22,11 @@ namespace Scenes.Battle.Feature.Units.ActionStates
             
             return new()
             {
-                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, self, attacker)},
-                { ActionStateType.Move , new MoveState(ActionStateType.Move, gameObject, attacker)},
-                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, gameObject, attacker)},
-                { ActionStateType.Downed , new DownedState(ActionStateType.Downed)},
-                { ActionStateType.Freeze , new FreezeState(ActionStateType.Freeze)}
+                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, this, self, attacker)},
+                { ActionStateType.Move , new MoveState(ActionStateType.Move, this, gameObject, attacker)},
+                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, this, gameObject, attacker)},
+                { ActionStateType.Downed , new DownedState(ActionStateType.Downed, this)},
+                { ActionStateType.Freeze , new FreezeState(ActionStateType.Freeze, this)}
             };
         }
 

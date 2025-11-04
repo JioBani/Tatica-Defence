@@ -8,85 +8,63 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds
 {
+    
     // TODO: StateBaseController 상속으로 변경
-    public class RoundManager : SceneSingleton<RoundManager>
+    public class RoundManager : StateBaseController<PhaseType>
     {
+        static RoundManager _instance;
+        static bool _quitting;
         public int RoundIndex { get; private set; } = 0;
-        private Phase _currentPhase;
         [SerializeField] private RoundAggressorManager roundAggressorManager;
 
-        private readonly Dictionary<PhaseType, Phase> _phases = new()
+        public static RoundManager Instance
         {
-            { PhaseType.Maintenance, new MaintenancePhase() },
-            { PhaseType.Ready, new ReadyPhase() },
-            { PhaseType.Combat, new CombatPhase() },
-        };
-
-        public List<RoundInfoData> rounds;
-
-        protected override void OnAwakeSingleton()
-        {
-            base.OnAwakeSingleton();
-            
-            // 한 페이즈 종료시 다음 페이즈 호출하는 콜백 등록
-            foreach (var pair in _phases)
+            get
             {
-                pair.Value.phaseEvent.Add(PhaseEventType.Exit, (_,_) => StartNextPhase());
+                if (_quitting) return null;
+
+                // 이미 캐시되어 있으면 반환
+                if (_instance != null) return _instance;
+
+                _instance = FindFirstObjectByType<RoundManager>(FindObjectsInactive.Exclude);
+
+                return _instance;
             }
         }
+        
+        protected override Dictionary<PhaseType, StateBase<PhaseType>> ConfigureStates()
+        {
+            return new()
+            {
+                { PhaseType.Maintenance, new MaintenancePhase(this) },
+                { PhaseType.Ready, new ReadyPhase(this) },
+                { PhaseType.Combat, new CombatPhase(roundAggressorManager, this) },
+            };
+        }
+
+        public List<RoundInfoData> rounds;
 
         private void Start()
         {
             StartRound();
         }
-
-        private void Update()
-        {
-            if (_currentPhase is not null)
-            {
-                _currentPhase.Run();
-                
-                // 현재 페이즈가 Combat 이고, 모든 침략자가 소환 되고 처치 되었으면 전투 페이즈 종료
-                if (
-                    _currentPhase.PhaseType == PhaseType.Combat && 
-                    roundAggressorManager.IsAllAggressorsCompleted()
-                    )
-                {
-                    _currentPhase.Exit();
-                }
-            }
-        }
         
         public void StartRound()
         {
             RoundIndex++;
-            
-            _currentPhase = _phases[PhaseType.Maintenance];
-            _currentPhase.Enter();
-        }
-
-        private void StartNextPhase()
-        {
-            _currentPhase = _phases[_currentPhase.GetNextPhase()];
-            
-            _currentPhase.Enter();
+            StartStateBase(PhaseType.Maintenance);
         }
 
         public RoundInfoData GetCurrentRoundData()
         {
             return rounds[RoundIndex];
         }
-
-        public Phase GetPhase(PhaseType type)
-        {
-            return _phases[type];
-        }
-
+        
         public void SetReady()
         {
-            if (_currentPhase.PhaseType == PhaseType.Maintenance)
+            if (CurrentStateType == PhaseType.Maintenance)
             {
-                GetPhase(PhaseType.Maintenance).Exit();
+                CurrentState.Exit(PhaseType.Ready);
             }
         }
     }

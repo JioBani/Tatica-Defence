@@ -12,9 +12,10 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         
         public IdleState(
             ActionStateType type,
+            StateBaseController<ActionStateType> controller,
             Unit self,
             Attacker attacker
-        ) : base(type)
+        ) : base(type, controller)
         {
             _self = self;
             _attacker = attacker;

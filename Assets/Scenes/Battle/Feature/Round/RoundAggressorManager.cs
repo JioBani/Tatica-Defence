@@ -5,6 +5,7 @@ using System.Threading;
 using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.RepeatX;
+using Common.Scripts.StateBase;
 using Common.Scripts.UniTaskHandles;
 using Cysharp.Threading.Tasks;
 using Scenes.Battle.Feature.Rounds.Phases;
@@ -39,15 +40,15 @@ namespace Scenes.Battle.Feature.Rounds
         {
             // Combat 페이즈 시작(Enter) 시 적 스폰 예약 시작
             RoundManager.Instance
-                .GetPhase(PhaseType.Combat)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, (_, _) => OnRoundEnter());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Enter, (_, _) => OnRoundEnter());
             
             // Combat 페이즈 종료(Exit) 시 진행 중인 스폰 예약/대기 모두 취소
             RoundManager.Instance
-                .GetPhase(PhaseType.Combat)
-                .phaseEvent
-                .Add(PhaseEventType.Exit,  (_, _) => OnRoundEnd());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Exit,  (_, _) => OnRoundEnd());
         }
 
         private void Update()

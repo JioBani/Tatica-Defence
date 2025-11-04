@@ -1,15 +1,23 @@
+using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Units;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Phases
 {
-    public class CombatPhase : Phase
+    public class CombatPhase : StateBase<PhaseType>
     {
         private UnitGenerator _unitGenerator;
+        private RoundAggressorManager _roundAggressorManager;
 
-        public CombatPhase() : base(PhaseType.Combat)
+        public CombatPhase(
+            RoundAggressorManager roundAggressorManager,
+            StateBaseController<PhaseType> controller
+        ) : base(
+            PhaseType.Combat,
+            controller
+        )
         {
-            
+            _roundAggressorManager = roundAggressorManager;
         }
 
         public override void OnEnter()
@@ -19,7 +27,10 @@ namespace Scenes.Battle.Feature.Rounds.Phases
 
         public override void OnRun()
         {
-            
+            if (_roundAggressorManager.IsAllAggressorsCompleted())
+            {
+                Exit(PhaseType.Maintenance);
+            }
         }
 
         public override void OnExit()
@@ -27,9 +38,9 @@ namespace Scenes.Battle.Feature.Rounds.Phases
             Debug.Log("Combat Phase OnExit");
         }
 
-        public override PhaseType GetNextPhase()
+        public override void Dispose()
         {
-            return PhaseType.Ready;
+            
         }
     }
 }
