@@ -51,16 +51,6 @@ namespace Scenes.Battle.Feature.Rounds
                 .Add(StateBaseEventType.Exit,  (_, _) => OnRoundEnd());
         }
 
-        private void Update()
-        {
-            if (
-                RoundAggressorState == RoundAggressorState.Spawned && 
-                _aggressors.All(unit => unit.ActionStateController.CurrentStateType == ActionStateType.Downed))
-            {
-                RoundAggressorState = RoundAggressorState.Completed;
-            }
-        }
-
         private void OnRoundEnter()
         {
             RoundAggressorState = RoundAggressorState.Spawning;
