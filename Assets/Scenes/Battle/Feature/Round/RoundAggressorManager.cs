@@ -154,7 +154,7 @@ namespace Scenes.Battle.Feature.Rounds
         /// <returns></returns>
         public bool IsAllAggressorsCompleted()
         {
-            return _aggressors.All(unit => unit.ActionStateController.CurrentStateType == ActionStateType.Downed) &&
+            return _aggressors.All(unit => unit.ActionStateController?.CurrentStateType == ActionStateType.Downed) &&
                    _aggressorTaskHandles.All(task => task.IsCompleted);
         }
     }
