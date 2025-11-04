@@ -17,7 +17,7 @@ namespace Scenes.Battle.Feature.Rounds.Phases
 
         public override void OnEnter()
         {
-            
+            RoundManager.Instance.IncrementRoundIndex();
         }
 
         public override void OnRun()

@@ -24,4 +24,4 @@ MonoBehaviour:
       minutes: 0
       seconds: 2
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
-    count: 1
+    count: 2

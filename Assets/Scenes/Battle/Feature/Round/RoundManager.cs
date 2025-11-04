@@ -51,7 +51,6 @@ namespace Scenes.Battle.Feature.Rounds
         
         public void StartRound()
         {
-            RoundIndex++;
             StartStateBase(PhaseType.Maintenance);
         }
 
@@ -66,6 +65,11 @@ namespace Scenes.Battle.Feature.Rounds
             {
                 CurrentState.Exit(PhaseType.Ready);
             }
+        }
+
+        public void IncrementRoundIndex()
+        {
+            RoundIndex++;
         }
     }
 }
