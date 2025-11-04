@@ -7,7 +7,7 @@ namespace Common.Scripts.StateBase
      * StateBase 에 따라 동작해야하는 것은 event 를 통해 StateBase 바깥에서 작성되어야 합니다.
      */
     
-    public abstract class StateBase<T> : IDisposable where T : Enum
+    public abstract class StateBase<T> : IDisposable where T : struct, Enum
     {
         public T StateType { get; }
         

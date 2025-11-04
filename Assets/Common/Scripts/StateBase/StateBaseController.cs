@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Common.Scripts.StateBase
 {
-    public abstract class StateBaseController<T> : MonoBehaviour where T : Enum
+    public abstract class StateBaseController<T> : MonoBehaviour where T : struct, Enum
     {
         protected Dictionary<T, StateBase<T>> _stateBases;
         
-        private StateBase<T> _currentState;
-        public StateBase<T> CurrentState => _currentState;
-        public T CurrentStateType => _currentState.StateType;
+        [CanBeNull] private StateBase<T> _currentState;
+        [CanBeNull] public StateBase<T> CurrentState => _currentState;
+        public T? CurrentStateType => _currentState?.StateType;
         
         [SerializeField] private T showState; // 인스펙터 노출용
         
