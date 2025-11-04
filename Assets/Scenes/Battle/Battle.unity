@@ -725,11 +725,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50d491294adc00344ae19b2c013b3113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dontDestroyOnLoad: 1
+  showState: 0
   roundAggressorManager: {fileID: 581890152}
   rounds:
   - {fileID: 11400000, guid: 27184a36de83fb246b82cc2e68ecb2ca, type: 2}
   - {fileID: 11400000, guid: b92b6a4df751f5e489c9bb685b24e354, type: 2}
+  - {fileID: 11400000, guid: 05ad6ee3afcf1d64d82c5c3346772519, type: 2}
+  - {fileID: 11400000, guid: c86bc6593542e0f49a2ac057800a7f20, type: 2}
 --- !u!4 &140234474
 Transform:
   m_ObjectHideFlags: 0
