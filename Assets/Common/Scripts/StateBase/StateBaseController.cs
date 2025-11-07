@@ -72,8 +72,6 @@ namespace Common.Scripts.StateBase
         {
             _currentState = _stateBases[nextState];
             
-            Debug.Log($"exit : {nextState}");
-            
             _currentState.Enter();
         }
 

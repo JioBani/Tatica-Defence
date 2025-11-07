@@ -14,12 +14,8 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         [SerializeField] private Attacker attacker;
         [SerializeField] private bool canMove;
         
-        private Rigidbody2D _rigidbody2D;
-        
         protected override Dictionary<ActionStateType, StateBase<ActionStateType>> ConfigureStates()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-            
             return new()
             {
                 { ActionStateType.Idle, new IdleState(ActionStateType.Idle, this, self, attacker)},
