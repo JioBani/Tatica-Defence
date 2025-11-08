@@ -725,10 +725,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50d491294adc00344ae19b2c013b3113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dontDestroyOnLoad: 1
+  showState: 0
+  roundAggressorManager: {fileID: 581890152}
+  defenderManager: {fileID: 1890914476}
   rounds:
   - {fileID: 11400000, guid: 27184a36de83fb246b82cc2e68ecb2ca, type: 2}
   - {fileID: 11400000, guid: b92b6a4df751f5e489c9bb685b24e354, type: 2}
+  - {fileID: 11400000, guid: 05ad6ee3afcf1d64d82c5c3346772519, type: 2}
+  - {fileID: 11400000, guid: c86bc6593542e0f49a2ac057800a7f20, type: 2}
 --- !u!4 &140234474
 Transform:
   m_ObjectHideFlags: 0
@@ -1210,6 +1214,7 @@ MonoBehaviour:
   battleField: {fileID: 111035655}
   unitGenerator: {fileID: 1387143021}
   tempUnitLoadOutData: {fileID: 11400000, guid: 88c99cd1d964d5349b40b45c03623977, type: 2}
+  defenderManager: {fileID: 1890914476}
 --- !u!114 &238958328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5232,6 +5237,7 @@ Transform:
   - {fileID: 581890151}
   - {fileID: 1382895711}
   - {fileID: 1310481135}
+  - {fileID: 1890914475}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1052805942
@@ -8456,6 +8462,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1890914474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1890914475}
+  - component: {fileID: 1890914476}
+  m_Layer: 0
+  m_Name: DefenderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1890914475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890914474}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1031017538}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1890914476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890914474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39daa6982a01c154fbc3ac1c0e7e12ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitGenerator: {fileID: 1387143021}
 --- !u!1 &1895823605
 GameObject:
   m_ObjectHideFlags: 0

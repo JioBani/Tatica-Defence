@@ -14,19 +14,15 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         [SerializeField] private Attacker attacker;
         [SerializeField] private bool canMove;
         
-        private Rigidbody2D _rigidbody2D;
-        
         protected override Dictionary<ActionStateType, StateBase<ActionStateType>> ConfigureStates()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-            
             return new()
             {
-                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, self, attacker)},
-                { ActionStateType.Move , new MoveState(ActionStateType.Move, gameObject, attacker)},
-                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, gameObject, attacker)},
-                { ActionStateType.Downed , new DownedState(ActionStateType.Downed)},
-                { ActionStateType.Freeze , new FreezeState(ActionStateType.Freeze)}
+                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, this, self, attacker)},
+                { ActionStateType.Move , new MoveState(ActionStateType.Move, this, gameObject, attacker)},
+                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, this, gameObject, attacker)},
+                { ActionStateType.Downed , new DownedState(ActionStateType.Downed, this)},
+                { ActionStateType.Freeze , new FreezeState(ActionStateType.Freeze, this)}
             };
         }
 
@@ -40,10 +36,10 @@ namespace Scenes.Battle.Feature.Units.ActionStates
             return currentStateBaseType;
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
-            StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
+            StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
+            //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
         }
     }
 }

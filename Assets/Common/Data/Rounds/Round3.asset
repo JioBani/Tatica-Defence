@@ -10,12 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d4e819f2bceb4479355db5892fd61d, type: 3}
-  m_Name: Round0
+  m_Name: Round3
   m_EditorClassIdentifier: 
   spawnEntries:
   - spawnTime:
       hours: 0
       minutes: 0
-      seconds: 1
+      seconds: 0
     unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
-    count: 1
+    count: 2
+  - spawnTime:
+      hours: 0
+      minutes: 0
+      seconds: 2
+    unitLoadOutData: {fileID: 11400000, guid: bde97786450c65e4b8a9cd0be48a788a, type: 2}
+    count: 2

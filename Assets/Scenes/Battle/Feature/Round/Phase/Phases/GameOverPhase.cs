@@ -1,39 +1,36 @@
-using Common.Data.Rounds;
 using Common.Scripts.StateBase;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Phases
 {
-    public class MaintenancePhase : StateBase<PhaseType>
+    public class GameOverPhase : StateBase<PhaseType>
     {
-        public MaintenancePhase(
+
+        public GameOverPhase(
             StateBaseController<PhaseType> controller
-        ) : base(
-            PhaseType.Maintenance,
-            controller
-        )
+        ) : base(PhaseType.Ready, controller)
         {
+
         }
 
         public override void OnEnter()
         {
-            RoundManager.Instance.IncrementRoundIndex();
+            Debug.Log("Game Over");
         }
 
         public override void OnRun()
         {
-            
+
         }
 
         public override void OnExit()
         {
-            Debug.Log("Maintenance Phase OnExit");
+
         }
 
         public override void Dispose()
         {
-            
+
         }
     }
 }
-

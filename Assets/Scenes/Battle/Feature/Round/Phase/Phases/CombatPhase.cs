@@ -1,15 +1,27 @@
+using Common.Scripts.StateBase;
+using Scenes.Battle.Feature.Unit.Defenders;
 using Scenes.Battle.Feature.Units;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Phases
 {
-    public class CombatPhase : Phase
+    public class CombatPhase : StateBase<PhaseType>
     {
         private UnitGenerator _unitGenerator;
+        private readonly RoundAggressorManager _roundAggressorManager;
+        private readonly DefenderManager _defenderManager;
 
-        public CombatPhase() : base(PhaseType.Combat)
+        public CombatPhase(
+            RoundAggressorManager roundAggressorManager,
+            DefenderManager defenderManager,
+            StateBaseController<PhaseType> controller
+        ) : base(
+            PhaseType.Combat,
+            controller
+        )
         {
-            
+            _roundAggressorManager = roundAggressorManager;
+            _defenderManager = defenderManager;
         }
 
         public override void OnEnter()
@@ -19,7 +31,15 @@ namespace Scenes.Battle.Feature.Rounds.Phases
 
         public override void OnRun()
         {
-            
+            if (_roundAggressorManager.IsAllAggressorsCompleted())
+            {
+                Exit(PhaseType.Maintenance);
+            }
+
+            if (_defenderManager.IsAllDefenderDowned())
+            {
+                Exit(PhaseType.GameOver);
+            }
         }
 
         public override void OnExit()
@@ -27,9 +47,9 @@ namespace Scenes.Battle.Feature.Rounds.Phases
             Debug.Log("Combat Phase OnExit");
         }
 
-        public override PhaseType GetNextPhase()
+        public override void Dispose()
         {
-            return PhaseType.Ready;
+            
         }
     }
 }

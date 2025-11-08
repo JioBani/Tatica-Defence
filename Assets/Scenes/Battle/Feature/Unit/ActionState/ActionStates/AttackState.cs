@@ -12,10 +12,11 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         private Attacker _attacker;
         
         public AttackState(
-            ActionStateType type, 
+            ActionStateType type,
+            StateBaseController<ActionStateType> controller,
             GameObject self,
             Attacker attacker
-        ) : base(type)
+        ) : base(type, controller)
         {
             _attacker = attacker;
         }
@@ -23,7 +24,6 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         public override void OnEnter()
         {
             Debug.Log("AttackState Enter");
-            Debug.Log($"{Event.Events[StateBaseEventType.Enter].Method.Name}");
         }
 
         public override void OnRun()

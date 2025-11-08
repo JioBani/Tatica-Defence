@@ -27,7 +27,6 @@ namespace Common.Scripts.DynamicRepeater
 
         public void Start(CancellationToken externalToken = default)
         {
-            Debug.Log($"is running :  {_running}");
             if (_running) return;
             _running = true;
             _stopCts = externalToken.CanBeCanceled

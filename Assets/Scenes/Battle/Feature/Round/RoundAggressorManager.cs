@@ -1,14 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.RepeatX;
+using Common.Scripts.StateBase;
+using Common.Scripts.UniTaskHandles;
 using Cysharp.Threading.Tasks;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Units;
+using Scenes.Battle.Feature.Units.ActionStates;
 using UnityEngine;
 using Random = UnityEngine.Random;
+
+public enum RoundAggressorState
+{
+    Waiting,
+    Spawning, // 스폰 중
+    Spawned, // 스폰 완료
+    Completed // 처치 완료
+}
 
 namespace Scenes.Battle.Feature.Rounds
 {
@@ -19,28 +31,47 @@ namespace Scenes.Battle.Feature.Rounds
 
         // 한 라운드(Combat 페이즈) 동안의 스폰 작업을 제어할 취소 토큰 소스
         private CancellationTokenSource _roundContext;
+        private readonly List<Units.Unit> _aggressors = new ();
+        private readonly List<UniTaskHandle> _aggressorTaskHandles = new();
+        
+        public RoundAggressorState RoundAggressorState { get; private set; } = RoundAggressorState.Waiting;
         
         private void Awake()
         {
             // Combat 페이즈 시작(Enter) 시 적 스폰 예약 시작
             RoundManager.Instance
-                .GetPhase(PhaseType.Combat)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, (_, _) => GenerateAggressorByRound());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Enter, (_, _) => OnRoundEnter());
             
             // Combat 페이즈 종료(Exit) 시 진행 중인 스폰 예약/대기 모두 취소
             RoundManager.Instance
-                .GetPhase(PhaseType.Combat)
-                .phaseEvent
-                .Add(PhaseEventType.Exit,  (_, _) => CancelGeneration());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Exit,  (_, _) => OnRoundEnd());
         }
 
+        private void OnRoundEnter()
+        {
+            RoundAggressorState = RoundAggressorState.Spawning;
+            GenerateAggressorByRound();
+        }
+
+        private void OnRoundEnd()
+        {
+            RoundAggressorState = RoundAggressorState.Waiting;
+            
+            _aggressors.Clear();
+            CancelGeneration();
+        }
+        
         /// <summary>
         /// 현재 라운드의 스폰 엔트리들을 순회하며 각각의 스폰 예약을 건다.
         /// fire-and-forget 형태로 예약만 걸고 즉시 반환한다.
         /// </summary>
         private void GenerateAggressorByRound()
         {
+            _aggressorTaskHandles.Clear();
             // 이전 라운드의 토큰이 남아있을 수 있으므로 새 컨텍스트 생성
             _roundContext = new CancellationTokenSource();
             
@@ -50,7 +81,8 @@ namespace Scenes.Battle.Feature.Rounds
             // 각 스폰 엔트리별로 비동기 예약 실행 (완료를 기다리지 않음)
             foreach (var entry in roundInfo.spawnEntries)
             {
-                GenerateAggressors(entry).Forget();
+                var handle = GenerateAggressors(entry).ToHandle(); // ← 한 번만 변환
+                _aggressorTaskHandles.Add(handle);
             }
         }
 
@@ -83,7 +115,7 @@ namespace Scenes.Battle.Feature.Rounds
 
         private void GenerateAggressor(UnitLoadOutData unitLoadOutData)
         {
-            Feature.Units.Unit unit = unitGenerator.GenerateAggressor(unitLoadOutData);
+            Units.Unit unit = unitGenerator.GenerateAggressor(unitLoadOutData);
             
             int spawnPointIndex = Random.Range(0, spawnPoints.Count - 1);
 
@@ -92,6 +124,8 @@ namespace Scenes.Battle.Feature.Rounds
                 spawnPoints[spawnPointIndex].position.y,
                 unit.transform.position.z
             );
+            
+            _aggressors.Add(unit);
         }
 
         /// <summary>
@@ -102,6 +136,16 @@ namespace Scenes.Battle.Feature.Rounds
             _roundContext?.Cancel();   // 진행 중(대기 중) 작업들 일괄 취소 신호
             _roundContext?.Dispose();  // 토큰 소스 자원 해제
             _roundContext = null;
+        }
+        
+        /// <summary>
+        /// 모든 침략자가 소환 되었고, downed 인지 확인
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAllAggressorsCompleted()
+        {
+            return _aggressors.All(unit => unit.ActionStateController?.CurrentStateType == ActionStateType.Downed) &&
+                   _aggressorTaskHandles.All(task => task.IsCompleted);
         }
     }
 }

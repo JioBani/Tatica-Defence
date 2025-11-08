@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Data.Rounds;
+using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.CameraControl;
 using Scenes.Battle.Feature.Rounds.Phases;
 using TMPro;
@@ -25,12 +26,12 @@ namespace Scenes.Battle.Feature.Rounds.Ui
         private void Awake()
         {
             RoundManager.Instance
-                .GetPhase(PhaseType.Maintenance)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, OnMaintenanceEnter);
+                .GetStateBase(PhaseType.Maintenance)
+                .Event
+                .Add(StateBaseEventType.Enter, OnMaintenanceEnter);
         }
         
-        private void OnMaintenanceEnter(PhaseType _, PhaseEventType __) => SetRoundInfo();
+        private void OnMaintenanceEnter(PhaseType _, StateBaseEventType __) => SetRoundInfo();
 
         public void SwitchView()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.ObjectPool;
+using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Aggressors;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Sells;
@@ -23,14 +24,14 @@ namespace Scenes.Battle.Feature.Rounds
         void Awake()
         {
             RoundManager.Instance
-                .GetPhase(PhaseType.Maintenance)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, (_,_) => ShowRoundInfo());
+                .GetStateBase(PhaseType.Maintenance)
+                .Event
+                .Add(StateBaseEventType.Enter, (_,_) => ShowRoundInfo());
             
             RoundManager.Instance
-                .GetPhase(PhaseType.Maintenance)
-                .phaseEvent
-                .Add(PhaseEventType.Exit, (_,_) => HideRoundInfo());
+                .GetStateBase(PhaseType.Maintenance)
+                .Event
+                .Add(StateBaseEventType.Exit, (_,_) => HideRoundInfo());
         }
 
         void ShowRoundInfo()

@@ -5,8 +5,12 @@ namespace Scenes.Battle.Feature.Units.ActionStates
     public class FreezeState : StateBase<ActionStateType>
     {
         public FreezeState(
-            ActionStateType type
-        ) : base(type)
+            ActionStateType type,
+            StateBaseController<ActionStateType> controller
+        ) : base(
+            type,
+            controller
+        )
         {
         }
 

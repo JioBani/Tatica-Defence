@@ -33,7 +33,7 @@ namespace Scenes.Battle.Feature.Projectiles
 
         private void Update()
         {
-            if (_target == null) {  poolable.DeSpawn(); return; }
+            if (!_target || !_target.gameObject.activeInHierarchy) {  poolable.DeSpawn(); return; }
 
             // 타깃 방향으로 이동
             var pos = transform.position;

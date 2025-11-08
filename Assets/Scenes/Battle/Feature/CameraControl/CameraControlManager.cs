@@ -1,3 +1,4 @@
+using Common.Scripts.StateBase;
 using DG.Tweening;
 using Scenes.Battle.Feature.Rounds;
 using Scenes.Battle.Feature.Rounds.Phases;
@@ -14,14 +15,14 @@ namespace Scenes.Battle.Feature.CameraControl
             _mainCamera = Camera.main;
             
             RoundManager.Instance
-                .GetPhase(PhaseType.Combat)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, (_,_) => SetCombatMode());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Enter, (_,_) => SetCombatMode());
             
             RoundManager.Instance
-                .GetPhase(PhaseType.Maintenance)
-                .phaseEvent
-                .Add(PhaseEventType.Enter, (_,_) => SetMaintenanceMode());
+                .GetStateBase(PhaseType.Combat)
+                .Event
+                .Add(StateBaseEventType.Exit, (_,_) => SetMaintenanceMode());
         }
         
         private void SetCombatMode()

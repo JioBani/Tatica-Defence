@@ -1,5 +1,4 @@
 ﻿using Common.Scripts.StateBase;
-using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
@@ -13,9 +12,10 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         
         public MoveState(
             ActionStateType type, 
+            StateBaseController<ActionStateType> controller,
             GameObject self,
             Attacker attacker
-        ) : base(type)
+        ) : base(type, controller)
         {
             _self = self;
             _attacker = attacker;
