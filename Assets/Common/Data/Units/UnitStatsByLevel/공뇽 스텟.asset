@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth:
     baseValuesByStar:
-    - 10
-    - 10
-    - 10
-    - 10
+    - 100
+    - 100
+    - 100
+    - 100
     additionalPerExtraStar: 0
   physicalAttack:
     baseValuesByStar:

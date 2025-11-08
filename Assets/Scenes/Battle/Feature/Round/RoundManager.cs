@@ -4,6 +4,7 @@ using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds.Phases;
+using Scenes.Battle.Feature.Unit.Defenders;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds
@@ -16,6 +17,7 @@ namespace Scenes.Battle.Feature.Rounds
         static bool _quitting;
         public int RoundIndex { get; private set; } = 0;
         [SerializeField] private RoundAggressorManager roundAggressorManager;
+        [SerializeField] private DefenderManager defenderManager;
 
         public static RoundManager Instance
         {
@@ -38,7 +40,8 @@ namespace Scenes.Battle.Feature.Rounds
             {
                 { PhaseType.Maintenance, new MaintenancePhase(this) },
                 { PhaseType.Ready, new ReadyPhase(this) },
-                { PhaseType.Combat, new CombatPhase(roundAggressorManager, this) },
+                { PhaseType.Combat, new CombatPhase(roundAggressorManager, defenderManager, this) },
+                { PhaseType.GameOver, new GameOverPhase(this) }
             };
         }
 
