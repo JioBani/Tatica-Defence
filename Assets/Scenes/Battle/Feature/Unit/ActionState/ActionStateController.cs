@@ -36,7 +36,7 @@ namespace Scenes.Battle.Feature.Units.ActionStates
             return currentStateBaseType;
         }
 
-        private void Start()
+        private void OnEnable()
         {
             StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
             //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
