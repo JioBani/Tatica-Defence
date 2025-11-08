@@ -24,7 +24,6 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         public override void OnEnter()
         {
             Debug.Log("AttackState Enter");
-            Debug.Log($"{Event.Events[StateBaseEventType.Enter].Method.Name}");
         }
 
         public override void OnRun()
