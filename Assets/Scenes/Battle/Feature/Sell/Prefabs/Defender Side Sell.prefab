@@ -70,14 +70,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4406297446508724012}
+      addedObject: {fileID: 8155629960930506182}
   m_SourcePrefab: {fileID: 100100000, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
 --- !u!1 &3429132515120802427 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5068442832248973027, guid: f9e8119b689040b498d6eb31cbcb5b84, type: 3}
   m_PrefabInstance: {fileID: 7620090828804279448}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4406297446508724012
+--- !u!114 &8155629960930506182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,9 +86,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3429132515120802427}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5ed072504d51754cbc54ca4efb5fc53, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f703d7802b5024489f4779094b49bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   requiredTag: 
   snapToCenter: 1
   occupant: {fileID: 0}
+  memo: "\uC774 \uCEF4\uD3EC\uB10C\uD2B8\uAC00 \uD558\uB294 \uC77C\uC744 \uC694\uC57D\uD569\uB2C8\uB2E4."
