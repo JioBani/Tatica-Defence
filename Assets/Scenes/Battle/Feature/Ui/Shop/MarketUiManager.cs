@@ -1,4 +1,5 @@
 using System;
+using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Markets;
 using TMPro;
 using UnityEngine;
@@ -8,7 +9,6 @@ namespace Scenes.Battle.Feature.Ui.Markets
     public class MarketUiManager : MonoBehaviour
     {
         [SerializeField] private MarketManager marketManager;
-        
         [SerializeField] private TextMeshProUGUI goldText;
 
         private void Awake()

@@ -18,11 +18,14 @@ namespace Common.Scripts.StateBase
         
         protected abstract Dictionary<T, StateBase<T>> ConfigureStates();
         public event Action<Dictionary<T, StateBase<T>>> OnConfigureStatesEvent;
+
+        private bool _isConfigured = false;
             
         protected virtual void Awake()
         {
             _stateBases = ConfigureStates();
             OnConfigureStatesEvent?.Invoke(_stateBases);
+            _isConfigured = true;
             StateBaseAwake();
         }
 
@@ -36,6 +39,16 @@ namespace Common.Scripts.StateBase
             if (!nextState.Equals(_currentState.StateType))
             {
                 _currentState.Exit(nextState);
+            }
+        }
+        
+        public void AddOnConfigureStatesEvent(Action<Dictionary<T, StateBase<T>>> action)
+        {
+            OnConfigureStatesEvent += action;
+
+            if (_isConfigured)
+            {
+                action(ConfigureStates());
             }
         }
 
