@@ -5423,6 +5423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 1
+  economyConfig: {fileID: 11400000, guid: 7f495dc7bec0eb34693f001a8cedc73c, type: 2}
 --- !u!114 &1041871075
 MonoBehaviour:
   m_ObjectHideFlags: 0
