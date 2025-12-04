@@ -33,5 +33,10 @@ namespace Common.Data.Units.UnitDefinitions
         [SpritePreview(80)]
         [SerializeField] private Sprite icon;
         public Sprite Icon => icon;
+        
+        [Tooltip("일러스트")]
+        [SpritePreview(180)]
+        [SerializeField] private Sprite illustration;
+        public Sprite Illustration => illustration;
     }
 }

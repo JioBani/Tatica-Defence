@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47fe19da2e4b4d05a6ee3194e7bf8c8b, type: 3}
-  m_Name: "\uC218\uD638\uC790"
+  m_Name: "04\uC9D5\uD06C\uC2A4"
   m_EditorClassIdentifier: 
-  id: 1
-  unit: {fileID: 11400000, guid: da8761c78a447da4a8f6d692360de66b, type: 2}
+  id: 4
+  unit: {fileID: 11400000, guid: 52d7eedcaff440242a16b517e9fbb114, type: 2}
   skill: {fileID: 11400000, guid: fe77c4cf241c97646a93f81ff353165b, type: 2}
   stats: {fileID: 11400000, guid: a89da4d03198a174fb0c9a549f876346, type: 2}

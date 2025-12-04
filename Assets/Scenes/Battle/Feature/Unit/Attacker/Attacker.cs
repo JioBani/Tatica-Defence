@@ -97,7 +97,6 @@ namespace Scenes.Battle.Feature.Units.Attackers
 
         private void StartRepeat()
         {
-            Debug.Log("start repeat");
             _attackRepeater.Start();
         }
 
