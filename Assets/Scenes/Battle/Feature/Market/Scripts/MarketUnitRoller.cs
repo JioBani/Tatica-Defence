@@ -20,6 +20,8 @@ namespace Scenes.Battle.Feature.Markets
             {4 , 10},
             {5 , 5}, 
         };
+        
+        public Dictionary<int, float> ProbabilityByCost => _probabilityByCost;
 
         public MarketUnitRoller(List<UnitLoadOutData> appearedUnitList)
         {
