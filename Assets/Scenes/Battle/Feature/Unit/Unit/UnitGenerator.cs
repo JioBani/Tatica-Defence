@@ -8,6 +8,7 @@ namespace Scenes.Battle.Feature.Units
     {
         private ObjectPooler _objectPooler;
         [SerializeField] private GameObject unitPrefab;
+        [SerializeField] private GameObject defenderPrefab;
         [SerializeField] private GameObject aggressorPrefab;
         [SerializeField] private GameObject aggressorSamplePrefab;
         
@@ -32,11 +33,11 @@ namespace Scenes.Battle.Feature.Units
             return unitComponent;
         }
 
+        // TODO: 어떤 종류의 Unit 을 생성할것인지는 Defender Manager 등에 위임하고, Unit 만 생성하도록 수정
         public Unit GenerateDefender(UnitLoadOutData data)
         {
-            return Generate(data, unitPrefab);
+            return Generate(data, defenderPrefab);
         }
-
         
         public Unit GenerateAggressor(UnitLoadOutData data)
         {

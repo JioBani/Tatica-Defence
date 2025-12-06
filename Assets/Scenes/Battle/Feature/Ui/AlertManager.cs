@@ -1,29 +1,15 @@
 using System;
+using Common.Scripts.SceneSingleton;
 using Scenes.Battle.Feature.Markets;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Ui
 {
-    public class AlertManager : MonoBehaviour
+    public class AlertManager : SceneSingleton<AlertManager>
     {
-        private void OnEnable()
+        public void Alert(string message)
         {
-            MarketManager.Instance.OnGoldNotEnough += OnGoldNotEnough;
-        }
-
-        private void OnDisable()
-        {
-            MarketManager.Instance.OnGoldNotEnough -= OnGoldNotEnough;
-        }
-
-        private void OnDestroy()
-        {
-            MarketManager.Instance.OnGoldNotEnough -= OnGoldNotEnough;
-        }
-
-        void OnGoldNotEnough(OnGoldNotEnoughDto dto)
-        {
-            Debug.Log("Gold not enough");
+            Debug.Log(message);   
         }
     }
 }

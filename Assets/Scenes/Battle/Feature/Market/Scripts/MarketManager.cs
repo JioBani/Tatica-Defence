@@ -6,6 +6,7 @@ using Common.Scripts.Rxs;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Rounds;
 using Scenes.Battle.Feature.Rounds.Phases;
+using Scenes.Battle.Feature.Ui;
 using Scenes.Battle.Feature.Unit.Defenders;
 using UnityEngine;
 
@@ -15,14 +16,14 @@ namespace Scenes.Battle.Feature.Markets
     {
         [SerializeField] private DefenderManager defenderManager;
         
-        public RxValue<int> Gold = new RxValue<int>(0);
+        public readonly RxValue<int> Gold = new RxValue<int>(10);
+        public readonly RxValue<int> DefenderPlacementLimit = new RxValue<int>(0);
 
         [SerializeField] private List<UnitLoadOutData> appearUnits;
         
         MarketUnitRoller _roller;
         public MarketUnitRoller Roller => _roller;
 
-        private List<MarketDefenderSlot> _defenderSlots;
         public Action<List<UnitLoadOutData>> OnSlotRerolled;
         public Action<OnGoldNotEnoughDto> OnGoldNotEnough;
         
@@ -35,6 +36,9 @@ namespace Scenes.Battle.Feature.Markets
             RoundManager
                 .Instance
                 .AddOnConfigureStatesEvent(AddOnRoundStartEvent);
+
+            // TOOD: RoundManager 에 게임 시작 상태를 만들고 그곳에 콜백 등록
+            DefenderPlacementLimit.Value = 3;
         }
 
         private void AddOnRoundStartEvent(object _)
@@ -59,7 +63,6 @@ namespace Scenes.Battle.Feature.Markets
         {
             List<UnitLoadOutData> units = _roller.PickUnits(4);
 
-            _defenderSlots = units.Select((unit) => new MarketDefenderSlot(unit)).ToList();
             OnSlotRerolled?.Invoke(units);
         }
 
@@ -69,12 +72,18 @@ namespace Scenes.Battle.Feature.Markets
             {
                 // TODO: UI에 표시
                 OnGoldNotEnough?.Invoke(new OnGoldNotEnoughDto());
+                AlertManager.Instance.Alert("골드 부족");
                 return false;
             }
             
             Gold.Value -= unit.Unit.Cost;
             defenderManager.GenerateDefender(unit);
             return true;
+        }
+
+        public bool IsDefenderLimitExceeded()
+        {
+            return  defenderManager.CalculateDefenderCount(Placement.BattleArea) >= DefenderPlacementLimit.Value;
         }
     }
 }

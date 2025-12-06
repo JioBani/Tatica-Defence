@@ -6026,6 +6026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 714470639557013153, guid: 55f271110f86e19488c6665236798e12, type: 3}
+  defenderPrefab: {fileID: 5471618386058694091, guid: 66d85881d18ea4347a5da9679849591f, type: 3}
   aggressorPrefab: {fileID: 811125581725547199, guid: d9b00ffe4e2ee9d47aa3a0f084112b07, type: 3}
   aggressorSamplePrefab: {fileID: 106699602015114965, guid: 3486ace55eae16244906f9f022e4ccd4, type: 3}
   enemyField: {fileID: 111035655}

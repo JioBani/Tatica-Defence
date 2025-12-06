@@ -11,7 +11,12 @@ namespace Scenes.Battle.Feature.Unit.Defenders
     public class DefenderManager : MonoBehaviour
     {
         [SerializeField] private UnitGenerator unitGenerator;
-        private List<Units.Unit> units = new List<Units.Unit>();
+        private List<Defender> units = new List<Defender>();
+
+        public int CalculateDefenderCount(Placement placement)
+        {
+            return units.Count(defender => defender.Placement == placement);
+        }
 
         public bool GenerateDefender(UnitLoadOutData unitLoadOutData)
         {
@@ -22,7 +27,7 @@ namespace Scenes.Battle.Feature.Unit.Defenders
                 
                 unit.MoveToWaitingArea();
                 
-                units.Add(unit);
+                units.Add(unit.GetComponent<Defender>());
 
                 return true;
             }

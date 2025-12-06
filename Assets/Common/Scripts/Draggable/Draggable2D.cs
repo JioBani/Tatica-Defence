@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Common.Scripts.Draggable
@@ -9,6 +10,11 @@ namespace Common.Scripts.Draggable
         private Camera _camera;
         private Vector2 _startPosition;
         public DropZone2D thisDropZone;
+
+        /// <summary>
+        /// oldZone => newZone
+        /// </summary>
+        public Action<DropZone2D,DropZone2D> OnDrop;
     
         void Awake()
         {
@@ -84,6 +90,7 @@ namespace Common.Scripts.Draggable
             thisDropZone = newZone;
             
             newZone.OnDrop(this, oldZone);
+            OnDrop?.Invoke(oldZone, newZone);
         }
     }
 }

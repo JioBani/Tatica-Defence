@@ -18,7 +18,7 @@ namespace Scenes.Battle.Feature.Units
         [SerializeField] private ActionStateController actionStateController;
         public ActionStateController ActionStateController => actionStateController;
         
-        private Draggable2D _draggable;
+        protected Draggable2D Draggable;
 
         public UnitLoadOutData UnitLoadOutData;
         
@@ -28,9 +28,9 @@ namespace Scenes.Battle.Feature.Units
 
         public Action<Unit> OnSpawnEvent;
         
-        private void Awake()
+        protected virtual void Awake()
         {
-            _draggable = GetComponent<Draggable2D>();
+            Draggable = GetComponent<Draggable2D>();
 
             StatSheet.Health.OnChange += (value) =>
             {
@@ -47,7 +47,7 @@ namespace Scenes.Battle.Feature.Units
             {
                 if (zone.occupant == null)
                 {
-                    _draggable.MoveToDropZone(zone);
+                    Draggable.MoveToDropZone(zone);
                     return true;
                 }
                 else
