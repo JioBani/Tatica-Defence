@@ -24,6 +24,7 @@ namespace Scenes.Battle.Feature.Markets
 
         private List<MarketDefenderSlot> _defenderSlots;
         public Action<List<UnitLoadOutData>> OnSlotRerolled;
+        public Action<OnGoldNotEnoughDto> OnGoldNotEnough;
         
         protected override void OnAwakeSingleton()
         {
@@ -62,14 +63,18 @@ namespace Scenes.Battle.Feature.Markets
             OnSlotRerolled?.Invoke(units);
         }
 
-        public void BuyDefender(int index)
+        public bool BuyDefender(UnitLoadOutData unit)
         {
-            if (index >= _defenderSlots.Count)
+            if (unit.Unit.Cost > Gold.Value)
             {
-                throw new IndexOutOfRangeException("Index out of range.");
+                // TODO: UI에 표시
+                OnGoldNotEnough?.Invoke(new OnGoldNotEnoughDto());
+                return false;
             }
             
-            defenderManager.GenerateDefender(_defenderSlots[index].UnitLoadOutData);
+            Gold.Value -= unit.Unit.Cost;
+            defenderManager.GenerateDefender(unit);
+            return true;
         }
     }
 }

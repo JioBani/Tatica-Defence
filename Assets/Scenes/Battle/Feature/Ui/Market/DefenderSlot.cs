@@ -67,9 +67,10 @@ namespace Scenes.Battle.Feature.Markets
 
         private void Purchase()
         {
-            if (defenderManager.GenerateDefender(_unitData))
+            IsPurchased = MarketManager.Instance.BuyDefender(_unitData);
+
+            if (IsPurchased)
             {
-                IsPurchased = true;
                 DeactivateImage();
             }
         }
