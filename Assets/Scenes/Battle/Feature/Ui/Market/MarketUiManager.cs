@@ -18,15 +18,16 @@ namespace Scenes.Battle.Feature.Ui.Markets
         {
             marketManager.Gold.OnChange -= OnGoldChange;
         }
-
-        private void OnDestroy()
+        
+        public void OnClickLevelUp()
         {
-            marketManager.Gold.OnChange -= OnGoldChange;
+            marketManager.LevelUp();
         }
 
         private void OnGoldChange(int gold)
         {
             goldText.text = $"{gold} GOLD";
         }
+
     }
 }
