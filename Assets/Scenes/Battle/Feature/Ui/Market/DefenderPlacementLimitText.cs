@@ -28,10 +28,14 @@ namespace Scenes.Battle.Feature.Ui.Markets
             
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             MarketManager.Instance.DefenderPlacementLimit.OnChange -= OnDefenderPlacementChanged;
             DefenderManager.Instance.OnPlacementChange -= OnDefenderPlacementChanged;
+            RoundManager.Instance
+                .GetStateBase(PhaseType.Maintenance)
+                .Event
+                .Remove(StateBaseEventType.Enter,OnRoundStart);
         }
 
         private void AddOnRoundStart(object _)
@@ -39,13 +43,15 @@ namespace Scenes.Battle.Feature.Ui.Markets
             RoundManager.Instance
                 .GetStateBase(PhaseType.Maintenance)
                 .Event
-                .Add(StateBaseEventType.Enter, (_, _) =>
-                {
-                    RefreshText(
-                        DefenderManager.Instance.GetPlacementCount(Placement.BattleArea),
-                        MarketManager.Instance.DefenderPlacementLimit.Value
-                    );
-                });
+                .Add(StateBaseEventType.Enter,OnRoundStart);
+        }
+
+        private void OnRoundStart(PhaseType _, StateBaseEventType _2)
+        {
+            RefreshText(
+                DefenderManager.Instance.GetPlacementCount(Placement.BattleArea),
+                MarketManager.Instance.DefenderPlacementLimit.Value
+            );
         }
 
         /// <summary>
