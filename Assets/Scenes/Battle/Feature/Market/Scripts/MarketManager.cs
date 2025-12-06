@@ -83,7 +83,7 @@ namespace Scenes.Battle.Feature.Markets
 
         public bool IsDefenderLimitExceeded()
         {
-            return  defenderManager.CalculateDefenderCount(Placement.BattleArea) >= DefenderPlacementLimit.Value;
+            return  defenderManager.GetPlacementCount(Placement.BattleArea) >= DefenderPlacementLimit.Value;
         }
     }
 }

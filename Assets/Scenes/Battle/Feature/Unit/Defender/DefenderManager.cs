@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.SceneSingleton;
 using Scenes.Battle.Feature.Units;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.WaitingAreas;
@@ -8,12 +10,13 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Unit.Defenders
 {
-    public class DefenderManager : MonoBehaviour
+    public class DefenderManager : SceneSingleton<DefenderManager>
     {
         [SerializeField] private UnitGenerator unitGenerator;
         private List<Defender> units = new List<Defender>();
+        public Action<Defender, Placement> OnPlacementChange;
 
-        public int CalculateDefenderCount(Placement placement)
+        public int GetPlacementCount(Placement placement)
         {
             return units.Count(defender => defender.Placement == placement);
         }
@@ -42,6 +45,11 @@ namespace Scenes.Battle.Feature.Unit.Defenders
         public bool IsAllDefenderDowned()
         {
             return units.All((unit) => unit.ActionStateController.CurrentStateType == ActionStateType.Downed);
+        }
+
+        public void RecordPlacement(Defender defender, Placement placement)
+        {
+            OnPlacementChange?.Invoke(defender, placement);
         }
     }
 }
