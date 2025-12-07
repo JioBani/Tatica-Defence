@@ -39,11 +39,6 @@ namespace Scenes.Battle.Feature.Markets
             _marketManager.OnSlotRerolled -= OnSlotRerolled;
         }
 
-        private void OnDestroy()
-        {
-            _marketManager.OnSlotRerolled -= OnSlotRerolled;
-        }
-
         private void OnSlotRerolled(List<UnitLoadOutData> unitDataList)
         {
             // 자신의 슬롯 번호에 해당하는 유닛 데이터 장착
@@ -54,6 +49,7 @@ namespace Scenes.Battle.Feature.Markets
         {
             _unitData = unitData;
             image.sprite = unitData.Unit.Illustration;
+            IsPurchased = false;
             ActivateImage();
         }
 

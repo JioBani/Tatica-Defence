@@ -22,11 +22,11 @@ namespace Scenes.Battle.Feature.Markets
         [SerializeField] private DefenderManager defenderManager;
         [SerializeField] private List<UnitLoadOutData> appearUnits;
 
-        [SerializeField] private int levelUpGold = 5;
-        
         public readonly RxValue<int> Gold = new RxValue<int>(10);
         public readonly RxValue<int> DefenderPlacementLimit = new RxValue<int>(0);
         public readonly RxValue<int> Level = new RxValue<int>(1);
+        public readonly RxValue<int> LevelUpGold = new RxValue<int>(5);
+        public readonly RxValue<int> RerollGold = new RxValue<int>(2);
 
         MarketUnitRoller _roller;
         public MarketUnitRoller Roller => _roller;
@@ -58,7 +58,6 @@ namespace Scenes.Battle.Feature.Markets
             GlobalEventBus.Unsubscribe<OnDefenderDragEventDto>(OnDefenderDrag);
         }
 
-
         private void OnRoundStart()
         {
             Gold.Value += 5;
@@ -76,14 +75,7 @@ namespace Scenes.Battle.Feature.Markets
                     (_,_) => OnRoundStart()
                 );
         }
-
-        private void RerollSlots()
-        {
-            List<UnitLoadOutData> units = _roller.PickUnits(4);
-
-            OnSlotRerolled?.Invoke(units);
-        }
-
+        
         private bool BuySomething(int gold, string notEnoughGoldMessage = null)
         {
             if (gold > Gold.Value)
@@ -100,6 +92,21 @@ namespace Scenes.Battle.Feature.Markets
             {
                 Gold.Value -= gold;
                 return true;
+            }
+        }
+
+        private void RerollSlots()
+        {
+            List<UnitLoadOutData> units = _roller.PickUnits(4);
+
+            OnSlotRerolled?.Invoke(units);
+        }
+
+        public void Reroll()
+        {
+            if (BuySomething(RerollGold.Value, "골드가 부족합니다."))
+            {
+                RerollSlots();
             }
         }
 
@@ -123,7 +130,7 @@ namespace Scenes.Battle.Feature.Markets
 
         public bool LevelUp()
         {
-            if (BuySomething(levelUpGold, "골드가 부족합니다."))
+            if (BuySomething(LevelUpGold.Value, "골드가 부족합니다."))
             {
                 Level.Value += 1;
                 DefenderPlacementLimit.Value += 1; // 레벨업시 수호자 배치 상한 상승

@@ -2116,7 +2116,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 454455826}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1041871075}
+        m_TargetAssemblyTypeName: Scenes.Battle.Feature.Ui.Markets.MarketUiManager,
+          Assembly-CSharp
+        m_MethodName: OnClickReroll
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &454455826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4870,7 +4883,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 17709f245e98e2f44af75ab196fe3d80, type: 2}
   - {fileID: 11400000, guid: 9f710968c0fe68143990184d165a6a21, type: 2}
   - {fileID: 11400000, guid: b7612ad2e3ed9fa4587eee193d3d32e2, type: 2}
-  levelUpGold: 5
 --- !u!114 &1041871075
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,5 +29,9 @@ namespace Scenes.Battle.Feature.Ui.Markets
             goldText.text = $"{gold} GOLD";
         }
 
+        public void OnClickReroll()
+        {
+            marketManager.Reroll();
+        }
     }
 }
