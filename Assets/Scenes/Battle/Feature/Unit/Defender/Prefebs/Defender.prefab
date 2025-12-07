@@ -94,6 +94,7 @@ MonoBehaviour:
   actionStateController: {fileID: 5538008670736061362}
   UnitLoadOutData: {fileID: 0}
   fraction: 0
+  draggable: {fileID: 9132227213633644993}
 --- !u!114 &5538008670736061362 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1071765619771846872, guid: 55f271110f86e19488c6665236798e12, type: 3}
@@ -114,5 +115,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d67b80e46dffdb94ea2d0598cec9b808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9132227213633644993 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4375643860260506283, guid: 55f271110f86e19488c6665236798e12, type: 3}
+  m_PrefabInstance: {fileID: 4757306078331118442}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5471618386058694091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea37cb3106c1b224dae1b70c16438892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

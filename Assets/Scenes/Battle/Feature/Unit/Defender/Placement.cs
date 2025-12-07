@@ -3,6 +3,6 @@
     public enum Placement
     {
         WaitingArea,
-        BattleArea
+        BattleArea,
     }
 }

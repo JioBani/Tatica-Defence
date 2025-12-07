@@ -12,6 +12,7 @@ namespace Scenes.Battle.Feature.Ui.Markets
     public class DefenderPlacementLimitText : MonoBehaviour
     {
         TextMeshProUGUI _text;
+        [SerializeField] DefenderManager defenderManager;
 
         private void Awake()
         {
@@ -21,7 +22,8 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void OnEnable()
         {
             MarketManager.Instance.DefenderPlacementLimit.OnChange += OnDefenderPlacementChanged;
-            DefenderManager.Instance.OnPlacementChange += OnDefenderPlacementChanged;
+            defenderManager.OnPlacementChange += OnDefenderPlacementChanged;
+            defenderManager.OnDefenderChange += OnDefenderChange;
             RoundManager
                 .Instance
                 .AddOnConfigureStatesEvent(AddOnRoundStart);
@@ -31,7 +33,8 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void OnDisable()
         {
             MarketManager.Instance.DefenderPlacementLimit.OnChange -= OnDefenderPlacementChanged;
-            DefenderManager.Instance.OnPlacementChange -= OnDefenderPlacementChanged;
+            defenderManager.OnPlacementChange -= OnDefenderPlacementChanged;
+            defenderManager.OnDefenderChange -= OnDefenderChange;
             RoundManager.Instance
                 .GetStateBase(PhaseType.Maintenance)
                 .Event
@@ -49,7 +52,7 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void OnRoundStart(PhaseType _, StateBaseEventType _2)
         {
             RefreshText(
-                DefenderManager.Instance.GetPlacementCount(Placement.BattleArea),
+                defenderManager.GetPlacementCount(Placement.BattleArea),
                 MarketManager.Instance.DefenderPlacementLimit.Value
             );
         }
@@ -62,7 +65,7 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void OnDefenderPlacementChanged(Defender defender, Placement placement)
         {
             RefreshText(
-                DefenderManager.Instance.GetPlacementCount(Placement.BattleArea), 
+                defenderManager.GetPlacementCount(Placement.BattleArea), 
                 MarketManager.Instance.DefenderPlacementLimit.Value
             );
         }
@@ -74,8 +77,16 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void OnDefenderPlacementChanged(int limit)
         {
             RefreshText(
-                DefenderManager.Instance.GetPlacementCount(Placement.BattleArea), 
+                defenderManager.GetPlacementCount(Placement.BattleArea), 
                 limit
+            );
+        }
+
+        private void OnDefenderChange(Defender defender, DefenderChanges changes)
+        {
+            RefreshText(
+                defenderManager.GetPlacementCount(Placement.BattleArea), 
+                MarketManager.Instance.DefenderPlacementLimit.Value
             );
         }
 

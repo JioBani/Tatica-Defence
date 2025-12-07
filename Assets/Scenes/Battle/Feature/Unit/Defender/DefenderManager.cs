@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.GlobalEventBus;
 using Common.Scripts.SceneSingleton;
+using Scenes.Battle.Feature.Events;
 using Scenes.Battle.Feature.Units;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.WaitingAreas;
@@ -10,11 +12,28 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Unit.Defenders
 {
-    public class DefenderManager : SceneSingleton<DefenderManager>
+    public enum DefenderChanges
+    {
+        Spawn,
+        Despawn,
+    }
+    
+    public class DefenderManager : MonoBehaviour
     {
         [SerializeField] private UnitGenerator unitGenerator;
         private List<Defender> units = new List<Defender>();
         public Action<Defender, Placement> OnPlacementChange;
+        public Action<Defender, DefenderChanges> OnDefenderChange;
+
+        private void OnEnable()
+        {
+            GlobalEventBus.Subscribe<OnDefenderPlacementChangedEventDto>(RecordPlacement);
+        }
+
+        private void OnDisable()
+        {
+            GlobalEventBus.Unsubscribe<OnDefenderPlacementChangedEventDto>(RecordPlacement);
+        }
 
         public int GetPlacementCount(Placement placement)
         {
@@ -29,8 +48,12 @@ namespace Scenes.Battle.Feature.Unit.Defenders
                 var unit = unitGenerator.GenerateDefender(unitLoadOutData);
                 
                 unit.MoveToWaitingArea();
+
+                Defender defender = unit.GetComponent<Defender>();
                 
-                units.Add(unit.GetComponent<Defender>());
+                units.Add(defender);
+                
+                OnDefenderChange.Invoke(defender, DefenderChanges.Spawn);
 
                 return true;
             }
@@ -42,14 +65,21 @@ namespace Scenes.Battle.Feature.Unit.Defenders
             }
         }
 
+        public void RemoveDefender(Defender defender)
+        {
+            units.Remove(defender);
+            OnDefenderChange?.Invoke(defender, DefenderChanges.Despawn);
+            unitGenerator.RemoveUnit(defender);
+        }
+
         public bool IsAllDefenderDowned()
         {
             return units.All((unit) => unit.ActionStateController.CurrentStateType == ActionStateType.Downed);
         }
 
-        public void RecordPlacement(Defender defender, Placement placement)
+        public void RecordPlacement(OnDefenderPlacementChangedEventDto dto)
         {
-            OnPlacementChange?.Invoke(defender, placement);
+            OnPlacementChange?.Invoke(dto.defender, dto.placement);
         }
     }
 }

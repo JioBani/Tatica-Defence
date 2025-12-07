@@ -48,5 +48,10 @@ namespace Scenes.Battle.Feature.Units
         {
             return Generate(data, aggressorSamplePrefab);
         }
+
+        public void RemoveUnit(Unit unit)
+        {
+            _objectPooler.DeSpawn(unit.GetComponent<Poolable>());
+        }
     }
 }

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.Draggable;
+using Common.Scripts.GlobalEventBus;
 using Common.Scripts.Rxs;
+using Common.Scripts.SceneSingleton;
 using Common.Scripts.StateBase;
-using JetBrains.Annotations;
+using Scenes.Battle.Feature.Events;
 using Scenes.Battle.Feature.Rounds;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Ui;
@@ -13,8 +15,10 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Markets
 {
-    public class MarketManager : Common.Scripts.SceneSingleton.SceneSingleton<MarketManager>
+    public class MarketManager : SceneSingleton<MarketManager>
     {
+        [SerializeField] private GameObject market;
+        [SerializeField] private DefenderSellZone sellZone;
         [SerializeField] private DefenderManager defenderManager;
         [SerializeField] private List<UnitLoadOutData> appearUnits;
 
@@ -43,7 +47,24 @@ namespace Scenes.Battle.Feature.Markets
             // TOOD: RoundManager 에 게임 시작 상태를 만들고 그곳에 콜백 등록
             DefenderPlacementLimit.Value = 3;
         }
+        
+        private void OnEnable()
+        {
+            GlobalEventBus.Subscribe<OnDefenderDragEventDto>(OnDefenderDrag);
+        }
 
+        private void OnDisable()
+        {
+            GlobalEventBus.Unsubscribe<OnDefenderDragEventDto>(OnDefenderDrag);
+        }
+
+
+        private void OnRoundStart()
+        {
+            Gold.Value += 5;
+            RerollSlots();
+        }
+        
         private void AddOnRoundStartEvent(object _)
         {
             RoundManager
@@ -54,12 +75,6 @@ namespace Scenes.Battle.Feature.Markets
                     StateBaseEventType.Enter,
                     (_,_) => OnRoundStart()
                 );
-        }
-
-        private void OnRoundStart()
-        {
-            Gold.Value += 5;
-            RerollSlots();
         }
 
         private void RerollSlots()
@@ -103,7 +118,7 @@ namespace Scenes.Battle.Feature.Markets
 
         public bool IsDefenderLimitExceeded()
         {
-            return  defenderManager.GetPlacementCount(Placement.BattleArea) >= DefenderPlacementLimit.Value;
+            return defenderManager.GetPlacementCount(Placement.BattleArea) >= DefenderPlacementLimit.Value;
         }
 
         public bool LevelUp()
@@ -118,6 +133,27 @@ namespace Scenes.Battle.Feature.Markets
             {
                 return false;
             }
+        }
+        
+        private void OnDefenderDrag(OnDefenderDragEventDto dto)
+        {
+            if (dto.state == DragState.DragStart)
+            {
+                market.SetActive(false);
+                sellZone.gameObject.SetActive(true);
+            }
+            else if(dto.state == DragState.DragEnd)
+            {
+                market.SetActive(true);
+                sellZone.TrySell(dto.defender);
+                sellZone.gameObject.SetActive(false);
+            }
+        }
+
+        public void Sell(Defender defender)
+        {
+            defenderManager.RemoveDefender(defender);
+            Gold.Value += defender.UnitLoadOutData.Unit.Cost;
         }
     }
 }

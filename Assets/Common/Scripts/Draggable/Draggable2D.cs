@@ -15,6 +15,8 @@ namespace Common.Scripts.Draggable
         /// oldZone => newZone
         /// </summary>
         public Action<DropZone2D,DropZone2D> OnDrop;
+        public Action OnDragStart;
+        public Action OnDragEnd;
     
         void Awake()
         {
@@ -25,11 +27,13 @@ namespace Common.Scripts.Draggable
         {
             _startPosition = transform.position;
             _isDragging = true;
+            OnDragStart?.Invoke();
         }
 
         public void EndDrag()
         {
             _isDragging = false;
+            OnDragEnd?.Invoke();
         
             TryDrop();
         }
