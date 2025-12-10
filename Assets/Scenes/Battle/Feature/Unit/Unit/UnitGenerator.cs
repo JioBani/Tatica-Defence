@@ -28,7 +28,7 @@ namespace Scenes.Battle.Feature.Units
             
             var unitComponent = newUnit.GetComponent<Unit>();
             
-            unitComponent.OnSpawn(data);
+            unitComponent.SetSpawn(data);
 
             return unitComponent;
         }

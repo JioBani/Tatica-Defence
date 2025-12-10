@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Common.Scripts.Enums;
+using Scenes.Battle.Feature.Unit.Skills;
+using Scenes.Battle.Feature.Unit.Skills.Contexts;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.HealthBars;
 using Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets;
@@ -27,6 +29,8 @@ namespace Scenes.Battle.Feature.Units
         public readonly UnitStatSheet StatSheet = new();
 
         public Action<Unit> OnSpawnEvent;
+        
+        protected ISkillExecutor SkillExecutor;
         
         protected virtual void Awake()
         {
@@ -58,15 +62,24 @@ namespace Scenes.Battle.Feature.Units
         }
 
         // UnitGenerator 에 의해 소환되었을 때
-        public void OnSpawn(UnitLoadOutData unitLoadOutData)
+        public void SetSpawn(UnitLoadOutData unitLoadOutData)
         {
             //_unitLoadOutData = unitLoadOutData;
             UnitLoadOutData = unitLoadOutData;
             StatSheet.Init(unitLoadOutData.Stats);
+            SkillExecutor = SkillFactory.Instance.CreateSkillExecutor(unitLoadOutData.Skill);
+            SkillExecutor.Initialize(new SkillInitializeContext());
+            
             //TEMP
             GetComponent<SpriteRenderer>().sprite = unitLoadOutData.Unit.Icon;
-            
+
+            OnSpawn(unitLoadOutData);
             OnSpawnEvent?.Invoke(this);
+        }
+
+        protected virtual void OnSpawn(UnitLoadOutData unitLoadOutData)
+        {
+            
         }
     }
 }
