@@ -42,21 +42,5 @@ namespace Scenes.Battle.Feature.Unit.Defenders
             Placement = placement;
             GlobalEventBus.Publish(new OnDefenderPlacementChangedEventDto(this, placement));
         }
-
-        protected override void OnSpawn(UnitLoadOutData unitLoadOutData)
-        {
-            Debug.Log("OnSpawn");
-            ExecuteSkill();
-        }
-
-        private void ExecuteSkill()
-        {
-            var repeater = new DynamicRepeater(
-                intervalNow: () => TimeSpan.FromSeconds(5), 
-                job : async () => SkillExecutor.Execute(new SkillRuntimeContext(this,null))
-            );
-            
-            repeater.Start();
-        }
     }
 }

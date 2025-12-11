@@ -18,6 +18,7 @@ namespace Common.Data.Skills.SkillDefinitions
         
         [Tooltip("스킬 쿨타임")]
         [SerializeField] private float coolTime;
+        public float CoolTime => coolTime;
 
         [Tooltip("아이콘")]
         [SerializeField] private Sprite icon;

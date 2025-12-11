@@ -7,9 +7,9 @@ namespace Scenes.Battle.Feature.Unit.Skills
 {
     public class SkillFactory : SceneSingleton<SkillFactory>
     {
-        public ISkillExecutor CreateSkillExecutor(SkillDefinitionData skillData)
+        public ISkill CreateSkill(SkillDefinitionData skillData)
         {
-            return new FireArrowExecutor();
+            return new FireArrow();
         } 
     }
 }

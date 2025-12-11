@@ -12,6 +12,7 @@ namespace Common.Scripts.DynamicRepeater
         private readonly Func<TimeSpan> _intervalNow;  // 현재 간격을 제공(외부에서 값만 변경)
         private CancellationTokenSource _stopCts;
         private bool _running;
+        public bool IsRunning => _running;
 
         /// <param name="intervalNow">현재 주기를 반환하는 함수(예: () => TimeSpan.FromSeconds(currentSec))</param>
         /// <param name="job">매 틱 실행할 작업</param>
