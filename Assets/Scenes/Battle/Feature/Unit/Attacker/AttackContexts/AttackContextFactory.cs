@@ -1,5 +1,6 @@
 ﻿using Common.Scripts.SceneSingleton;
 using Scenes.Battle.Feature.Projectiles;
+using Scenes.Battle.Feature.Unit.Attackers.AttackContexts.Dtos;
 using Scenes.Battle.Feature.Units.Attackables;
 using Scenes.Battle.Feature.Units.Attackers;
 using UnityEngine;
@@ -10,14 +11,19 @@ namespace Scenes.Battle.Feature.Unit.Attackers.AttackContexts
     {
         [SerializeField] ProjectileGenerator generator;
         
-        public MeleeAttackContext GenerateMelee(float damage, Attacker attacker, Victim victim)
+        public MeleeAttackContext GenerateMelee(AttackContextDto dto)
         {
-            return new MeleeAttackContext(damage, attacker, victim);
+            return new MeleeAttackContext(dto);
         }
 
-        public RangedAttackContext GenerateRanged(float damage, Attacker attacker, Victim victim)
+        public RangedAttackContext GenerateRanged(AttackContextDto dto)
         {
-            return new RangedAttackContext(damage, attacker, victim, generator.Generate());
+            return new RangedAttackContext(new RangedAttackContextDto(
+                dto.Damage,
+                dto.Attacker,
+                dto.Victim,
+                generator.Generate()
+            ));
         }
     }
 }

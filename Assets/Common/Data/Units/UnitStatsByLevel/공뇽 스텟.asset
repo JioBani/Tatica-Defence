@@ -37,9 +37,9 @@ MonoBehaviour:
     additionalPerExtraStar: 0
   attackSpeed:
     baseValuesByStar:
-    - 1
-    - 1
-    - 1
+    - 0.01
+    - 0.01
+    - 0.01
     additionalPerExtraStar: 0
   attackRange:
     baseValuesByStar:

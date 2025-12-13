@@ -4,6 +4,7 @@ using Common.Scripts.DynamicRepeater;
 using Common.Scripts.StateBase;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Unit.Attackers.AttackContexts;
+using Scenes.Battle.Feature.Unit.Attackers.AttackContexts.Dtos;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
         public Action<Victim> OnTargetExit;
 
         private DynamicRepeater _attackRepeater;
+        private AttackContextDto _attackContextDto;
 
         private void Awake()
         {
@@ -109,11 +111,13 @@ namespace Scenes.Battle.Feature.Units.Attackers
         {
             if (_victim != null)
             {
-                var context = AttackContextFactory.Instance.GenerateRanged(
-                    unit.StatSheet.PhysicalAttack.CurrentValue,
-                    this,
-                    _victim
+                AttackContextDto attackContextDto = new AttackContextDto(
+                    damage: unit.StatSheet.PhysicalAttack.CurrentValue,
+                    attacker: this,
+                    victim: _victim
                 );
+                
+                var context = AttackContextFactory.Instance.GenerateRanged(attackContextDto);
                 
                 context.TryAttack();
             }

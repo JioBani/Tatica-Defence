@@ -1,4 +1,5 @@
-﻿using Scenes.Battle.Feature.Units.Attackers;
+﻿using Scenes.Battle.Feature.Unit.Attackers.AttackContexts.Dtos;
+using Scenes.Battle.Feature.Units.Attackers;
 
 namespace Scenes.Battle.Feature.Units.Attackables
 {
@@ -8,11 +9,11 @@ namespace Scenes.Battle.Feature.Units.Attackables
         protected Victim Victim;
         protected Attacker Attacker;
 
-        public AttackContext(float damage, Attacker attacker, Victim victim)
+        public AttackContext(AttackContextDto dto)
         {
-            this.damage = damage;
-            Attacker = attacker;
-            Victim = victim;
+            this.damage = dto.Damage;
+            Attacker = dto.Attacker;
+            Victim = dto.Victim;
         }
 
         public abstract void TryAttack();

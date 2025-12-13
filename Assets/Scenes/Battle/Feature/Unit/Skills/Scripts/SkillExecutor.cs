@@ -113,7 +113,7 @@ namespace Scenes.Battle.Feature.Unit.Skills
         {
             // 스킬 실행 처리: 준비 상태 해제, Execute 호출, 타이머 재시작
             _isSkillReady = false;
-            _skill.Execute(new ExecuteContext(attacker.Victim));
+            _skill.Execute(new ExecuteContext(attacker,attacker.Victim));
             _skillTimer.Restart();
         }
     }

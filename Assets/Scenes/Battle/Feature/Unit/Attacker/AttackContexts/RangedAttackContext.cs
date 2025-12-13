@@ -1,4 +1,5 @@
 ﻿using Scenes.Battle.Feature.Projectiles;
+using Scenes.Battle.Feature.Unit.Attackers.AttackContexts.Dtos;
 using Scenes.Battle.Feature.Units.Attackables;
 using Scenes.Battle.Feature.Units.Attackers;
 using UnityEngine;
@@ -9,11 +10,12 @@ namespace Scenes.Battle.Feature.Unit.Attackers.AttackContexts
     {
         private readonly Projectile _projectile;
         
-        public RangedAttackContext(float damage, Attacker attacker, Victim victim, Projectile projectile) 
-            : base(damage,attacker, victim)
+        public RangedAttackContext(RangedAttackContextDto dto) 
+            : base(dto)
         {
-            _projectile = projectile;
-            projectile.OnHit += OnHit;
+            Debug.Log(dto.Projectile);
+            _projectile = dto.Projectile;
+            _projectile.OnHit += OnHit;
         }
 
         public override void TryAttack()
