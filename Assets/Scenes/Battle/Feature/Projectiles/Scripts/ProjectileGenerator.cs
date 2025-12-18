@@ -1,9 +1,10 @@
 ﻿using Common.Scripts.ObjectPool;
+using Common.Scripts.SceneSingleton;
 using UnityEngine;
 
 namespace Scenes.Battle.Feature.Projectiles
 {
-    public class ProjectileGenerator : MonoBehaviour
+    public class ProjectileGenerator : SceneSingleton<ProjectileGenerator>
     {
         private ObjectPooler _objectPooler;
         

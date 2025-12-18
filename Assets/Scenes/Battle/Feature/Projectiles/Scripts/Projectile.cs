@@ -15,12 +15,23 @@ namespace Scenes.Battle.Feature.Projectiles
         [SerializeField] private float maxLifetime;// 안전 타이머
 
         private Transform _target;
-        private Attacker _attacker;
         private float _life;
 
-        public void Shot(Attacker attacker, Transform target)
+        // TODO: attacker 만을 위한 것이 아닌, 투사체 전체로 확장
+        // public void Shot(Attacker attacker, Transform target)
+        // {
+        //     _target = target;
+        //     _life = 0f;
+        //
+        //     transform.position = new Vector3(
+        //         attacker.transform.position.x,
+        //         attacker.transform.position.y,
+        //         transform.position.z
+        //     );
+        // }
+        
+        public void Shot(Transform attacker, Transform target)
         {
-            _attacker = attacker;
             _target = target;
             _life = 0f;
 
@@ -66,6 +77,11 @@ namespace Scenes.Battle.Feature.Projectiles
         public void OnSpawn()
         {
             
+        }
+
+        private void OnDisable()
+        {
+            OnHit = null;
         }
     }
 }

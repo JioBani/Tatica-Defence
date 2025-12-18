@@ -63,5 +63,10 @@ namespace Common.Scripts.Timers
         {
             OnTimeOut = null;
         }
+
+        public void SetMaxTime(float time)
+        {
+            MaxTime = time;
+        }
     }
 }

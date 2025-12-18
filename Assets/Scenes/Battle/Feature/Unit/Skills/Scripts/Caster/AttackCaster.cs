@@ -1,23 +1,23 @@
-using System;
+﻿using System;
 using Common.Data.Units.UnitStatsByLevel;
 using Common.Scripts.DynamicRepeater;
 using Common.Scripts.StateBase;
-using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Unit.Attackers.AttackContexts;
 using Scenes.Battle.Feature.Unit.Attackers.AttackContexts.Dtos;
 using Scenes.Battle.Feature.Unit.Skills.Castables;
+using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackables;
 using UnityEngine;
 
-namespace Scenes.Battle.Feature.Units.Attackers
+namespace Scenes.Battle.Feature.Unit.Skills.Caster
 {
-    public class Attacker : MonoBehaviour
+    public class AttackCaster : MonoBehaviour
     {
         [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
-        [SerializeField] private Unit unit;
+        [SerializeField] private Units.Unit unit;
         [SerializeField] private ActionStateController actionStateController;
-        public Unit Unit => unit;
+        public Units.Unit Unit => unit;
         
         private CircleCollider2D _circleCollider2D;
         private Victim _victim;
@@ -43,7 +43,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
             actionEvent.Add(StateBaseEventType.Enter, (_,_) => StartRepeat());
             actionEvent.Add(StateBaseEventType.Exit, (_,_) => EndAttackRepeat());
 
-            _attackCast = new AttackCast(this);
+            //_attackCast = new AttackCast(this);
         }
 
         private void Update()
@@ -55,7 +55,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
         }
 
         //TODO: 동적 스탯 변경을 적용하기
-        private void SetStats(Unit unit)
+        private void SetStats(Units.Unit unit)
         {
             _circleCollider2D.radius = unit.UnitLoadOutData.Stats.GetStat(UnitStatKind.AttackRange, 0);
             attackSpeed = unit.UnitLoadOutData.Stats.GetStat(UnitStatKind.AttackSpeed, 0);
@@ -117,7 +117,6 @@ namespace Scenes.Battle.Feature.Units.Attackers
             if (_victim != null)
             {
                 _attackCast.Cast();
-                
                 // AttackContextDto attackContextDto = new AttackContextDto(
                 //     damage: unit.StatSheet.PhysicalAttack.CurrentValue,
                 //     attacker: this,

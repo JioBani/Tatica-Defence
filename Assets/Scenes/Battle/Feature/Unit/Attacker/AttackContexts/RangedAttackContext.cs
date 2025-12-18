@@ -20,7 +20,7 @@ namespace Scenes.Battle.Feature.Unit.Attackers.AttackContexts
 
         public override void TryAttack()
         {
-            _projectile.Shot(Attacker, Victim.transform);
+            _projectile.Shot(Attacker.transform, Victim.transform);
         }
 
         private void OnHit()
