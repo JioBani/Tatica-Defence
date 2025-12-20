@@ -1,26 +1,26 @@
 ﻿using Scenes.Battle.Feature.Projectiles;
 using Scenes.Battle.Feature.Unit.Skills.Executables;
+using Scenes.Battle.Feature.Unit.Skills.Skills;
 using Scenes.Battle.Feature.Units.Attackers;
 
 namespace Scenes.Battle.Feature.Unit.Skills.Castables
 {
-    public class AttackCast : Castable
+    public class FireArrow : SkillCast
     {
-        private readonly Attacker _attacker;
-
-        public AttackCast(Attacker attacker)
+        private Attacker _attacker;
+        public FireArrow(Attacker attacker)
         {
             _attacker = attacker;
         }
         
         public override bool CanCast()
         {
-            return true;
+            return _attacker.Victim;
         }
 
         public override Executable Casting()
         {
-            RangeAttackExecutor executor = new RangeAttackExecutor(this,_attacker, _attacker.Victim);
+            FireArrowExecutor executor = new FireArrowExecutor(this, _attacker, _attacker.Victim);
 
             var projectile = ProjectileGenerator.Instance.Generate();
 
@@ -28,7 +28,7 @@ namespace Scenes.Battle.Feature.Unit.Skills.Castables
             
             projectile.Shot(_attacker.transform, _attacker.Victim.transform);
             
-            return new RangeAttackExecutor(this,_attacker, _attacker.Victim);
+            return new FireArrowExecutor(this, _attacker, _attacker.Victim);
         }
     }
 }

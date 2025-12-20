@@ -7,9 +7,11 @@ namespace Common.Scripts.Timers
         public float MaxTime { get; private set; }
         public float CurrentTime { get; private set; }
         public bool IsRunning { get; private set; }
-        public bool IsTimeOut { get; private set; }
 
-        public Action<float> OnTimeOut;
+        public bool IsTimeOut => CurrentTime <= 0;
+
+        // isTimeOut, MaxTime
+        public Action<bool, float> OnTimeOutChange;
         
         public Timer(float maxTime)
         {
@@ -21,11 +23,20 @@ namespace Common.Scripts.Timers
         {
             CurrentTime = MaxTime;
             IsRunning =  true;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
         }
 
         public void Stop()
         {
             IsRunning = false;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
+        }
+
+        public void Reset()
+        {
+            CurrentTime = MaxTime;
+            IsRunning = false;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
         }
 
         public void Restart()
@@ -37,11 +48,13 @@ namespace Common.Scripts.Timers
         public void Pause()
         {
             IsRunning = false;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
         }
 
         public void Resume()
         {
             IsRunning = true;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
         }
 
         public void Update(float deltaTime)
@@ -54,19 +67,20 @@ namespace Common.Scripts.Timers
                 {
                     CurrentTime = 0;
                     IsRunning = false;
-                    OnTimeOut?.Invoke(CurrentTime);
+                    OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
                 }
             }
         }
 
         public void Dispose()
         {
-            OnTimeOut = null;
+            OnTimeOutChange = null;
         }
 
         public void SetMaxTime(float time)
         {
             MaxTime = time;
+            OnTimeOutChange?.Invoke(IsTimeOut, MaxTime);
         }
     }
 }

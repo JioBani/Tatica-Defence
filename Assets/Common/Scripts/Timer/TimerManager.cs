@@ -9,12 +9,12 @@ namespace Common.Scripts.Timers
     {
         private readonly List<Timer> _timers = new List<Timer>();
 
-        public Timer Make(float maxTime, Action<float> onTimeOut = null)
+        public Timer Make(float maxTime, Action<bool, float> onTimeOutChange = null)
         {
             Timer timer = new Timer(maxTime);
-            if (onTimeOut != null)
+            if (onTimeOutChange != null)
             {
-                timer.OnTimeOut += onTimeOut;
+                timer.OnTimeOutChange += onTimeOutChange;
             }
             
             _timers.Add(timer);

@@ -1,15 +1,16 @@
 ﻿using Scenes.Battle.Feature.Unit.Skills.Castables;
 using Scenes.Battle.Feature.Units.Attackables;
 using Scenes.Battle.Feature.Units.Attackers;
+using UnityEngine;
 
 namespace Scenes.Battle.Feature.Unit.Skills.Executables
 {
-    public class RangeAttackExecutor : Executable
+    public class FireArrowExecutor : Executable
     {
-        private readonly Attacker _attacker;
-        private readonly Victim _victim;
-
-        public RangeAttackExecutor(Castable castable, Attacker attacker, Victim victim) : base(castable)
+        private Attacker _attacker;
+        private Victim _victim;
+        
+        public FireArrowExecutor(Castable castable, Attacker attacker, Victim victim) : base(castable)
         {
             _attacker = attacker;
             _victim = victim;
@@ -17,7 +18,8 @@ namespace Scenes.Battle.Feature.Unit.Skills.Executables
 
         protected override void Executing()
         {
-            _victim.Hit( _attacker.Unit.StatSheet.PhysicalAttack.CurrentValue);
+            Debug.Log("Executing FireArrow");
+            EndExecute();
         }
 
         protected override void EndExecuting()

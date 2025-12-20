@@ -66,13 +66,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6465798290088026175, guid: 55f271110f86e19488c6665236798e12, type: 3}
+    - {fileID: 2639577754113328182, guid: 55f271110f86e19488c6665236798e12, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 714470639557013153, guid: 55f271110f86e19488c6665236798e12, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4865092755452814107}
+    - targetCorrespondingSourceObject: {fileID: 714470639557013153, guid: 55f271110f86e19488c6665236798e12, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 674961399463421444}
   m_SourcePrefab: {fileID: 100100000, guid: 55f271110f86e19488c6665236798e12, type: 3}
+--- !u!114 &725602850310981760 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5193920713948900330, guid: 55f271110f86e19488c6665236798e12, type: 3}
+  m_PrefabInstance: {fileID: 4757306078331118442}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85395ab5701f454da5f31167e751f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5471618386058694091 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 714470639557013153, guid: 55f271110f86e19488c6665236798e12, type: 3}
@@ -95,6 +110,20 @@ MonoBehaviour:
   UnitLoadOutData: {fileID: 0}
   fraction: 0
   draggable: {fileID: 9132227213633644993}
+--- !u!114 &674961399463421444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5471618386058694091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87a2d0c26284b6a849359726820c2e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unit: {fileID: 4865092755452814107}
+  attacker: {fileID: 725602850310981760}
 --- !u!114 &5538008670736061362 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1071765619771846872, guid: 55f271110f86e19488c6665236798e12, type: 3}
