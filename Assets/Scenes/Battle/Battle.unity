@@ -4911,6 +4911,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 17709f245e98e2f44af75ab196fe3d80, type: 2}
   - {fileID: 11400000, guid: 9f710968c0fe68143990184d165a6a21, type: 2}
   - {fileID: 11400000, guid: b7612ad2e3ed9fa4587eee193d3d32e2, type: 2}
+  economyConfig: {fileID: 11400000, guid: 7f495dc7bec0eb34693f001a8cedc73c, type: 2}
 --- !u!114 &1041871075
 MonoBehaviour:
   m_ObjectHideFlags: 0

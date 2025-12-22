@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Common.Scripts.GlobalEventBus;
+using Common.Data.Configs;
 using Common.Scripts.Rxs;
 using Common.Scripts.SceneSingleton;
 using Common.Scripts.StateBase;
@@ -21,8 +22,9 @@ namespace Scenes.Battle.Feature.Markets
         [SerializeField] private DefenderSellZone sellZone;
         [SerializeField] private DefenderManager defenderManager;
         [SerializeField] private List<UnitLoadOutData> appearUnits;
+        public RxValue<int> Gold = new RxValue<int>(0);
+        [SerializeField] private EconomyConfig economyConfig;
 
-        public readonly RxValue<int> Gold = new RxValue<int>(10);
         public readonly RxValue<int> DefenderPlacementLimit = new RxValue<int>(0);
         public readonly RxValue<int> Level = new RxValue<int>(1);
         public readonly RxValue<int> LevelUpGold = new RxValue<int>(5);
@@ -161,6 +163,26 @@ namespace Scenes.Battle.Feature.Markets
         {
             defenderManager.RemoveDefender(defender);
             Gold.Value += defender.UnitLoadOutData.Unit.Cost;
+            Gold.Value += GetRoundStartIncome();
+        }
+        
+        private int GetRoundStartIncome()
+        {
+            int income = economyConfig.baseGoldPerRound;
+
+            // 이자
+            int steps = Mathf.Min(Gold.Value / economyConfig.goldPerInterestStep, economyConfig.maxInterest);
+            income += steps * economyConfig.interestPerStep;
+
+            // 연승 보너스
+            // if (winStreak > 0 && winStreak < winStreakBonusByCount.Length)
+            //     income += winStreakBonusByCount[winStreak];
+            //
+            // // 연패 보너스
+            // if (loseStreak > 0 && loseStreak < loseStreakBonusByCount.Length)
+            //     income += loseStreakBonusByCount[loseStreak];
+
+            return income;
         }
     }
 }
