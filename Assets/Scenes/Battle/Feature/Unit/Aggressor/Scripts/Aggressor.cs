@@ -11,7 +11,7 @@ namespace Scenes.Battle.Feature.Aggressors
 
         [SerializeField] private Poolable poolable;
         [SerializeField] private ActionStateController actionStateController;
-        
+
         private void Awake()
         {
             _rigidbody2d = GetComponent<Rigidbody2D>();
@@ -24,7 +24,7 @@ namespace Scenes.Battle.Feature.Aggressors
                 .Event
                 .Add(
                     StateBaseEventType.Enter,
-                    (_, _) =>{ OnDown();}
+                    (_, _) => { OnDown(); }
                 );
             _rigidbody2d.linearVelocity = Vector2.down * 1f;
         }
@@ -36,9 +36,9 @@ namespace Scenes.Battle.Feature.Aggressors
                 .Event
                 .Remove(
                     StateBaseEventType.Enter,
-                    (_, _) =>{ OnDown();}
+                    (_, _) => { OnDown(); }
                 );
-            
+
             _rigidbody2d.linearVelocity = Vector2.zero;
         }
 
@@ -46,6 +46,13 @@ namespace Scenes.Battle.Feature.Aggressors
         {
             poolable.DeSpawn();
         }
-        
+
+        /// <summary>
+        /// 생명 수정 위험 지역에 진입한 경우
+        /// </summary>
+        public void OnEnterLifeCrystalContactZone()
+        {
+            poolable.DeSpawn();
+        }
     }
 }
