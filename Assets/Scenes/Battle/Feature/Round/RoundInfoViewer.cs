@@ -21,17 +21,30 @@ namespace Scenes.Battle.Feature.Rounds
         private RoundInfoData _currentRoundInfo;
         private readonly List<AggressorSample> _samples = new ();
 
-        void Awake()
+        private void OnEnable()
+        {
+            RoundManager.Instance.OnConfigureStatesEvent += AddRoundManagerEvents;
+        }
+
+        private void OnDisable()
+        {
+            RoundManager.Instance.OnConfigureStatesEvent -= AddRoundManagerEvents;
+        }
+
+        /// <summary>
+        /// RoundManager Maintenance 진입시 라운드 보이기 등록, Maintenance 퇴장시 라운드 정보 숨기기 등록
+        /// </summary>
+        void AddRoundManagerEvents(dynamic _)
         {
             RoundManager.Instance
                 .GetStateBase(PhaseType.Maintenance)
                 .Event
-                .Add(StateBaseEventType.Enter, (_,_) => ShowRoundInfo());
+                .Remove(StateBaseEventType.Enter, (_,_) => ShowRoundInfo());
             
             RoundManager.Instance
                 .GetStateBase(PhaseType.Maintenance)
                 .Event
-                .Add(StateBaseEventType.Exit, (_,_) => HideRoundInfo());
+                .Remove(StateBaseEventType.Exit, (_,_) => HideRoundInfo());
         }
 
         void ShowRoundInfo()
