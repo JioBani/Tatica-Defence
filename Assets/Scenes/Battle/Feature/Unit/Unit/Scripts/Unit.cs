@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Common.Data.Units.UnitLoadOuts;
 using Common.Scripts.Draggable;
 using Common.Scripts.Enums;
+using Common.Scripts.GlobalEventBus;
+using Scenes.Battle.Feature.Events.RoundEvents;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.HealthBars;
@@ -38,6 +40,8 @@ namespace Scenes.Battle.Feature.Units
                 healthBar.Display(value / StatSheet.MaxHealth.CurrentValue);
             };
         }
+
+        
 
         public void MoveToWaitingArea()
         {

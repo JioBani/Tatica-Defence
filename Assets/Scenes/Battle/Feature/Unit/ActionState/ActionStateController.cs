@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.Scripts.GlobalEventBus;
 using Common.Scripts.StateBase;
+using Scenes.Battle.Feature.Events.RoundEvents;
 using Scenes.Battle.Feature.Units.ActionStates;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Attackables;
@@ -38,8 +40,19 @@ namespace Scenes.Battle.Feature.Units.ActionStates
 
         private void OnEnable()
         {
+            GlobalEventBus.Subscribe<OnGameOverEventDto>(OnGameOver);
             StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Idle);
             //StartStateBase(canMove ? ActionStateType.Move :  ActionStateType.Freeze);
+        }
+
+        private void OnDisable()
+        {
+            GlobalEventBus.Unsubscribe<OnGameOverEventDto>(OnGameOver);
+        }
+
+        private void OnGameOver(OnGameOverEventDto _)
+        {
+            CurrentState?.Exit(ActionStateType.Freeze);
         }
     }
 }

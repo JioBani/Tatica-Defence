@@ -10,9 +10,11 @@ namespace Scenes.Battle.Feature.LifeCrystals
     {
         public RxValue<int> MaxLifePoint;
         public RxValue<int> CurrentLifePoint;
+        public bool IsLifeCrystalDestroyed { get; private set; }
 
         [SerializeField] private float maxLifeBarWidth;
         [SerializeField] private RectTransform lifeBar;
+        
 
         private void Awake()
         {
@@ -32,6 +34,16 @@ namespace Scenes.Battle.Feature.LifeCrystals
         {
             CurrentLifePoint.Value += point;
             GlobalEventBus.Publish(new OnLifeCrystalPointChangedEventDto(CurrentLifePoint.Value));
+
+            if (CurrentLifePoint.Value < 0)
+            {
+                CurrentLifePoint.Value = 0;
+                IsLifeCrystalDestroyed = true;
+            }
+            else
+            {
+                IsLifeCrystalDestroyed = false;
+            }
         }
 
         private void UpdateUI(int _)

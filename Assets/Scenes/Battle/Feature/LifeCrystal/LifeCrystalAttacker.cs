@@ -18,7 +18,7 @@ namespace Scenes.Battle.Feature.LifeCrystals
         {
             if (other.CompareTag("LifeCrystalContactZone"))
             {
-                _lifeCrystalManager.ChangeLifePoint(-10);
+                _lifeCrystalManager.ChangeLifePoint(-100);
                 _aggressors.OnEnterLifeCrystalContactZone();
             }
         }

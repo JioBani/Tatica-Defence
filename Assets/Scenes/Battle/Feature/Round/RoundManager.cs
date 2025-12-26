@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
 using Common.Scripts.StateBase;
+using Scenes.Battle.Feature.LifeCrystals;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Unit.Defenders;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Scenes.Battle.Feature.Rounds
         public int RoundIndex { get; private set; } = 0;
         [SerializeField] private RoundAggressorManager roundAggressorManager;
         [SerializeField] private DefenderManager defenderManager;
+        [SerializeField] private LifeCrystalManager lifeCrystalManager;
 
         public static RoundManager Instance
         {
@@ -61,6 +63,16 @@ namespace Scenes.Battle.Feature.Rounds
         {
             return rounds[RoundIndex];
         }
+        
+        protected override PhaseType GlobalTransition(PhaseType currentStateBaseType)
+        {
+            if (currentStateBaseType != PhaseType.GameOver && lifeCrystalManager.IsLifeCrystalDestroyed)
+            {
+                return PhaseType.GameOver;
+            }
+            return currentStateBaseType;
+        }
+
         
         public void SetReady()
         {
