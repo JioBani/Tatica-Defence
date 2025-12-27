@@ -41,6 +41,8 @@ namespace Common.Scripts.StateBase
         // IStateListener 리스너 관리
         private readonly List<IStateListener<T>> _listeners = new();
 
+        protected bool DebugMode = false;
+
         protected virtual void Awake()
         {
             StateBaseAwake();
@@ -131,9 +133,9 @@ namespace Common.Scripts.StateBase
         /// <summary>
         /// 상태를 강제로 변경합니다. (외부에서 호출 가능)
         /// </summary>
-        public void RequestStateChange(T nextState, bool log = false)
+        public void RequestStateChange(T nextState)
         {
-            if (log)
+            if (DebugMode)
             {
                 Debug.Log($"RequestStateChange: {CurrentState} -> {nextState}");
             }
