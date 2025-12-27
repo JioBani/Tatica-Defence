@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
 using Common.Scripts.GlobalEventBus;
 using Common.Scripts.StateBase;
+using Cysharp.Threading.Tasks;
 using Scenes.Battle.Feature.Events;
 using Scenes.Battle.Feature.Events.RoundEvents;
 using Scenes.Battle.Feature.LifeCrystals;
@@ -23,6 +25,13 @@ namespace Scenes.Battle.Feature.Rounds
         [SerializeField] private DefenderManager defenderManager;
         [SerializeField] private LifeCrystalManager lifeCrystalManager;
 
+        [Header("Phase Transition Times")]
+        [SerializeField] private float readyPhaseDuration = 3f;
+        [SerializeField] private float endPhaseDuration = 3f;
+
+        private CancellationTokenSource _endPhaseCts;
+        private CancellationTokenSource _readyPhaseCts;
+        
         public static RoundManager Instance
         {
             get
@@ -43,6 +52,8 @@ namespace Scenes.Battle.Feature.Rounds
         protected override void Awake()
         {
             base.Awake();
+
+            DebugMode = true;
 
             // IStateListener 등록 (자기 자신)
             RegisterListener(this);
@@ -66,6 +77,10 @@ namespace Scenes.Battle.Feature.Rounds
         {
             GlobalEventBus.Unsubscribe<RoundAggressorCompletedEventDto>(OnAggressorAllCompleted);
             GlobalEventBus.Unsubscribe<OnLifeCrystalDestroyEventDto>(OnLifeCrystalDestroy);
+            _endPhaseCts?.Cancel();
+            _endPhaseCts?.Dispose();
+            _readyPhaseCts?.Cancel();
+            _readyPhaseCts?.Dispose();
         }
 
         // IStateListener 명시적 구현
@@ -75,6 +90,14 @@ namespace Scenes.Battle.Feature.Rounds
             {
                 case PhaseType.Maintenance:
                     IncrementRoundIndex();
+                    break;
+
+                case PhaseType.Ready:
+                    WaitAndTransitionToCombat().Forget();
+                    break;
+
+                case PhaseType.End:
+                    WaitAndTransitionToMaintenance().Forget();
                     break;
 
                 case PhaseType.GameOver:
@@ -106,8 +129,8 @@ namespace Scenes.Battle.Feature.Rounds
                     break;
 
                 case PhaseType.Ready:
-                    // Ready -> Combat: 자동 전환
-                    return PhaseType.Combat;
+                    // Ready -> Combat: 3초 후 자동 전환 (UniTask로 처리)
+                    break;
 
                 case PhaseType.Combat:
                     break;
@@ -115,9 +138,10 @@ namespace Scenes.Battle.Feature.Rounds
                 case PhaseType.GameOver:
                     // GameOver는 전환 없음
                     break;
-                
+
                 case PhaseType.End:
-                    return PhaseType.Maintenance;
+                    // End는 3초 후 자동 전환 (UniTask로 처리)
+                    break;
             }
 
             return currentPhase;
@@ -160,6 +184,60 @@ namespace Scenes.Battle.Feature.Rounds
         private void OnLifeCrystalDestroy(OnLifeCrystalDestroyEventDto _)
         {
             RequestStateChange(PhaseType.GameOver);
+        }
+
+        /// <summary>
+        /// Ready 페이즈 진입 시 3초 대기 후 Combat 페이즈로 전환
+        /// </summary>
+        private async UniTaskVoid WaitAndTransitionToCombat()
+        {
+            // 기존 취소 토큰 정리
+            _readyPhaseCts?.Cancel();
+            _readyPhaseCts?.Dispose();
+            _readyPhaseCts = new CancellationTokenSource();
+
+            try
+            {
+                // 설정된 시간만큼 대기
+                await UniTask.Delay(TimeSpan.FromSeconds(readyPhaseDuration), cancellationToken: _readyPhaseCts.Token);
+
+                // Combat 페이즈로 전환
+                if (CurrentState == PhaseType.Ready)
+                {
+                    RequestStateChange(PhaseType.Combat);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // 취소된 경우 아무 작업도 하지 않음
+            }
+        }
+
+        /// <summary>
+        /// End 페이즈 진입 시 3초 대기 후 Maintenance 페이즈로 전환
+        /// </summary>
+        private async UniTaskVoid WaitAndTransitionToMaintenance()
+        {
+            // 기존 취소 토큰 정리
+            _endPhaseCts?.Cancel();
+            _endPhaseCts?.Dispose();
+            _endPhaseCts = new CancellationTokenSource();
+
+            try
+            {
+                // 설정된 시간만큼 대기
+                await UniTask.Delay(TimeSpan.FromSeconds(endPhaseDuration), cancellationToken: _endPhaseCts.Token);
+
+                // Maintenance 페이즈로 전환
+                if (CurrentState == PhaseType.End)
+                {
+                    RequestStateChange(PhaseType.Maintenance);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // 취소된 경우 아무 작업도 하지 않음
+            }
         }
     }
 }
