@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading;
 using Common.Data.Rounds;
 using Common.Data.Units.UnitLoadOuts;
+using Common.Scripts.GlobalEventBus;
 using Common.Scripts.RepeatX;
 using Common.Scripts.StateBase;
 using Common.Scripts.UniTaskHandles;
 using Cysharp.Threading.Tasks;
+using Scenes.Battle.Feature.Events;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Units;
 using Scenes.Battle.Feature.Units.ActionStates;
@@ -68,6 +70,27 @@ namespace Scenes.Battle.Feature.Rounds
         {
             RoundManager.Instance.UnregisterListener(this);
             CancelGeneration();
+        }
+
+        private void Update()
+        {
+            // 스폰 중일 때 모든 태스크가 완료되었는지 확인
+            if (RoundAggressorState == RoundAggressorState.Spawning && IsAllAggressorsSpawned())
+            {
+                RoundAggressorState = RoundAggressorState.Spawned;
+            }
+
+            // 스폰 완료 후 모든 침략자가 비활성화되었는지 확인
+            if (
+                RoundManager.Instance.CurrentState == PhaseType.Combat &&
+                RoundAggressorState == RoundAggressorState.Spawned &&
+                _aggressors.All(aggressor => !aggressor.gameObject.activeInHierarchy)
+            )
+            {
+                RoundAggressorState = RoundAggressorState.Completed;
+                
+                GlobalEventBus.Publish<RoundAggressorCompletedEventDto>(new RoundAggressorCompletedEventDto());
+            }
         }
 
         private void OnRoundEnter()
@@ -163,8 +186,13 @@ namespace Scenes.Battle.Feature.Rounds
         /// <returns></returns>
         public bool IsAllAggressorsCompleted()
         {
-            return _aggressors.All(unit => unit.ActionStateController?.CurrentStateType == ActionStateType.Downed) &&
+            return _aggressors.All(unit => unit.ActionStateController?.CurrentState == ActionStateType.Downed) &&
                    _aggressorTaskHandles.All(task => task.IsCompleted);
+        }
+
+        private bool IsAllAggressorsSpawned()
+        {
+            return _aggressorTaskHandles.All(task => task.IsCompleted);
         }
     }
 }

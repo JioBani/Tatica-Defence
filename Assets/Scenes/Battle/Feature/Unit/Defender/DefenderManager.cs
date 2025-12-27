@@ -74,7 +74,7 @@ namespace Scenes.Battle.Feature.Unit.Defenders
 
         public bool IsAllDefenderDowned()
         {
-            return units.All((unit) => unit.ActionStateController.CurrentStateType == ActionStateType.Downed);
+            return units.All((unit) => unit.ActionStateController.CurrentState == ActionStateType.Downed);
         }
 
         public void RecordPlacement(OnDefenderPlacementChangedEventDto dto)

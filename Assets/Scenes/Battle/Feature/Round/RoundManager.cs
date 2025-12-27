@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using Common.Scripts.SceneSingleton;
 using Common.Data.Rounds;
+using Common.Scripts.GlobalEventBus;
 using Common.Scripts.StateBase;
+using Scenes.Battle.Feature.Events;
+using Scenes.Battle.Feature.Events.RoundEvents;
 using Scenes.Battle.Feature.LifeCrystals;
 using Scenes.Battle.Feature.Rounds.Phases;
 using Scenes.Battle.Feature.Unit.Defenders;
@@ -50,6 +53,21 @@ namespace Scenes.Battle.Feature.Rounds
             StartRound();
         }
 
+        private void OnEnable()
+        {
+            // 침략자 모두 처치 이벤트 구독
+            GlobalEventBus.Subscribe<RoundAggressorCompletedEventDto>(OnAggressorAllCompleted);
+            
+            // 생명수정 파괴 이벤트 구독
+            GlobalEventBus.Subscribe<OnLifeCrystalDestroyEventDto>(OnLifeCrystalDestroy);
+        }
+
+        private void OnDisable()
+        {
+            GlobalEventBus.Unsubscribe<RoundAggressorCompletedEventDto>(OnAggressorAllCompleted);
+            GlobalEventBus.Unsubscribe<OnLifeCrystalDestroyEventDto>(OnLifeCrystalDestroy);
+        }
+
         // IStateListener 명시적 구현
         void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
         {
@@ -60,8 +78,8 @@ namespace Scenes.Battle.Feature.Rounds
                     break;
 
                 case PhaseType.GameOver:
-                    Common.Scripts.GlobalEventBus.GlobalEventBus.Publish(
-                        new Scenes.Battle.Feature.Events.RoundEvents.OnGameOverEventDto()
+                    GlobalEventBus.Publish(
+                        new OnGameOverEventDto()
                     );
                     Debug.Log("Game Over");
                     break;
@@ -78,24 +96,8 @@ namespace Scenes.Battle.Feature.Rounds
             // Exit 단계에서는 특별한 동작 없음
         }
         
-        public void StartRound()
-        {
-            StartStateBase(PhaseType.Maintenance);
-        }
-
-        public RoundInfoData GetCurrentRoundData()
-        {
-            return rounds[RoundIndex];
-        }
-        
         protected override PhaseType CheckStateTransition(PhaseType currentPhase)
         {
-            // 우선순위 1: 라이프 크리스탈이 파괴되면 무조건 GameOver
-            if (currentPhase != PhaseType.GameOver && lifeCrystalManager.IsLifeCrystalDestroyed)
-            {
-                return PhaseType.GameOver;
-            }
-
             // 우선순위 2: 각 Phase별 전환 조건 체크
             switch (currentPhase)
             {
@@ -108,30 +110,32 @@ namespace Scenes.Battle.Feature.Rounds
                     return PhaseType.Combat;
 
                 case PhaseType.Combat:
-                    // Combat -> Maintenance: 모든 적 처치 완료
-                    if (roundAggressorManager.IsAllAggressorsCompleted())
-                    {
-                        return PhaseType.Maintenance;
-                    }
-
-                    // Combat -> GameOver: 모든 디펜더 다운
-                    if (defenderManager.IsAllDefenderDowned())
-                    {
-                        return PhaseType.GameOver;
-                    }
                     break;
 
                 case PhaseType.GameOver:
                     // GameOver는 전환 없음
                     break;
+                
+                case PhaseType.End:
+                    return PhaseType.Maintenance;
             }
 
             return currentPhase;
         }
+        
+        public void StartRound()
+        {
+            StartStateBase(PhaseType.Maintenance);
+        }
+
+        public RoundInfoData GetCurrentRoundData()
+        {
+            return rounds[RoundIndex];
+        }
 
         public void SetReady()
         {
-            if (CurrentStateType == PhaseType.Maintenance)
+            if (CurrentState == PhaseType.Maintenance)
             {
                 RequestStateChange(PhaseType.Ready);
             }
@@ -140,6 +144,22 @@ namespace Scenes.Battle.Feature.Rounds
         public void IncrementRoundIndex()
         {
             RoundIndex++;
+        }
+
+        // 라운드의 모든 침략자가 처치되었을 때
+        private void OnAggressorAllCompleted(RoundAggressorCompletedEventDto _)
+        {
+            // 전투 페이즈면 종료 페이즈로 전환
+            if (CurrentState == PhaseType.Combat)
+            {
+                RequestStateChange(PhaseType.End);
+            }
+        }
+
+        // 생명수정 파괴시 게임 종료 페이즈 전환
+        private void OnLifeCrystalDestroy(OnLifeCrystalDestroyEventDto _)
+        {
+            RequestStateChange(PhaseType.GameOver);
         }
     }
 }

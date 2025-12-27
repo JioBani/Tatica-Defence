@@ -35,12 +35,7 @@ namespace Common.Scripts.StateBase
         /// 현재 상태를 반환합니다.
         /// </summary>
         public T CurrentState => _currentState;
-
-        /// <summary>
-        /// CurrentState와 동일합니다. (호환성 유지용)
-        /// </summary>
-        public T CurrentStateType => _currentState;
-
+        
         [SerializeField] private T showState; // 인스펙터 노출용
 
         // IStateListener 리스너 관리
@@ -136,8 +131,12 @@ namespace Common.Scripts.StateBase
         /// <summary>
         /// 상태를 강제로 변경합니다. (외부에서 호출 가능)
         /// </summary>
-        public void RequestStateChange(T nextState)
+        public void RequestStateChange(T nextState, bool log = false)
         {
+            if (log)
+            {
+                Debug.Log($"RequestStateChange: {CurrentState} -> {nextState}");
+            }
             NotifyExit(_currentState);
             ChangeState(nextState);
         }
