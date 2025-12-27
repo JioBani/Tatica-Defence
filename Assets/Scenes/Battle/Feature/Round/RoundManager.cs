@@ -10,9 +10,8 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds
 {
-    
-    // TODO: StateBaseController 상속으로 변경
-    public class RoundManager : StateBaseController<PhaseType>
+
+    public class RoundManager : StateBaseController<PhaseType>, IStateListener<PhaseType>
     {
         static RoundManager _instance;
         static bool _quitting;
@@ -36,22 +35,47 @@ namespace Scenes.Battle.Feature.Rounds
             }
         }
         
-        protected override Dictionary<PhaseType, StateBase<PhaseType>> ConfigureStates()
-        {
-            return new()
-            {
-                { PhaseType.Maintenance, new MaintenancePhase(this) },
-                { PhaseType.Ready, new ReadyPhase(this) },
-                { PhaseType.Combat, new CombatPhase(roundAggressorManager, defenderManager, this) },
-                { PhaseType.GameOver, new GameOverPhase(this) }
-            };
-        }
-
         public List<RoundInfoData> rounds;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            // IStateListener 등록 (자기 자신)
+            RegisterListener(this);
+        }
 
         private void Start()
         {
             StartRound();
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            switch (phaseType)
+            {
+                case PhaseType.Maintenance:
+                    IncrementRoundIndex();
+                    break;
+
+                case PhaseType.GameOver:
+                    Common.Scripts.GlobalEventBus.GlobalEventBus.Publish(
+                        new Scenes.Battle.Feature.Events.RoundEvents.OnGameOverEventDto()
+                    );
+                    Debug.Log("Game Over");
+                    break;
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            // Exit 단계에서는 특별한 동작 없음
         }
         
         public void StartRound()
@@ -64,21 +88,52 @@ namespace Scenes.Battle.Feature.Rounds
             return rounds[RoundIndex];
         }
         
-        protected override PhaseType GlobalTransition(PhaseType currentStateBaseType)
+        protected override PhaseType CheckStateTransition(PhaseType currentPhase)
         {
-            if (currentStateBaseType != PhaseType.GameOver && lifeCrystalManager.IsLifeCrystalDestroyed)
+            // 우선순위 1: 라이프 크리스탈이 파괴되면 무조건 GameOver
+            if (currentPhase != PhaseType.GameOver && lifeCrystalManager.IsLifeCrystalDestroyed)
             {
                 return PhaseType.GameOver;
             }
-            return currentStateBaseType;
+
+            // 우선순위 2: 각 Phase별 전환 조건 체크
+            switch (currentPhase)
+            {
+                case PhaseType.Maintenance:
+                    // Maintenance는 SetReady() 호출로만 전환
+                    break;
+
+                case PhaseType.Ready:
+                    // Ready -> Combat: 자동 전환
+                    return PhaseType.Combat;
+
+                case PhaseType.Combat:
+                    // Combat -> Maintenance: 모든 적 처치 완료
+                    if (roundAggressorManager.IsAllAggressorsCompleted())
+                    {
+                        return PhaseType.Maintenance;
+                    }
+
+                    // Combat -> GameOver: 모든 디펜더 다운
+                    if (defenderManager.IsAllDefenderDowned())
+                    {
+                        return PhaseType.GameOver;
+                    }
+                    break;
+
+                case PhaseType.GameOver:
+                    // GameOver는 전환 없음
+                    break;
+            }
+
+            return currentPhase;
         }
 
-        
         public void SetReady()
         {
             if (CurrentStateType == PhaseType.Maintenance)
             {
-                CurrentState.Exit(PhaseType.Ready);
+                RequestStateChange(PhaseType.Ready);
             }
         }
 

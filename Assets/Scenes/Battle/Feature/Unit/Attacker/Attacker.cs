@@ -11,14 +11,14 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Units.Attackers
 {
-    public class Attacker : MonoBehaviour
+    public class Attacker : MonoBehaviour, IStateListener<ActionStateType>
     {
         [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
         [SerializeField] private Unit unit;
         [SerializeField] private ActionStateController actionStateController;
         public Unit Unit => unit;
-        
+
         private CircleCollider2D _circleCollider2D;
         private Victim _victim;
         public Victim Victim => _victim;
@@ -36,23 +36,13 @@ namespace Scenes.Battle.Feature.Units.Attackers
             _circleCollider2D = GetComponent<CircleCollider2D>();
             unit.OnSpawnEvent += SetStats;
 
-            var actionEvent = actionStateController
-                .GetStateBase(ActionStateType.Attack)
-                .Event;
-            
-            actionEvent.Add(StateBaseEventType.Enter, (_,_) => StartRepeat());
-            actionEvent.Add(StateBaseEventType.Exit, (_,_) => EndAttackRepeat());
+            // IStateListener 등록
+            actionStateController.RegisterListener(this);
 
             _attackCast = new AttackCast(this);
         }
 
-        private void Update()
-        {
-            if (_victim && _victim.Unit.ActionStateController.CurrentState.StateType == ActionStateType.Downed)
-            {
-                ReleaseVictim();
-            }
-        }
+        // Update는 더 이상 필요 없음 - 상태 전환 로직이 ActionStateController로 이동
 
         //TODO: 동적 스탯 변경을 적용하기
         private void SetStats(Unit unit)
@@ -75,7 +65,7 @@ namespace Scenes.Battle.Feature.Units.Attackers
 
                 if (
                     newVictim.Unit.fraction != Unit.fraction && 
-                    newVictim.Unit.ActionStateController.CurrentState.StateType != ActionStateType.Downed
+                    newVictim.Unit.ActionStateController.CurrentState != ActionStateType.Downed
                 )
                 {
                     _victim = newVictim;
@@ -99,7 +89,30 @@ namespace Scenes.Battle.Feature.Units.Attackers
         private void OnDestroy()
         {
             unit.OnSpawnEvent -= SetStats;
-            _attackRepeater.Dispose();
+            _attackRepeater?.Dispose();
+            actionStateController.UnregisterListener(this);
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<ActionStateType>.OnStateEnter(ActionStateType stateType)
+        {
+            if (stateType == ActionStateType.Attack)
+            {
+                StartRepeat();
+            }
+        }
+
+        void IStateListener<ActionStateType>.OnStateRun(ActionStateType stateType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<ActionStateType>.OnStateExit(ActionStateType stateType)
+        {
+            if (stateType == ActionStateType.Attack)
+            {
+                EndAttackRepeat();
+            }
         }
 
         private void StartRepeat()

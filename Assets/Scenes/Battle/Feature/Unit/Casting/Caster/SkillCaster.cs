@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Unit.Castables
 {
-    public class SkillCaster : MonoBehaviour
+    public class SkillCaster : MonoBehaviour, IStateListener<PhaseType>
     {
         [SerializeField] private Units.Unit unit; // 이 스킬 실행기를 가진 유닛 참조
         [SerializeField] private Attacker attacker; // 공격자(타겟을 가진 컴포넌트)
@@ -21,45 +21,53 @@ namespace Scenes.Battle.Feature.Unit.Castables
         private Timer _skillTimer; // 쿨타임 타이머
         private bool _isSkillReady = false; // 스킬 사용 가능 여부
         private SkillCast _skill;
-        
+
         private void Awake()
         {
             // 컴포넌트 초기화: 같은 게임오브젝트의 Unit 컴포넌트를 가져옴
             unit = GetComponent<Units.Unit>();
+
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
         }
 
         private void OnEnable()
         {
             // 유닛 스폰 이벤트 등록
             unit.OnSpawnEvent += OnSpawn;
-            
-            // 전투 페이즈 진입 이벤트 등록: 전투 시작 시 스킬을 준비 상태로 설정
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Enter, OnEnterCombat);
-            
-            // 전투 페이즈 진입
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Exit, OnExitCombat);
         }
 
         private void OnDisable()
         {
             // 이벤트 해제 정리
             unit.OnSpawnEvent -= OnSpawn;
-            
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Remove(StateBaseEventType.Enter, OnEnterCombat);
-            
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Remove(StateBaseEventType.Enter, OnExitCombat);
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                OnEnterCombat();
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                OnExitCombat();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
         }
         
         private void Update()
@@ -94,14 +102,14 @@ namespace Scenes.Battle.Feature.Unit.Castables
             _skill.OnExecuteEndEvent += OnExecuteEnd;
         }
 
-        private void OnEnterCombat(PhaseType _, StateBaseEventType __)
+        private void OnEnterCombat()
         {
             // 전투 시작 시 스킬을 사용 가능으로 만들고 타이머 시작
             _isSkillReady = true;
             _skillTimer.Start();
         }
 
-        private void OnExitCombat(PhaseType _, StateBaseEventType __)
+        private void OnExitCombat()
         {
             // 전투 종료 시 타이머 정지(스킬 비활성화 등 추가 로직 필요 시 여기에 추가)
             _skillTimer.Stop();

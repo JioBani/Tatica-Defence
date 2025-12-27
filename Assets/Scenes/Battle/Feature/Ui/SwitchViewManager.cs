@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds.Ui
 {
-    public class SwitchViewManager : MonoBehaviour
+    public class SwitchViewManager : MonoBehaviour, IStateListener<PhaseType>
     {
         [SerializeField] private bool isEnemySideView;
         [SerializeField] private TextMeshProUGUI buttonText;
@@ -21,17 +21,35 @@ namespace Scenes.Battle.Feature.Rounds.Ui
 
         public Action<bool> switchViewEvent;
 
-        Phase _maintenancePhase;
-        
         private void Awake()
         {
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Add(StateBaseEventType.Enter, OnMaintenanceEnter);
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
         }
-        
-        private void OnMaintenanceEnter(PhaseType _, StateBaseEventType __) => SetRoundInfo();
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Maintenance)
+            {
+                SetRoundInfo();
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            // Exit 단계에서는 특별한 동작 없음
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
+        }
 
         public void SwitchView()
         {

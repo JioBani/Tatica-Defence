@@ -6,23 +6,43 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.CameraControl
 {
-    public class CameraControlManager : MonoBehaviour
+    public class CameraControlManager : MonoBehaviour, IStateListener<PhaseType>
     {
         Camera _mainCamera;
-        
+
         private void Awake()
         {
             _mainCamera = Camera.main;
-            
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Enter, (_,_) => SetCombatMode());
-            
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Exit, (_,_) => SetMaintenanceMode());
+
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                SetCombatMode();
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                SetMaintenanceMode();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
         }
         
         private void SetCombatMode()

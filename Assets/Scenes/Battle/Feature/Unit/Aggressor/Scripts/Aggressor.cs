@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Aggressors
 {
-    public class Aggressor : MonoBehaviour
+    public class Aggressor : MonoBehaviour, IStateListener<ActionStateType>
     {
         private Rigidbody2D _rigidbody2d;
 
@@ -15,31 +15,43 @@ namespace Scenes.Battle.Feature.Aggressors
         private void Awake()
         {
             _rigidbody2d = GetComponent<Rigidbody2D>();
+
+            // IStateListener 등록
+            actionStateController.RegisterListener(this);
         }
 
         private void OnEnable()
         {
-            actionStateController
-                .GetStateBase(ActionStateType.Downed)
-                .Event
-                .Add(
-                    StateBaseEventType.Enter,
-                    (_, _) => { OnDown(); }
-                );
             _rigidbody2d.linearVelocity = Vector2.down * 1f;
         }
 
         private void OnDisable()
         {
-            actionStateController
-                .GetStateBase(ActionStateType.Downed)
-                .Event
-                .Remove(
-                    StateBaseEventType.Enter,
-                    (_, _) => { OnDown(); }
-                );
-
             _rigidbody2d.linearVelocity = Vector2.zero;
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<ActionStateType>.OnStateEnter(ActionStateType stateType)
+        {
+            if (stateType == ActionStateType.Downed)
+            {
+                OnDown();
+            }
+        }
+
+        void IStateListener<ActionStateType>.OnStateRun(ActionStateType stateType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<ActionStateType>.OnStateExit(ActionStateType stateType)
+        {
+            // Exit 단계에서는 특별한 동작 없음
+        }
+
+        private void OnDestroy()
+        {
+            actionStateController.UnregisterListener(this);
         }
 
         private void OnDown()

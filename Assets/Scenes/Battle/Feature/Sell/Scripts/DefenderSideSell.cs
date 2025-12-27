@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Common.Scripts.Draggable;
 using Common.Scripts.InspectorDescriptionAttributes;
 using Scenes.Battle.Feature.Markets;
@@ -25,7 +24,7 @@ namespace Scenes.Battle.Feature.Sells
 
         public bool CanAccept(Draggable2D draggable, DropZone2D before, DropZone2D after)
         {
-            if (RoundManager.Instance.GetCurrentState().StateType != PhaseType.Maintenance)
+            if (RoundManager.Instance.CurrentState != PhaseType.Maintenance)
             {
                 Debug.Log("수호자는 준비 상태에서만 배치 할 수 있습니다.");
                 return false;

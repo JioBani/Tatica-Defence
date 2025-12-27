@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Markets
 {
-    public class MarketManager : SceneSingleton<MarketManager>
+    public class MarketManager : SceneSingleton<MarketManager>, IStateListener<PhaseType>
     {
         [SerializeField] private GameObject market;
         [SerializeField] private DefenderSellZone sellZone;
@@ -35,47 +35,54 @@ namespace Scenes.Battle.Feature.Markets
 
         public Action<List<UnitLoadOutData>> OnSlotRerolled;
         public Action<OnGoldNotEnoughDto> OnGoldNotEnough;
-        
+
         protected override void OnAwakeSingleton()
         {
             base.OnAwakeSingleton();
 
             _roller = new MarketUnitRoller(appearUnits);
-            
-            RoundManager
-                .Instance
-                .AddOnConfigureStatesEvent(AddOnRoundStartEvent);
+
+            // IStateListener 등록
 
             // TOOD: RoundManager 에 게임 시작 상태를 만들고 그곳에 콜백 등록
             DefenderPlacementLimit.Value = 3;
         }
-        
+
         private void OnEnable()
         {
+            RoundManager.Instance.RegisterListener(this);
             GlobalEventBus.Subscribe<OnDefenderDragEventDto>(OnDefenderDrag);
         }
 
         private void OnDisable()
         {
+            RoundManager.Instance.UnregisterListener(this);
             GlobalEventBus.Unsubscribe<OnDefenderDragEventDto>(OnDefenderDrag);
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Maintenance)
+            {
+                OnRoundStart();
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            // Exit 단계에서는 특별한 동작 없음
         }
 
         private void OnRoundStart()
         {
             Gold.Value += 5;
             RerollSlots();
-        }
-        
-        private void AddOnRoundStartEvent(object _)
-        {
-            RoundManager
-                .Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Add(
-                    StateBaseEventType.Enter,
-                    (_,_) => OnRoundStart()
-                );
         }
         
         private bool BuySomething(int gold, string notEnoughGoldMessage = null)

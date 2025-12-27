@@ -24,7 +24,7 @@ public enum RoundAggressorState
 
 namespace Scenes.Battle.Feature.Rounds
 {
-    public class RoundAggressorManager : MonoBehaviour
+    public class RoundAggressorManager : MonoBehaviour, IStateListener<PhaseType>
     {
         [SerializeField] private UnitGenerator unitGenerator;
         [SerializeField] private List<Transform> spawnPoints;
@@ -33,22 +33,41 @@ namespace Scenes.Battle.Feature.Rounds
         private CancellationTokenSource _roundContext;
         private readonly List<Units.Unit> _aggressors = new ();
         private readonly List<UniTaskHandle> _aggressorTaskHandles = new();
-        
+
         public RoundAggressorState RoundAggressorState { get; private set; } = RoundAggressorState.Waiting;
-        
+
         private void Awake()
         {
-            // Combat 페이즈 시작(Enter) 시 적 스폰 예약 시작
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Enter, (_, _) => OnRoundEnter());
-            
-            // Combat 페이즈 종료(Exit) 시 진행 중인 스폰 예약/대기 모두 취소
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Combat)
-                .Event
-                .Add(StateBaseEventType.Exit,  (_, _) => OnRoundEnd());
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
+        }
+
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                OnRoundEnter();
+            }
+        }
+
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Combat)
+            {
+                OnRoundEnd();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
+            CancelGeneration();
         }
 
         private void OnRoundEnter()

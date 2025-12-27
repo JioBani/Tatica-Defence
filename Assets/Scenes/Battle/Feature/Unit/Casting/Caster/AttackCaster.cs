@@ -11,14 +11,14 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Unit.Skills.Caster
 {
-    public class AttackCaster : MonoBehaviour
+    public class AttackCaster : MonoBehaviour, IStateListener<ActionStateType>
     {
         [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
         [SerializeField] private Units.Unit unit;
         [SerializeField] private ActionStateController actionStateController;
         public Units.Unit Unit => unit;
-        
+
         private CircleCollider2D _circleCollider2D;
         private Victim _victim;
         public Victim Victim => _victim;
@@ -36,19 +36,37 @@ namespace Scenes.Battle.Feature.Unit.Skills.Caster
             _circleCollider2D = GetComponent<CircleCollider2D>();
             unit.OnSpawnEvent += SetStats;
 
-            var actionEvent = actionStateController
-                .GetStateBase(ActionStateType.Attack)
-                .Event;
-            
-            actionEvent.Add(StateBaseEventType.Enter, (_,_) => StartRepeat());
-            actionEvent.Add(StateBaseEventType.Exit, (_,_) => EndAttackRepeat());
+            // IStateListener 등록
+            actionStateController.RegisterListener(this);
 
             //_attackCast = new AttackCast(this);
         }
 
+        // IStateListener 명시적 구현
+        void IStateListener<ActionStateType>.OnStateEnter(ActionStateType stateType)
+        {
+            if (stateType == ActionStateType.Attack)
+            {
+                StartRepeat();
+            }
+        }
+
+        void IStateListener<ActionStateType>.OnStateRun(ActionStateType stateType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<ActionStateType>.OnStateExit(ActionStateType stateType)
+        {
+            if (stateType == ActionStateType.Attack)
+            {
+                EndAttackRepeat();
+            }
+        }
+
         private void Update()
         {
-            if (_victim && _victim.Unit.ActionStateController.CurrentState.StateType == ActionStateType.Downed)
+            if (_victim && _victim.Unit.ActionStateController.CurrentState == ActionStateType.Downed)
             {
                 ReleaseVictim();
             }
@@ -75,7 +93,7 @@ namespace Scenes.Battle.Feature.Unit.Skills.Caster
 
                 if (
                     newVictim.Unit.fraction != Unit.fraction && 
-                    newVictim.Unit.ActionStateController.CurrentState.StateType != ActionStateType.Downed
+                    newVictim.Unit.ActionStateController.CurrentState != ActionStateType.Downed
                 )
                 {
                     _victim = newVictim;
@@ -99,7 +117,8 @@ namespace Scenes.Battle.Feature.Unit.Skills.Caster
         private void OnDestroy()
         {
             unit.OnSpawnEvent -= SetStats;
-            _attackRepeater.Dispose();
+            _attackRepeater?.Dispose();
+            actionStateController.UnregisterListener(this);
         }
 
         private void StartRepeat()

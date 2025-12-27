@@ -13,38 +13,45 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Rounds
 {
-    public class RoundInfoViewer : MonoBehaviour
+    public class RoundInfoViewer : MonoBehaviour, IStateListener<PhaseType>
     {
         [SerializeField] private UnitGenerator unitGenerator;
         [SerializeField] private AggressorSideSellManager  aggressorSideSellManager;
-        
+
         private RoundInfoData _currentRoundInfo;
         private readonly List<AggressorSample> _samples = new ();
 
-        private void OnEnable()
+        private void Awake()
         {
-            RoundManager.Instance.OnConfigureStatesEvent += AddRoundManagerEvents;
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
         }
 
-        private void OnDisable()
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
         {
-            RoundManager.Instance.OnConfigureStatesEvent -= AddRoundManagerEvents;
+            if (phaseType == PhaseType.Maintenance)
+            {
+                ShowRoundInfo();
+            }
         }
 
-        /// <summary>
-        /// RoundManager Maintenance 진입시 라운드 보이기 등록, Maintenance 퇴장시 라운드 정보 숨기기 등록
-        /// </summary>
-        void AddRoundManagerEvents(dynamic _)
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
         {
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Remove(StateBaseEventType.Enter, (_,_) => ShowRoundInfo());
-            
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Remove(StateBaseEventType.Exit, (_,_) => HideRoundInfo());
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            if (phaseType == PhaseType.Maintenance)
+            {
+                HideRoundInfo();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
         }
 
         void ShowRoundInfo()

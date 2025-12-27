@@ -15,27 +15,53 @@ namespace Scenes.Battle.Feature.Units.ActionStates
         [SerializeField] private Unit self;
         [SerializeField] private Attacker attacker;
         [SerializeField] private bool canMove;
-        
-        protected override Dictionary<ActionStateType, StateBase<ActionStateType>> ConfigureStates()
-        {
-            return new()
-            {
-                { ActionStateType.Idle, new IdleState(ActionStateType.Idle, this, self, attacker)},
-                { ActionStateType.Move , new MoveState(ActionStateType.Move, this, gameObject, attacker)},
-                { ActionStateType.Attack , new AttackState(ActionStateType.Attack, this, gameObject, attacker)},
-                { ActionStateType.Downed , new DownedState(ActionStateType.Downed, this)},
-                { ActionStateType.Freeze , new FreezeState(ActionStateType.Freeze, this)}
-            };
-        }
 
-        protected override ActionStateType GlobalTransition(ActionStateType currentStateBaseType)
+        protected override ActionStateType CheckStateTransition(ActionStateType currentState)
         {
+            // 우선순위 1: 체력이 0 이하면 무조건 Downed 상태로 전환
             if (self.StatSheet.Health.CurrentValue <= 0)
             {
                 return ActionStateType.Downed;
             }
-            
-            return currentStateBaseType;
+
+            // 우선순위 2: 각 상태별 전환 조건 체크
+            switch (currentState)
+            {
+                case ActionStateType.Idle:
+                    // Idle -> Attack: 타겟이 있으면 공격
+                    if (attacker.Victim)
+                    {
+                        return ActionStateType.Attack;
+                    }
+                    break;
+
+                case ActionStateType.Move:
+                    // Move -> Attack: 타겟이 있으면 공격
+                    if (attacker.Victim)
+                    {
+                        return ActionStateType.Attack;
+                    }
+                    break;
+
+                case ActionStateType.Attack:
+                    // Attack -> Move: 타겟이 없거나 타겟이 Downed 상태면 이동
+                    if (!attacker.Victim ||
+                        attacker.Victim.Unit.ActionStateController.CurrentState == ActionStateType.Downed)
+                    {
+                        return canMove ? ActionStateType.Move : ActionStateType.Idle;
+                    }
+                    break;
+
+                case ActionStateType.Downed:
+                    // Downed 상태는 전환 없음
+                    break;
+
+                case ActionStateType.Freeze:
+                    // Freeze 상태는 전환 없음
+                    break;
+            }
+
+            return currentState;
         }
 
         private void OnEnable()
@@ -52,7 +78,7 @@ namespace Scenes.Battle.Feature.Units.ActionStates
 
         private void OnGameOver(OnGameOverEventDto _)
         {
-            CurrentState?.Exit(ActionStateType.Freeze);
+            RequestStateChange(ActionStateType.Freeze);
         }
     }
 }

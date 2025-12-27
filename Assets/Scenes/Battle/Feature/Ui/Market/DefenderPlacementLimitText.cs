@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Scenes.Battle.Feature.Ui.Markets
 {
-    public class DefenderPlacementLimitText : MonoBehaviour
+    public class DefenderPlacementLimitText : MonoBehaviour, IStateListener<PhaseType>
     {
         TextMeshProUGUI _text;
         [SerializeField] DefenderManager defenderManager;
@@ -17,6 +17,9 @@ namespace Scenes.Battle.Feature.Ui.Markets
         private void Awake()
         {
             _text = GetComponent<TextMeshProUGUI>();
+
+            // IStateListener 등록
+            RoundManager.Instance.RegisterListener(this);
         }
 
         private void OnEnable()
@@ -24,10 +27,6 @@ namespace Scenes.Battle.Feature.Ui.Markets
             MarketManager.Instance.DefenderPlacementLimit.OnChange += OnDefenderPlacementChanged;
             defenderManager.OnPlacementChange += OnDefenderPlacementChanged;
             defenderManager.OnDefenderChange += OnDefenderChange;
-            RoundManager
-                .Instance
-                .AddOnConfigureStatesEvent(AddOnRoundStart);
-            
         }
 
         private void OnDisable()
@@ -35,21 +34,33 @@ namespace Scenes.Battle.Feature.Ui.Markets
             MarketManager.Instance.DefenderPlacementLimit.OnChange -= OnDefenderPlacementChanged;
             defenderManager.OnPlacementChange -= OnDefenderPlacementChanged;
             defenderManager.OnDefenderChange -= OnDefenderChange;
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Remove(StateBaseEventType.Enter,OnRoundStart);
         }
 
-        private void AddOnRoundStart(object _)
+        // IStateListener 명시적 구현
+        void IStateListener<PhaseType>.OnStateEnter(PhaseType phaseType)
         {
-            RoundManager.Instance
-                .GetStateBase(PhaseType.Maintenance)
-                .Event
-                .Add(StateBaseEventType.Enter,OnRoundStart);
+            if (phaseType == PhaseType.Maintenance)
+            {
+                OnRoundStart();
+            }
         }
 
-        private void OnRoundStart(PhaseType _, StateBaseEventType _2)
+        void IStateListener<PhaseType>.OnStateRun(PhaseType phaseType)
+        {
+            // Run 단계에서는 특별한 동작 없음
+        }
+
+        void IStateListener<PhaseType>.OnStateExit(PhaseType phaseType)
+        {
+            // Exit 단계에서는 특별한 동작 없음
+        }
+
+        private void OnDestroy()
+        {
+            RoundManager.Instance.UnregisterListener(this);
+        }
+
+        private void OnRoundStart()
         {
             RefreshText(
                 defenderManager.GetPlacementCount(Placement.BattleArea),
