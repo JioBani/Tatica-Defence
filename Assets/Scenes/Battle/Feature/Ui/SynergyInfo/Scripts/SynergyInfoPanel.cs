@@ -24,10 +24,19 @@ namespace Scenes.Battle.Feature.Ui.SynergyInfo
             listPanel.OnIndicatorClicked -= HandleIndicatorClicked;
         }
 
-        /// <summary>인디케이터 클릭을 수신하여 상세 패널에 전달한다. (CD-10)</summary>
+        /// <summary>인디케이터 클릭을 수신하여 상세 패널을 토글한다.</summary>
         private void HandleIndicatorClicked(SynergyActivation activation)
         {
-            detailPanel.Show(activation);
+            // 같은 시너지를 다시 클릭하면 패널을 닫는다 (CD-2)
+            if (detailPanel.gameObject.activeSelf && detailPanel.CurrentActivation == activation)
+            {
+                detailPanel.Hide();
+            }
+            else
+            {
+                // 새 시너지이거나 패널이 닫혀있으면 해당 시너지로 열기 (CD-1, CD-3)
+                detailPanel.Show(activation);
+            }
         }
     }
 }
