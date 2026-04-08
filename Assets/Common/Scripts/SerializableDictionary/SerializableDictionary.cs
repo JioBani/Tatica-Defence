@@ -35,6 +35,12 @@ namespace Common.Scripts.SerializableDictionary
         /// <summary>항목 수를 반환한다.</summary>
         public int Count => _dict.Count;
 
+        /// <summary>모든 키를 반환한다.</summary>
+        public Dictionary<TKey, TValue>.KeyCollection Keys => _dict.Keys;
+
+        /// <summary>모든 값을 반환한다.</summary>
+        public Dictionary<TKey, TValue>.ValueCollection Values => _dict.Values;
+
         /// <summary>모든 항목을 제거한다.</summary>
         public void Clear() => _dict.Clear();
 
