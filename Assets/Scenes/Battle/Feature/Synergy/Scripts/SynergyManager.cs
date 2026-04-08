@@ -109,6 +109,24 @@ namespace Scenes.Battle.Feature.Synergy
             }
         }
 
+        // ── 조회 ──
+
+        /// <summary>해당 시너지에 속하는 소환수 목록을 반환한다.</summary>
+        public List<UnitLoadOutData> GetUnitsForSynergy(SynergyDefinitionData definition)
+        {
+            var result = new List<UnitLoadOutData>();
+
+            foreach (var pair in _unitSynergyMap)
+            {
+                if (pair.Value == definition)
+                {
+                    result.Add(pair.Key);
+                }
+            }
+
+            return result;
+        }
+
         // ── Defender Spawn 처리 ──
 
         /// <summary>Defender 스폰 시 역방향 맵에서 소환술사 효과를 조회하여 주입한다.</summary>

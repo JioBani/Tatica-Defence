@@ -10050,6 +10050,9 @@ MonoBehaviour:
   descriptionText: {fileID: 1558852345}
   tierListContainer: {fileID: 641385357}
   tierRowPrefab: {fileID: 8730897085802767296, guid: 19e532472bedc7b46ba292c6d07f9caa, type: 3}
+  unitListContainer: {fileID: 1462050601}
+  unitSlotPrefab: {fileID: 2371790108313546331, guid: b30fc95154935424e8c3e272e8dd67a5, type: 3}
+  defenderManager: {fileID: 1890914476}
 --- !u!114 &1178205387
 MonoBehaviour:
   m_ObjectHideFlags: 0
