@@ -1,0 +1,864 @@
+{
+  "$comment": "QA 콘솔 커맨드 명세 (TACD-304, D-7). 단일 진실. 응답 봉투는 게이트웨이(벤더 MCP)가 제공하는 단일 봉투만 쓴다: 성공 { success:true, data } / 실패 { success:false, error }. 자체 봉투(ok 레이어) 중복 금지. 각 커맨드 returns.schema는 그 data의 스키마만 기술한다. NOW(카탈로그 [1차]/[2차]/[3차])만 수록. DEFER(보류·미구현·범위밖)는 미수록(future 주석만). 스키마는 반복 객체만 정의(Unit 베이스+Defender/Aggressor/Summoner 변형, StatSheet, TerminalSlot, Synergy, 입력 GridPosition); 스칼라/일회성 반환은 커맨드 returns에 인라인. 식별자 컨벤션: 인스턴스 식별자=instanceId(정수), 타입(정의) 식별자=definitionId(문자열). 구현 상태: 커맨드에 implemented:false 가 있고 설명이 [미구현] 으로 시작하면 명세에는 있으나 아직 미구현 — qa_call 호출 시 거부됨. implemented 필드가 없으면 구현됨. blocking:true 커맨드(Step·RunUntil 등 단일호출 대기형)는 동기 qa_call이 아니라 별도 async 블로킹 툴(async Task<object>, hold-open)로 디스패치된다 — 단일 hold ≤28000ms(30s 브릿지 캡 마진), 내부는 await UniTask.Yield(PlayerLoopTiming.Update)로 매프레임 양보(동기 블로킹 금지). blocking 필드가 없으면 동기 qa_call 경로.",
+  "$futureCommands": "DEFER 미수록 (검수 후 시나리오 요구 시 추가): LoadBattle/SetupLoadout(수동 전제), 적 강제 스폰(ForceSpawnAggressor), 스탯 강제 수정(SetStat), 페이즈 강제 점프(ForcePhase), 웨이브 프리뷰, 출격 모듈, 소환수 특성, 시너지 정보 패널, 전술 지원, 연쇄 합성 검증.",
+  "schemas": {
+    "output": {
+      "Unit": {
+        "description": "모든 유닛(소환수·침략자·소환술사)의 공통 관측면. 목록뷰는 이 베이스를 유닛당 한 줄로 평탄 조회한다(타입별 확장·14종 스탯은 드릴다운에서만). 진영·종류 불문 통일 조회의 단일 모델.",
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "integer",
+            "description": "인스턴스 식별자(정수). 살아있는 한 유닛 인스턴스를 가리킴. 인스턴스 지정 커맨드(PlaceUnit·MoveUnit·SellUnit·GetUnitStats)의 unitInstanceId 인자가 이 값."
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["defender", "aggressor", "summoner"],
+            "description": "유닛 종류. 어느 변형 스키마가 함께 적용되는지 결정."
+          },
+          "name": {
+            "type": "string",
+            "description": "유닛 표시명."
+          },
+          "definitionId": {
+            "type": "string",
+            "description": "유닛 타입(정의) 식별자(문자열). 어떤 종류의 유닛인지를 가리키는 타입 식별자이며 인스턴스 식별자(instanceId)와 구분된다. GiveUnit·ForceTerminalSlots가 지정하는 식별자와 동일 의미."
+          },
+          "faction": {
+            "type": "string",
+            "enum": ["Guardian", "Aggressor"],
+            "description": "진영. 아군(소환수·소환술사)은 Guardian, 적은 Aggressor."
+          },
+          "star": {
+            "type": "integer",
+            "description": "성급(합성으로 상승)."
+          },
+          "reinforcement": {
+            "type": "integer",
+            "description": "강화 수치(성급과 합쳐 유효 등급을 형성)."
+          },
+          "health": {
+            "type": "number",
+            "description": "현재 체력."
+          },
+          "maxHealth": {
+            "type": "number",
+            "description": "최대 체력."
+          },
+          "actionState": {
+            "type": "string",
+            "enum": ["Idle", "Move", "Attack", "Downed", "Freeze", "Waiting"],
+            "description": "현재 행동 상태. Waiting=정비 중 대기석 무적 대기 상태."
+          },
+          "alive": {
+            "type": "boolean",
+            "description": "생존 여부(Downed가 아니면 true)."
+          },
+          "statusEffects": {
+            "type": "array",
+            "description": "활성 상태이상 요약 목록.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "description": "상태이상 식별자." },
+                "stacks": { "type": "integer", "description": "중첩 수." },
+                "remaining": { "type": "number", "description": "남은 지속(초)." }
+              },
+              "required": ["id"]
+            }
+          },
+          "worldPosition": {
+            "type": "object",
+            "description": "월드 좌표(시각 검증 보조). 논리 위치는 변형별 필드를 본다.",
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" }
+            },
+            "required": ["x", "y"]
+          }
+        },
+        "required": ["instanceId", "kind", "name", "faction", "health", "maxHealth", "actionState", "alive"]
+      },
+      "Defender": {
+        "description": "소환수 = Unit 베이스 + 배치·시너지. 대기석/전장에 존재.",
+        "allOf": [
+          { "$ref": "#/schemas/output/Unit" },
+          {
+            "type": "object",
+            "properties": {
+              "placement": {
+                "type": "string",
+                "enum": ["WaitingArea", "BattleArea"],
+                "description": "현재 배치 영역(대기석 또는 전장)."
+              },
+              "position": {
+                "type": "object",
+                "description": "논리 위치. 대기석이면 슬롯, 전장이면 그리드 칸(lane,column). 영역에 따라 채워지는 필드가 다름.",
+                "properties": {
+                  "slotNumber": { "type": "integer", "description": "대기석 슬롯 번호(placement=WaitingArea일 때, 0-base)." },
+                  "lane": { "type": "integer", "description": "전장 그리드 레인(0~3, placement=BattleArea일 때). GridPosition.lane 컨벤션과 동일(월드 Y 오름차순)." },
+                  "column": { "type": "integer", "description": "전장 그리드 열(0~7, placement=BattleArea일 때). GridPosition.column 컨벤션과 동일(월드 X 오름차순, 왼쪽=0)." }
+                },
+                "$note": "전장 격자 확인됨(4 레인 x 8 열 = 32 DefenderSideSell). QA가 드롭존 월드좌표를 정렬해 (lane,column)에 매핑. 코드에 1급 격자 타입은 없으나 씬 배치가 규칙 격자."
+              },
+              "synergies": {
+                "type": "array",
+                "description": "이 소환수에 부여된 시너지(심상) 식별자 목록.",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["placement"]
+          }
+        ]
+      },
+      "Aggressor": {
+        "description": "침략자 = Unit 베이스 + 레인·진행도. 레인을 따라 이동.",
+        "allOf": [
+          { "$ref": "#/schemas/output/Unit" },
+          {
+            "type": "object",
+            "properties": {
+              "lane": {
+                "type": "integer",
+                "description": "배정된 레인."
+              },
+              "progress": {
+                "type": "number",
+                "description": "레인 상 진행도(0~1, 끝에 가까울수록 1에 근접)."
+              }
+            }
+          }
+        ]
+      },
+      "Summoner": {
+        "description": "소환술사 = Unit 베이스 + 술사정의·담당 레인. 레인 끝을 지키며 뚫리면 패배로 연결.",
+        "allOf": [
+          { "$ref": "#/schemas/output/Unit" },
+          {
+            "type": "object",
+            "properties": {
+              "summonerDefinition": {
+                "type": "object",
+                "description": "소환술사 정의(타입).",
+                "properties": {
+                  "definitionId": { "type": "string", "description": "술사 정의(타입) 식별자(문자열)." },
+                  "name": { "type": "string", "description": "술사 표시명." }
+                }
+              },
+              "lane": {
+                "type": "integer",
+                "description": "담당(수비) 레인."
+              }
+            }
+          }
+        ]
+      },
+      "StatSheet": {
+        "description": "유닛 상세 스탯(드릴다운 전용). 14종 능력치 각각 {base, final} + 성급/강화/현재체력. GetUnitStats가 반환.",
+        "type": "object",
+        "properties": {
+          "star": { "type": "integer", "description": "성급." },
+          "reinforcement": { "type": "integer", "description": "강화." },
+          "health": { "type": "number", "description": "현재 체력." },
+          "stats": {
+            "type": "object",
+            "description": "14종 능력치. 각 키는 {base, final} 쌍.",
+            "properties": {
+              "MaxHealth": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "PhysicalAttack": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "MagicAttack": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "PhysicalDefense": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "MagicDefense": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "AttackSpeed": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "AttackRange": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "MoveSpeed": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "CriticalChance": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "CriticalDamageMultiplier": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "CooldownReduction": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "StatusResistance": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "DamageDealtIncrease": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" },
+              "DamageReduction": { "$ref": "#/schemas/output/StatSheet/$defs/statPair" }
+            }
+          }
+        },
+        "$defs": {
+          "statPair": {
+            "type": "object",
+            "description": "한 능력치의 기본값과 최종값.",
+            "properties": {
+              "base": { "type": "number", "description": "기본값." },
+              "final": { "type": "number", "description": "강화·시너지 등 적용 후 최종값." }
+            },
+            "required": ["base", "final"]
+          }
+        }
+      },
+      "TerminalSlot": {
+        "description": "소환 터미널(상점)의 후보 슬롯 1칸.",
+        "type": "object",
+        "properties": {
+          "index": { "type": "integer", "description": "슬롯 번호(SummonUnit의 slotIndex)." },
+          "definitionId": {
+            "type": "string",
+            "description": "후보 유닛 타입(정의) 식별자(문자열). Unit.definitionId와 동일 컨벤션."
+          },
+          "name": { "type": "string", "description": "후보 유닛 표시명." },
+          "cost": { "type": "integer", "description": "소환 비용(마나)." },
+          "empty": { "type": "boolean", "description": "빈 슬롯 여부(이미 소환됨 등)." }
+        },
+        "required": ["index"]
+      },
+      "Synergy": {
+        "description": "시너지(심상) 1종의 현황.",
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "심상(시너지) 식별자." },
+          "name": { "type": "string", "description": "심상 표시명." },
+          "count": { "type": "integer", "description": "현재 기여 유닛 수(임계치 진행 기준값)." },
+          "activeThreshold": { "type": "integer", "description": "현재 발동 중인 임계치(미발동이면 0)." },
+          "nextThreshold": { "type": "integer", "description": "다음 임계치(없으면 생략)." }
+        },
+        "required": ["id"]
+      }
+    },
+    "input": {
+      "GridPosition": {
+        "description": "전장 그리드의 한 칸(4 레인 x 8 열). PlaceUnit·MoveUnit의 위치 인자.",
+        "type": "object",
+        "properties": {
+          "lane": { "type": "integer", "description": "레인 인덱스(0~3). 전장 행을 월드 Y 오름차순으로 0-base 부여(아래 행=lane 0, 위 행=lane 3)." },
+          "column": { "type": "integer", "description": "열 인덱스(0~7). 전장 열을 월드 X 오름차순으로 0-base 부여(왼쪽=column 0=수비 진영측, 오른쪽=column 7=침략자 진입측. 침략자는 오른쪽→왼쪽 진행)." }
+        },
+        "required": ["lane", "column"]
+      },
+      "PhaseType": {
+        "type": "string",
+        "enum": ["Maintenance", "Ready", "Combat", "End", "RoundLose", "BattleWin", "BattleLose"],
+        "description": "라운드 페이즈(RoundManager 상태머신). Maintenance=정비(소환·배치·합성·리롤), Ready=전투시작 후 3초 카운트다운, Combat=전투 진행, End=라운드 승리 처리(다음 정비로), RoundLose=라운드 패배(같은 라운드 재도전), BattleWin=전장 전체 승리, BattleLose=전장 전체 패배."
+      },
+      "Condition": {
+        "description": "RunUntil 대기 조건(닫힌 판별 유니온). type으로 종류 구분. 전부 '호출 시점 기준선 이후 새로 발생한 엣지'에 반응한다 — 이미 충족된 상태로 재호출해도 즉시 반응하지 않고 다음 사건을 기다린다(재무장 안전). 게임이 스스로·빠르게 일으켜 놓치기 쉬운 순간(페이즈 전환·전투 중 죽음)만 대상이며, 내 행동의 결과(합성·마나·시너지)는 관측 커맨드로 현재 상태를 보면 되므로 조건에 없다.",
+        "type": "object",
+        "oneOf": [
+          {
+            "properties": {
+              "type": { "const": "phaseEntered", "description": "지정 페이즈로 새로 진입하는 순간." },
+              "phase": { "$ref": "#/schemas/input/PhaseType" }
+            },
+            "required": ["type", "phase"],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": { "const": "phaseExited", "description": "지정 페이즈에서 벗어나는 순간(다음이 무엇이든). 예: phaseExited(Combat)=전투 끝." },
+              "phase": { "$ref": "#/schemas/input/PhaseType" }
+            },
+            "required": ["type", "phase"],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": { "const": "aggressorDied", "description": "침략자가 한 마리 죽는(줄어드는) 순간. 원자 단위 — 집계가 아니라 단일 죽음. 재무장으로 다음 죽음을 잡는다. 적 전멸=전투 끝은 phaseExited(Combat)로." }
+            },
+            "required": ["type"],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": { "const": "summonerDowned", "description": "소환술사(본진)가 새로 쓰러지는 순간. 패배 직결. matchedCondition에 누구인지 포함." }
+            },
+            "required": ["type"],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "type": { "const": "defenderDowned", "description": "아군 소환수가 새로 쓰러지는 순간. 재무장 시 이미 쓰러진 것은 무시하고 다음 건만." }
+            },
+            "required": ["type"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "commands": {
+    "GetBattleState": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "전장의 큰 흐름을 한눈에 본다(페이즈·라운드·마나·목숨·수입 등).",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "현재 전장 상태 값들(스칼라 인라인).",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "phase": {
+              "type": "string",
+              "enum": ["Maintenance", "Ready", "Combat", "End", "RoundLose", "BattleWin", "BattleLose"],
+              "description": "현재 페이즈(실제 게임 페이즈). Maintenance=정비, Ready=전투준비, Combat=전투, End=전투종료(다음 라운드/승리 전이), RoundLose=라운드실패, BattleWin=전체승리, BattleLose=전체패배."
+            },
+            "round": { "type": "integer", "description": "현재 라운드 번호." },
+            "livesLeft": { "type": "integer", "description": "남은 목숨(패배 허용 횟수)." },
+            "mana": { "type": "integer", "description": "현재 마나." },
+            "nextManaIncome": { "type": "integer", "description": "다음 라운드 마나 수입(기본+이자)." },
+            "lastInterest": { "type": "integer", "description": "직전에 받은 이자." },
+            "placementLimit": { "type": "integer", "description": "배치 상한." }
+          },
+          "required": ["phase", "round", "mana"]
+        }
+      }
+    },
+    "GetTerminalState": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "소환 터미널(상점)의 현재 모습을 본다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "소환 후보 슬롯들 + 스캔 잠금 여부.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "slots": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/TerminalSlot" }
+            },
+            "scanLocked": { "type": "boolean", "description": "스캔 잠금 여부." }
+          },
+          "required": ["slots", "scanLocked"]
+        }
+      }
+    },
+    "GetBenchState": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "대기석(아직 배치 안 한 소환수 보관소) 상태를 본다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "대기석 점유 수 + 대기 중인 소환수들.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "occupied": { "type": "integer", "description": "대기석 점유 수." },
+            "units": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Defender" }
+            }
+          },
+          "required": ["occupied", "units"]
+        }
+      }
+    },
+    "GetGridState": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "전장 그리드에 배치된 소환수들을 본다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "배치된 소환수들(위치·체력·쿨다운 등 배치 맥락) + 총 배치 수.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "placedCount": { "type": "integer", "description": "총 배치 수." },
+            "units": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Defender" }
+            }
+          },
+          "required": ["placedCount", "units"]
+        }
+      }
+    },
+    "GetCombatState": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "전투 중 상황을 본다. 전투 중 시점마다 값이 바뀌므로 필요할 때마다 다시 부른다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "소환수+침략자(공통 Unit 베이스로 통일 조회) + 남은 침략자 수 + 전투 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "defenders": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Defender" }
+            },
+            "aggressors": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Aggressor" }
+            },
+            "remaining": { "type": "integer", "description": "남은 침략자 수." },
+            "result": {
+              "type": "string",
+              "enum": ["InProgress", "Victory", "Defeat"],
+              "description": "전투 결과(진행중/승리/패배)."
+            }
+          },
+          "required": ["defenders", "aggressors", "remaining", "result"]
+        }
+      }
+    },
+    "GetSummonerState": {
+      "category": "observe",
+      "slice": "S2",
+      "description": "각 레인 끝을 지키는 소환술사들의 상태를 본다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "소환술사 목록(위치·체력).",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "summoners": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Summoner" }
+            }
+          },
+          "required": ["summoners"]
+        }
+      }
+    },
+    "GetSynergyState": {
+      "category": "observe",
+      "slice": "S2",
+      "description": "시너지(심상 효과) 현황을 본다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "시너지(심상·임계치 진행) 목록.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "synergies": {
+              "type": "array",
+              "items": { "$ref": "#/schemas/output/Synergy" }
+            }
+          },
+          "required": ["synergies"]
+        }
+      }
+    },
+    "GetUnitStats": {
+      "category": "observe",
+      "slice": "S3",
+      "implemented": false,
+      "description": "[미구현] 특정 소환수 한 마리의 능력치를 자세히 본다(드릴다운). 합성/강화 후 스탯을 확인할 때 쓴다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "unitInstanceId": {
+            "type": "integer",
+            "description": "대상 유닛 인스턴스 식별자(정수, 관측이 돌려준 Unit.instanceId)."
+          }
+        },
+        "required": ["unitInstanceId"]
+      },
+      "returns": {
+        "description": "대상 유닛의 상세 스탯시트.",
+        "schema": { "$ref": "#/schemas/output/StatSheet" }
+      }
+    },
+    "Screenshot": {
+      "category": "observe",
+      "slice": "S1",
+      "description": "지금 게임 화면을 그대로 찍는다(월드+UI 최종 프레임). UI 깨짐 등 눈으로 봐야 하는 검증용.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "저장된 이미지 파일 경로(이미지 자체는 필요 시 열어 본다).",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string", "description": "저장된 스크린샷 파일 경로." }
+          },
+          "required": ["path"]
+        }
+      }
+    },
+    "SummonUnit": {
+      "category": "input",
+      "slice": "S1",
+      "description": "소환 터미널의 slotIndex번 후보의 소환 버튼을 탭한다. 게임 규칙대로 마나를 쓰고 소환수가 대기석에 들어간다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "slotIndex": {
+            "type": "integer",
+            "description": "소환할 터미널 슬롯 번호(TerminalSlot.index)."
+          }
+        },
+        "required": ["slotIndex"]
+      },
+      "returns": {
+        "description": "소환 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "summoned": { "type": "boolean", "description": "소환 성공 여부(마나 부족 등으로 거부되면 false)." }
+          },
+          "required": ["summoned"]
+        }
+      }
+    },
+    "PlaceUnit": {
+      "category": "input",
+      "slice": "S1",
+      "description": "대기석의 소환수를 그리드의 칸에 배치한다(원래 드래그 동작). 배치 규칙(상한·빈 칸 등)을 통과해야 성공.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "unitInstanceId": {
+            "type": "integer",
+            "description": "배치할 소환수 인스턴스 식별자(정수, Unit.instanceId)."
+          },
+          "position": { "$ref": "#/schemas/input/GridPosition" }
+        },
+        "required": ["unitInstanceId", "position"]
+      },
+      "returns": {
+        "description": "배치 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "placed": { "type": "boolean", "description": "배치 성공 여부." }
+          },
+          "required": ["placed"]
+        }
+      }
+    },
+    "StartCombat": {
+      "category": "input",
+      "slice": "S1",
+      "description": "전투 시작 버튼을 누른다. 정비 페이즈를 끝내고 전투를 시작한다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "전투 시작 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "started": { "type": "boolean", "description": "전투 시작 성공 여부." }
+          },
+          "required": ["started"]
+        }
+      }
+    },
+    "OpenTerminal": {
+      "category": "input",
+      "slice": "S1",
+      "description": "소환 터미널 UI를 연다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "터미널 열기 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "open": { "type": "boolean", "description": "열림 상태(성공 시 true)." }
+          },
+          "required": ["open"]
+        }
+      }
+    },
+    "CloseTerminal": {
+      "category": "input",
+      "slice": "S1",
+      "description": "소환 터미널 UI를 닫는다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "터미널 닫기 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "open": { "type": "boolean", "description": "열림 상태(성공 시 false)." }
+          },
+          "required": ["open"]
+        }
+      }
+    },
+    "Reroll": {
+      "category": "input",
+      "slice": "S2",
+      "description": "재스캔(상점 새로고침) 버튼을 누른다. 마나를 쓰고 소환 후보 4개를 다시 뽑는다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "재스캔 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "rerolled": { "type": "boolean", "description": "재스캔 성공 여부(마나 부족 등으로 거부되면 false)." }
+          },
+          "required": ["rerolled"]
+        }
+      }
+    },
+    "ToggleScanLock": {
+      "category": "input",
+      "slice": "S2",
+      "description": "스캔 잠금 버튼을 누른다. 라운드 넘어갈 때 자동 재스캔이 안 되도록 현재 후보를 잠그거나 푼다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "스캔 잠금 토글 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "scanLocked": { "type": "boolean", "description": "토글 후 스캔 잠금 상태." }
+          },
+          "required": ["scanLocked"]
+        }
+      }
+    },
+    "IncreasePlacementLimit": {
+      "category": "input",
+      "slice": "S2",
+      "description": "배치 상한 증가 버튼을 누른다. 마나를 쓰고 배치 가능 수를 1 늘린다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "배치 상한 증가 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "increased": { "type": "boolean", "description": "증가 성공 여부(마나 부족 등으로 거부되면 false)." },
+            "placementLimit": { "type": "integer", "description": "처리 후 배치 상한." }
+          },
+          "required": ["increased"]
+        }
+      }
+    },
+    "MoveUnit": {
+      "category": "input",
+      "slice": "S2",
+      "description": "그리드의 소환수를 다른 칸으로 이동한다(빈 칸이면 이동, 점유 칸이면 위치 교환). 원래 드래그 동작.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "from": { "$ref": "#/schemas/input/GridPosition" },
+          "to": { "$ref": "#/schemas/input/GridPosition" }
+        },
+        "required": ["from", "to"]
+      },
+      "returns": {
+        "description": "이동 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "moved": { "type": "boolean", "description": "이동/교환 성공 여부." }
+          },
+          "required": ["moved"]
+        }
+      }
+    },
+    "SellUnit": {
+      "category": "input",
+      "slice": "S2",
+      "description": "소환수를 환원(판매)한다(원래 상점으로 드래그하는 동작). 소환수를 없애고 마나를 돌려받는다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "unitInstanceId": {
+            "type": "integer",
+            "description": "판매할 소환수 인스턴스 식별자(정수, Unit.instanceId)."
+          }
+        },
+        "required": ["unitInstanceId"]
+      },
+      "returns": {
+        "description": "판매 입력 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sold": { "type": "boolean", "description": "판매 성공 여부." },
+            "refund": { "type": "integer", "description": "돌려받은 마나." }
+          },
+          "required": ["sold"]
+        }
+      }
+    },
+    "GiveUnit": {
+      "category": "setup",
+      "slice": "S3",
+      "implemented": false,
+      "description": "[미구현] 특정 소환수 타입을 대기석에 즉시 지급한다(치트). 재스캔·소환 반복 없이 원하는 소환수를 원하는 수만큼 확보(예: 합성 테스트용 같은 소환수 3개).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "unitDefinitionId": {
+            "type": "string",
+            "description": "지급할 소환수 타입(정의) 식별자(문자열). 인스턴스 식별자가 아니라 타입(정의) 식별자(Unit.definitionId / TerminalSlot.definitionId와 동일 의미)."
+          },
+          "count": {
+            "type": "integer",
+            "description": "지급 수량."
+          },
+          "star": {
+            "type": "integer",
+            "description": "지급 시 성급."
+          }
+        },
+        "required": ["unitDefinitionId", "count", "star"]
+      },
+      "returns": {
+        "description": "지급 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "given": { "type": "integer", "description": "실제 지급된 수(대기석 한도 등으로 요청보다 적을 수 있음)." }
+          },
+          "required": ["given"]
+        }
+      }
+    },
+    "ForceTerminalSlots": {
+      "category": "setup",
+      "slice": "S3",
+      "implemented": false,
+      "description": "[미구현] 소환 터미널의 후보를 원하는 구성으로 강제 채운다(치트). 랜덤에 의존하지 않고 특정 소환수가 상점에 뜨게 한다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "slots": {
+            "type": "array",
+            "description": "강제할 슬롯 구성. 각 원소는 해당 슬롯에 둘 소환수 타입(정의) 식별자(definition id 문자열).",
+            "items": {
+              "type": "string",
+              "description": "소환수 타입(정의) 식별자(definition id 문자열, Unit.definitionId와 동일 의미)."
+            },
+            "$note": "슬롯 매핑 방식(인덱스 순서 vs 객체) — 카탈로그가 'slots' 구성만 명시. 인덱스 순서 문자열 배열로 둠 — 검수 확인."
+          }
+        },
+        "required": ["slots"]
+      },
+      "returns": {
+        "description": "강제 구성 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "applied": { "type": "boolean", "description": "강제 구성 적용 성공 여부." }
+          },
+          "required": ["applied"]
+        }
+      }
+    },
+    "Pause": {
+      "category": "time",
+      "slice": "S4",
+      "description": "게임 시뮬레이션을 정지한다(전투·이동·타이머·스킬 진행이 멈춤). 빠르게 끝나는 전투를 특정 시점에 멈춰 관측하기 위해 상태를 고정한다. 이미 정지 상태면 그대로 둔다. 정지 중에도 QA 관측·제어 커맨드는 계속 처리되어야 한다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "정지 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "paused": { "type": "boolean", "description": "처리 후 정지 상태(성공 시 true)." },
+            "timeScale": { "type": "number", "description": "처리 후 시뮬레이션 속도 배율(정지 시 0)." }
+          },
+          "required": ["paused"]
+        }
+      }
+    },
+    "Resume": {
+      "category": "time",
+      "slice": "S4",
+      "description": "정지를 해제하고 시뮬레이션을 기본 1배속으로 재개한다. (직전 SetTimeScale 배율이 아니라 항상 1배속으로 복귀.) 이미 진행 중이면 1배속으로 맞춘다.",
+      "parameters": { "type": "object", "properties": {}, "required": [] },
+      "returns": {
+        "description": "재개 처리 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "paused": { "type": "boolean", "description": "처리 후 정지 상태(성공 시 false)." },
+            "timeScale": { "type": "number", "description": "처리 후 시뮬레이션 속도 배율(재개 시 1)." }
+          },
+          "required": ["paused"]
+        }
+      }
+    },
+    "SetTimeScale": {
+      "category": "time",
+      "slice": "S4",
+      "description": "시뮬레이션 속도 배율을 설정한다. 0=정지, 1=기본, 1 초과=가속(빠르게 진행 보내기), 1 미만=감속(느리게 관측). 관측 타이밍을 조절할 때 쓴다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scale": {
+            "type": "number",
+            "description": "적용할 속도 배율(0 이상). 0이면 정지와 동치. 음수는 거부된다.",
+            "minimum": 0
+          }
+        },
+        "required": ["scale"]
+      },
+      "returns": {
+        "description": "배율 설정 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "timeScale": { "type": "number", "description": "실제 적용된 속도 배율." }
+          },
+          "required": ["timeScale"]
+        }
+      }
+    },
+    "Step": {
+      "category": "time",
+      "slice": "S4",
+      "blocking": true,
+      "description": "시뮬레이션을 지정한 프레임 수만큼 전진시킨 뒤 다시 정지한다. 정지 상태가 아니면 먼저 정지를 보장한 뒤 전진하며, 호출 종료 시 정지 상태로 남는다. 프레임 단위로 변화를 관측할 때 쓴다(예: 투사체 1프레임 이동 확인).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "frames": {
+            "type": "integer",
+            "description": "전진할 프레임 수(1 이상).",
+            "minimum": 1
+          }
+        },
+        "required": ["frames"]
+      },
+      "returns": {
+        "description": "프레임 전진 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "paused": { "type": "boolean", "description": "전진 후 정지 상태(항상 true)." },
+            "steppedFrames": { "type": "integer", "description": "실제 전진한 프레임 수." }
+          },
+          "required": ["paused", "steppedFrames"]
+        }
+      }
+    },
+    "RunUntil": {
+      "category": "time",
+      "slice": "S4",
+      "blocking": true,
+      "description": "지정 조건이 충족될 때까지(또는 타임아웃까지) 대기 후 반환한다. 폴링 기반(매 프레임 상태 검사, 게임 코드 무수정·비침습) — 게임이 스스로·빠르게 일으켜 놓치기 쉬운 순간(페이즈 전환, 전투 중 죽음)을 붙잡는 용도. 조건은 호출 시점 기준선 이후 *새로* 발생한 엣지에 반응한다(재무장 안전). 충족 시 freezeOnTrigger=true(기본)면 게임을 정지(Time.timeScale=0, Pause 메커니즘 재사용)하므로 관측 후 Resume/SetTimeScale로 직접 재개해야 한다. 단일 호출 대기는 ≤28000ms(브릿지 캡); 더 긴 대기는 timeout 반환을 받아 재호출(재무장)한다. blocking:true → 동기 qa_call이 아니라 qa_await(async hold-open)로 호출.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "condition": { "$ref": "#/schemas/input/Condition" },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 28000,
+            "description": "최대 대기 시간(ms). 미지정 시 28000. 28000 초과는 28000으로 클램프(30s 브릿지 캡 마진)."
+          },
+          "freezeOnTrigger": {
+            "type": "boolean",
+            "description": "충족 순간 게임을 정지할지. 미지정 시 true. true면 정지 후 에이전트가 Resume/SetTimeScale로 재개 책임."
+          }
+        },
+        "required": ["condition"]
+      },
+      "returns": {
+        "description": "대기 결과.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "triggered": { "type": "boolean", "description": "조건 충족 여부(true=충족, false=타임아웃)." },
+            "reason": { "type": "string", "enum": ["conditionMet", "timeout"], "description": "종료 사유." },
+            "matchedCondition": {
+              "type": "object",
+              "description": "충족된 조건 정보(condition.type + 부가 정보. 예: summonerDowned=누가, phaseEntered=어느 페이즈). 타임아웃이면 null."
+            },
+            "frozen": { "type": "boolean", "description": "반환 시 게임 정지 상태 여부(freezeOnTrigger=true로 충족된 경우 true)." }
+          },
+          "required": ["triggered", "reason"]
+        }
+      }
+    }
+  }
+}

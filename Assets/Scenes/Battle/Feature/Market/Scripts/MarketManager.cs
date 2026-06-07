@@ -50,6 +50,11 @@ namespace Scenes.Battle.Feature.Markets
         public MarketUnitRoller Roller => _roller;
         public StarProbabilityConfig StarProbabilityConfig => starProbabilityConfig;
 
+        private List<MarketDefenderSlot> _currentSlots = new List<MarketDefenderSlot>();
+
+        /// <summary>현재 터미널에 떠 있는 슬롯들(QA 관측용 read-only). RerollSlots 에서 갱신된다.</summary>
+        public IReadOnlyList<MarketDefenderSlot> CurrentSlots => _currentSlots;
+
         public Action<List<MarketDefenderSlot>> OnSlotRerolled;
         public Action<OnManaNotEnoughDto> OnManaNotEnough;
 
@@ -148,6 +153,7 @@ namespace Scenes.Battle.Feature.Markets
         {
             List<MarketDefenderSlot> slots = _roller.PickUnits(4, Level.Value);
 
+            _currentSlots = slots;
             OnSlotRerolled?.Invoke(slots);
         }
 

@@ -39,6 +39,12 @@ namespace Scenes.Battle.Feature.Rounds
 
         public RoundAggressorState RoundAggressorState { get; private set; } = RoundAggressorState.Waiting;
 
+        /// <summary>현재 라운드의 침략자 유닛 목록(QA 관측용 read-only). 라운드 종료 시 Clear 된다.</summary>
+        public IReadOnlyList<Units.Unit> Aggressors => _aggressors;
+
+        /// <summary>아직 살아있는(활성) 침략자 수(QA 관측용).</summary>
+        public int RemainingAggressorCount => _aggressors.Count(aggressor => aggressor.gameObject.activeInHierarchy);
+
         private void Awake()
         {
             // IStateListener 등록

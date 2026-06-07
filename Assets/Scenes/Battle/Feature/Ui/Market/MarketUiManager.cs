@@ -26,6 +26,10 @@ namespace Scenes.Battle.Feature.Ui.Markets
         [SerializeField] private Button toggleButton;
 
         private bool _isOpen = true;
+
+        /// <summary>터미널 패널이 열려 있는지(QA 관측·열기/닫기 판정용 read-only).</summary>
+        public bool IsOpen => _isOpen;
+
         private float _shownX;
         private float _hiddenX;
         private Tweener _tween;
