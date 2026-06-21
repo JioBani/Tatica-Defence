@@ -87,10 +87,12 @@ namespace Tests.Editor
         }
 
         [Test]
-        public void MinimumZero_NeverNegative()
+        public void ZeroAttack_ResultsInZeroDamage()
         {
-            // 방어력이 100% 이상이면 최소 0
-            _victim.Defense.SetBaseValue(1.5f);
+            // 공격력 0이면 데미지 0 (파이프라인 최소 0 보장).
+            // 방어력은 단위·범위 강제(stat-unit-range)로 0~95%만 가능하므로
+            // "방어력 100%로 데미지 0" 시나리오는 더 이상 유효 입력이 아니다.
+            _attacker.Attack.SetBaseValue(0f);
             float result = DamageCalculator.Calculate(_attacker, _victim, isCritical: false);
             Assert.AreEqual(0f, result);
         }
@@ -136,11 +138,10 @@ namespace Tests.Editor
         }
 
         [Test]
-        public void BaseDamageOverload_MinimumZero()
+        public void BaseDamageOverload_ZeroBase_ResultsInZero()
         {
-            // 방어력 100% 이상 → 최소 0
-            _victim.Defense.SetBaseValue(1.5f);
-            float result = DamageCalculator.Calculate(200f, _attacker, _victim, isCritical: false);
+            // baseDamage 0 → 0 (파이프라인 최소 0 보장).
+            float result = DamageCalculator.Calculate(0f, _attacker, _victim, isCritical: false);
             Assert.AreEqual(0f, result);
         }
     }

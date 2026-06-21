@@ -1,6 +1,7 @@
 using Common.Data.Units.UnitStatsByLevel;
 using NUnit.Framework;
 using Scenes.Battle.Feature.Ui.StatInfoPanel;
+using Scenes.Battle.Feature.Units.UnitStats;
 
 namespace Tests.Editor
 {
@@ -68,90 +69,56 @@ namespace Tests.Editor
             Assert.AreEqual("입히는 피해 증가", UnitStatKind.DamageDealtIncrease.GetDisplayName());
         }
 
-        // ── FormatStatValue: 퍼센트 표시 스탯 ──
+        // ── FormatStatValue: 단위(StatUnit)별 표기 ──
+        // FormatStatValue 는 stat-unit-range(Task-3)에서 단위(StatUnit) 기반 시그니처로 변경됐다.
+        // 능력치 종류→단위 매핑·표시 정합은 StatUnitRangeTests(DoD-S10)가 별도 검증한다.
 
         [Test]
-        public void FormatStatValue_CriticalChance_FormatsAsPercent()
+        public void FormatStatValue_Percent_FormatsWithPercentSign()
         {
-            Assert.AreEqual("25%", UnitStatKind.CriticalChance.FormatStatValue(0.25f));
-        }
-
-        [Test]
-        public void FormatStatValue_CooldownReduction_FormatsAsPercent()
-        {
-            Assert.AreEqual("10%", UnitStatKind.CooldownReduction.FormatStatValue(0.1f));
-        }
-
-        [Test]
-        public void FormatStatValue_DamageDealtIncrease_FormatsAsPercent()
-        {
-            Assert.AreEqual("15%", UnitStatKind.DamageDealtIncrease.FormatStatValue(0.15f));
+            Assert.AreEqual("25%", StatUnit.Percent.FormatStatValue(0.25f));
         }
 
         [Test]
         public void FormatStatValue_PercentZero_Shows0Percent()
         {
-            Assert.AreEqual("0%", UnitStatKind.CriticalChance.FormatStatValue(0f));
+            Assert.AreEqual("0%", StatUnit.Percent.FormatStatValue(0f));
         }
 
         [Test]
         public void FormatStatValue_PercentFull_Shows100Percent()
         {
-            Assert.AreEqual("100%", UnitStatKind.CriticalChance.FormatStatValue(1f));
-        }
-
-        // ── FormatStatValue: 소수점 2자리 스탯 (공격속도) ──
-
-        [Test]
-        public void FormatStatValue_AttackSpeed_FormatsTwoDecimals()
-        {
-            Assert.AreEqual("1.50", UnitStatKind.AttackSpeed.FormatStatValue(1.5f));
+            Assert.AreEqual("100%", StatUnit.Percent.FormatStatValue(1f));
         }
 
         [Test]
-        public void FormatStatValue_AttackSpeed_SmallValue()
+        public void FormatStatValue_Float_FormatsTwoDecimals()
         {
-            Assert.AreEqual("0.80", UnitStatKind.AttackSpeed.FormatStatValue(0.8f));
-        }
-
-        // ── FormatStatValue: 배수 표시 스탯 (치명타 피해 배수) ──
-
-        [Test]
-        public void FormatStatValue_CriticalDamageMultiplier_FormatsAsMultiplier()
-        {
-            Assert.AreEqual("1.5x", UnitStatKind.CriticalDamageMultiplier.FormatStatValue(1.5f));
+            Assert.AreEqual("1.50", StatUnit.Float.FormatStatValue(1.5f));
         }
 
         [Test]
-        public void FormatStatValue_CriticalDamageMultiplier_DefaultValue()
+        public void FormatStatValue_Float_SmallValue()
         {
-            Assert.AreEqual("1.0x", UnitStatKind.CriticalDamageMultiplier.FormatStatValue(1f));
-        }
-
-        // ── FormatStatValue: 정수 표시 스탯 ──
-
-        [Test]
-        public void FormatStatValue_MaxHealth_FormatsAsInteger()
-        {
-            Assert.AreEqual("1000", UnitStatKind.MaxHealth.FormatStatValue(1000f));
+            Assert.AreEqual("0.80", StatUnit.Float.FormatStatValue(0.8f));
         }
 
         [Test]
-        public void FormatStatValue_Attack_FormatsAsInteger()
+        public void FormatStatValue_Multiplier_FormatsWithX()
         {
-            Assert.AreEqual("150", UnitStatKind.Attack.FormatStatValue(150f));
+            Assert.AreEqual("1.5x", StatUnit.Multiplier.FormatStatValue(1.5f));
         }
 
         [Test]
-        public void FormatStatValue_MoveSpeed_FormatsAsInteger()
+        public void FormatStatValue_Multiplier_DefaultValue()
         {
-            Assert.AreEqual("3", UnitStatKind.MoveSpeed.FormatStatValue(3.2f));
+            Assert.AreEqual("1.0x", StatUnit.Multiplier.FormatStatValue(1f));
         }
 
         [Test]
-        public void FormatStatValue_AttackRange_FormatsAsInteger()
+        public void FormatStatValue_Integer_FormatsAsInteger()
         {
-            Assert.AreEqual("5", UnitStatKind.AttackRange.FormatStatValue(5f));
+            Assert.AreEqual("1000", StatUnit.Integer.FormatStatValue(1000f));
         }
     }
 }
