@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────
 // WarmongerSynergyStatusEffect: 전쟁기계 시너지 SSE.
-// 체력 50% 기준 조건부 DamageReduction + IOnActionStateChangedHook으로 사망 시 아군 회복.
+// 체력 50% 기준 조건부 방어력 수정자 + IOnActionStateChangedHook으로 사망 시 아군 회복.
 // ─────────────────────────────────────────────
 using System.Linq;
 using Common.Data.StatusEffects;
@@ -15,7 +15,7 @@ using UnityEngine;
 namespace Scenes.Battle.Feature.Synergy.SynergyEffects
 {
     /// <summary>
-    /// 전쟁기계 시너지 효과. 체력 50% 이상이면 높은 DamageReduction, 미만이면 낮은 값을 적용한다.
+    /// 전쟁기계 시너지 효과. 체력 50% 이상이면 높은 방어력, 미만이면 낮은 값을 적용한다.
     /// 자신이 다운되면 다른 전쟁기계를 회복시킨다.
     /// </summary>
     public class WarmongerSynergyStatusEffect
@@ -101,18 +101,20 @@ namespace Scenes.Battle.Feature.Synergy.SynergyEffects
             ApplyModifier();
         }
 
-        /// <summary>현재 임계값에 맞는 DamageReduction 수정자를 추가한다.</summary>
+        /// <summary>현재 임계값에 맞는 방어력 수정자를 추가한다.</summary>
         private void ApplyModifier()
         {
+            // 받는 피해 감소 스탯 제거(10종 정정)로, 생존하는 경감성 스탯인 방어력에 의탁한다.
+            // 방어력은 증감분리 곱연산 모드라 수정자 값(양수)이 방어 비율에 가산되는 형태가 된다.
             float value = _isAboveThreshold ? _highReduction : _lowReduction;
-            _unit.StatSheet.DamageReduction.AddModifier(
+            _unit.StatSheet.Defense.AddModifier(
                 new StatModifier(this, StatModifierType.Flat, value));
         }
 
         /// <summary>이 SSE가 추가한 수정자를 모두 제거한다.</summary>
         private void RemoveModifier()
         {
-            _unit.StatSheet.DamageReduction.RemoveModifiersBySource(this);
+            _unit.StatSheet.Defense.RemoveModifiersBySource(this);
         }
 
         /// <summary>다른 전쟁기계 Defender를 최대 체력의 healPercent만큼 회복시킨다.</summary>

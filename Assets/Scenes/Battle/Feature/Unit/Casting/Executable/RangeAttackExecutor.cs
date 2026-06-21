@@ -1,5 +1,4 @@
-﻿using Common.Data.Damage;
-using Scenes.Battle.Feature.Unit.Skills.Castables;
+﻿using Scenes.Battle.Feature.Unit.Skills.Castables;
 using Scenes.Battle.Feature.Units.Attackables;
 using Scenes.Battle.Feature.Units.Attackers;
 using Scenes.Battle.Feature.Units.Damage;
@@ -21,8 +20,7 @@ namespace Scenes.Battle.Feature.Unit.Skills.Executables
         {
             float damage = DamageCalculator.Calculate(
                 _attacker.Unit.StatSheet,
-                _victim.Unit.StatSheet,
-                DamageType.Physical
+                _victim.Unit.StatSheet
             );
             _victim.Hit(new AttackContext(damage, _attacker, _victim));
         }

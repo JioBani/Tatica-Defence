@@ -81,17 +81,17 @@ namespace Scenes.Battle.Feature.Synergy.SynergyEffects
 
         // ── 내부 로직 ──
 
-        /// <summary>PhysicalAttack에 % 수정자를 적용한다.</summary>
+        /// <summary>공격력에 % 수정자를 적용한다.</summary>
         private void ApplyModifier()
         {
-            _unit.StatSheet.PhysicalAttack.AddModifier(
+            _unit.StatSheet.Attack.AddModifier(
                 new StatModifier(this, StatModifierType.Percent, _attackPercent));
         }
 
         /// <summary>이 SSE가 추가한 수정자를 모두 제거한다.</summary>
         private void RemoveModifier()
         {
-            _unit.StatSheet.PhysicalAttack.RemoveModifiersBySource(this);
+            _unit.StatSheet.Attack.RemoveModifiersBySource(this);
         }
 
         /// <summary>티어 상수를 캐싱한다.</summary>

@@ -29,21 +29,18 @@ namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
         /// <summary>현재 강화 단계. 강화 합성 시 증가한다. 기본 승급 시 0으로 리셋된다.</summary>
         public int Reinforcement { get; private set; }
 
-        // ── 14종 능력치 (수정자 지원) ──
+        // ── 10종 능력치 (수정자 지원) ──
         public readonly UnitStat MaxHealth = new();
-        public readonly UnitStat PhysicalAttack = new();
-        public readonly UnitStat MagicAttack = new();
-        public readonly UnitStat PhysicalDefense = new(StatCalculationMode.SeparatedMultiplicative);
-        public readonly UnitStat MagicDefense = new(StatCalculationMode.SeparatedMultiplicative);
+        public readonly UnitStat Attack = new();
+        // 방어력은 증감을 분리해 곱하는 합산식을 쓴다(기존 물리/마법 방어력 모드 계승).
+        public readonly UnitStat Defense = new(StatCalculationMode.SeparatedMultiplicative);
         public readonly UnitStat AttackSpeed = new();
         public readonly UnitStat AttackRange = new();
         public readonly UnitStat MoveSpeed = new();
         public readonly UnitStat CriticalChance = new();
         public readonly UnitStat CriticalDamageMultiplier = new();
         public readonly UnitStat CooldownReduction = new();
-        public readonly UnitStat StatusResistance = new();
         public readonly UnitStat DamageDealtIncrease = new();
-        public readonly UnitStat DamageReduction = new();
 
         // ── 현재 체력 (런타임 값, 수정자 대상 아님) ──
         public readonly RxValue<float> Health = new(0f);
@@ -90,38 +87,30 @@ namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
         public UnitStat Get(UnitStatKind kind) => kind switch
         {
             UnitStatKind.MaxHealth                => MaxHealth,
-            UnitStatKind.PhysicalAttack           => PhysicalAttack,
-            UnitStatKind.MagicAttack              => MagicAttack,
-            UnitStatKind.PhysicalDefense          => PhysicalDefense,
-            UnitStatKind.MagicDefense             => MagicDefense,
+            UnitStatKind.Attack                   => Attack,
+            UnitStatKind.Defense                  => Defense,
             UnitStatKind.AttackSpeed              => AttackSpeed,
             UnitStatKind.AttackRange              => AttackRange,
             UnitStatKind.MoveSpeed                => MoveSpeed,
             UnitStatKind.CriticalChance           => CriticalChance,
             UnitStatKind.CriticalDamageMultiplier => CriticalDamageMultiplier,
             UnitStatKind.CooldownReduction        => CooldownReduction,
-            UnitStatKind.StatusResistance         => StatusResistance,
             UnitStatKind.DamageDealtIncrease      => DamageDealtIncrease,
-            UnitStatKind.DamageReduction          => DamageReduction,
             _ => null
         };
 
         public IEnumerable<(UnitStatKind kind, UnitStat stat)> Enumerate()
         {
             yield return (UnitStatKind.MaxHealth,                MaxHealth);
-            yield return (UnitStatKind.PhysicalAttack,           PhysicalAttack);
-            yield return (UnitStatKind.MagicAttack,              MagicAttack);
-            yield return (UnitStatKind.PhysicalDefense,          PhysicalDefense);
-            yield return (UnitStatKind.MagicDefense,             MagicDefense);
+            yield return (UnitStatKind.Attack,                   Attack);
+            yield return (UnitStatKind.Defense,                  Defense);
             yield return (UnitStatKind.AttackSpeed,              AttackSpeed);
             yield return (UnitStatKind.AttackRange,              AttackRange);
             yield return (UnitStatKind.MoveSpeed,                MoveSpeed);
             yield return (UnitStatKind.CriticalChance,           CriticalChance);
             yield return (UnitStatKind.CriticalDamageMultiplier, CriticalDamageMultiplier);
             yield return (UnitStatKind.CooldownReduction,        CooldownReduction);
-            yield return (UnitStatKind.StatusResistance,         StatusResistance);
             yield return (UnitStatKind.DamageDealtIncrease,      DamageDealtIncrease);
-            yield return (UnitStatKind.DamageReduction,          DamageReduction);
         }
 
         /// <summary>

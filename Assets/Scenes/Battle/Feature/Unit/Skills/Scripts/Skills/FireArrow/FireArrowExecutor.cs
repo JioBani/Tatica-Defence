@@ -1,4 +1,3 @@
-using Common.Data.Damage;
 using Common.Data.Skills.SkillDefinitions;
 using Scenes.Battle.Feature.Unit.Skills.Castables;
 using Scenes.Battle.Feature.Units.Attackables;
@@ -30,8 +29,7 @@ namespace Scenes.Battle.Feature.Unit.Skills.Executables
             float damage = DamageCalculator.Calculate(
                 baseDamage,
                 _attacker.Unit.StatSheet,
-                _victim.Unit.StatSheet,
-                DamageType.Magical
+                _victim.Unit.StatSheet
             );
 
             _victim.Hit(new AttackContext(damage, _attacker, _victim));

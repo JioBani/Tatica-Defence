@@ -9,22 +9,24 @@ namespace Common.Data.Units.UnitStatsByLevel
     // ──────────────────────────────────────────────────────────────
     // enum
     // ──────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────
+    // UnitStatKind: 능력치 종류의 단일 진실(10종).
+    // 정수값을 명시 부여한다 — 스킬 .asset의 StatScaling.statKind가 enum 정수로
+    // 직렬화되므로, 생존 멤버는 기존 정수값을 보존하고 병합·제거된 멤버의 정수는
+    // 결번으로 둔다(2=구 마법공격력, 4=구 마법방어력, 11=구 상태저항력, 13=구 받는피해감소).
+    // ─────────────────────────────────────────────
     public enum UnitStatKind
     {
-        [InspectorName("체력")]                  MaxHealth,
-        [InspectorName("물리공격력")]            PhysicalAttack,
-        [InspectorName("마법공격력")]            MagicAttack,
-        [InspectorName("물리방어력")]            PhysicalDefense,
-        [InspectorName("마법방어력")]            MagicDefense,
-        [InspectorName("공격속도")]              AttackSpeed,
-        [InspectorName("사거리")]                AttackRange,
-        [InspectorName("이동속도")]              MoveSpeed,
-        [InspectorName("치명타 확률")]            CriticalChance,
-        [InspectorName("치명타 피해 배수")]       CriticalDamageMultiplier,
-        [InspectorName("스킬 쿨타임 감소")]       CooldownReduction,
-        [InspectorName("상태저항력")]            StatusResistance,
-        [InspectorName("입히는 피해 증가")]       DamageDealtIncrease,
-        [InspectorName("받는 피해 감소")]         DamageReduction,
+        [InspectorName("체력")]                  MaxHealth                = 0,
+        [InspectorName("공격력")]                Attack                   = 1,
+        [InspectorName("방어력")]                Defense                  = 3,
+        [InspectorName("공격속도")]              AttackSpeed              = 5,
+        [InspectorName("사거리")]                AttackRange              = 6,
+        [InspectorName("이동속도")]              MoveSpeed                = 7,
+        [InspectorName("치명타 확률")]            CriticalChance           = 8,
+        [InspectorName("치명타 피해 배수")]       CriticalDamageMultiplier = 9,
+        [InspectorName("스킬 쿨타임 감소")]       CooldownReduction        = 10,
+        [InspectorName("입히는 피해 증가")]       DamageDealtIncrease      = 12,
     }
 
     // ──────────────────────────────────────────────────────────────
@@ -39,25 +41,17 @@ namespace Common.Data.Units.UnitStatsByLevel
         [SerializeField] private StarStatRecord maxHealth;
         public StarStatRecord MaxHealth => maxHealth;
 
-        [InspectorHint("물리공격력", InspectorHintPlacement.Right, 100)]
+        // 단일 공격력. 기존 물리공격력 값을 계승한다(FormerlySerializedAs).
+        [InspectorHint("공격력", InspectorHintPlacement.Right, 100)]
         [FormerlySerializedAs("physicalAttack")]
-        [SerializeField] private StarStatRecord physicalAttack;
-        public StarStatRecord PhysicalAttack => physicalAttack;
+        [SerializeField] private StarStatRecord attack;
+        public StarStatRecord Attack => attack;
 
-        [InspectorHint("마법공격력", InspectorHintPlacement.Right, 100)]
-        [FormerlySerializedAs("magicAttack")]
-        [SerializeField] private StarStatRecord magicAttack;
-        public StarStatRecord MagicAttack => magicAttack;
-
-        [InspectorHint("물리방어력", InspectorHintPlacement.Right, 100)]
+        // 단일 방어력. 기존 물리방어력 값을 계승한다(FormerlySerializedAs).
+        [InspectorHint("방어력", InspectorHintPlacement.Right, 100)]
         [FormerlySerializedAs("physicalDefense")]
-        [SerializeField] private StarStatRecord physicalDefense;
-        public StarStatRecord PhysicalDefense => physicalDefense;
-
-        [InspectorHint("마법방어력", InspectorHintPlacement.Right, 100)]
-        [FormerlySerializedAs("magicDefense")]
-        [SerializeField] private StarStatRecord magicDefense;
-        public StarStatRecord MagicDefense => magicDefense;
+        [SerializeField] private StarStatRecord defense;
+        public StarStatRecord Defense => defense;
 
         [InspectorHint("공격속도", InspectorHintPlacement.Right, 100)]
         [FormerlySerializedAs("attackSpeedAPS")]
@@ -74,7 +68,7 @@ namespace Common.Data.Units.UnitStatsByLevel
         [SerializeField] private StarStatRecord moveSpeed;
         public StarStatRecord MoveSpeed => moveSpeed;
 
-        [Header("치명/쿨감/저항/피해증가 (비율은 0~1 권장)")]
+        [Header("치명/쿨감/피해증가 (비율은 0~1 권장)")]
         [InspectorHint("치명타 확률(%)", InspectorHintPlacement.Right, 100)]
         [FormerlySerializedAs("criticalChance")]
         [SerializeField] private StarStatRecord criticalChance;
@@ -90,37 +84,24 @@ namespace Common.Data.Units.UnitStatsByLevel
         [SerializeField] private StarStatRecord cooldownReduction;
         public StarStatRecord CooldownReduction => cooldownReduction;
 
-        [InspectorHint("상태저항력", InspectorHintPlacement.Right, 100)]
-        [FormerlySerializedAs("statusResistance")]
-        [SerializeField] private StarStatRecord statusResistance;
-        public StarStatRecord StatusResistance => statusResistance;
-
         [InspectorHint("입히는 피해 증가", InspectorHintPlacement.Right, 100)]
         [FormerlySerializedAs("damageDealtIncrease")]
         [SerializeField] private StarStatRecord damageDealtIncrease;
         public StarStatRecord DamageDealtIncrease => damageDealtIncrease;
 
-        [InspectorHint("받는 피해 감소", InspectorHintPlacement.Right, 100)]
-        [SerializeField] private StarStatRecord damageReduction;
-        public StarStatRecord DamageReduction => damageReduction;
-
         // enum으로 조회 (필요 시)
         public float GetStat(UnitStatKind kind, int star) => kind switch
         {
             UnitStatKind.MaxHealth                => maxHealth.GetValue(star),
-            UnitStatKind.PhysicalAttack           => physicalAttack.GetValue(star),
-            UnitStatKind.MagicAttack              => magicAttack.GetValue(star),
-            UnitStatKind.PhysicalDefense          => physicalDefense.GetValue(star),
-            UnitStatKind.MagicDefense             => magicDefense.GetValue(star),
+            UnitStatKind.Attack                   => attack.GetValue(star),
+            UnitStatKind.Defense                  => defense.GetValue(star),
             UnitStatKind.AttackSpeed              => attackSpeed.GetValue(star),
             UnitStatKind.AttackRange              => attackRange.GetValue(star),
             UnitStatKind.MoveSpeed                => moveSpeed.GetValue(star),
             UnitStatKind.CriticalChance           => criticalChance.GetValue(star),
             UnitStatKind.CriticalDamageMultiplier => criticalDamageMultiplier.GetValue(star),
             UnitStatKind.CooldownReduction        => cooldownReduction.GetValue(star),
-            UnitStatKind.StatusResistance         => statusResistance.GetValue(star),
             UnitStatKind.DamageDealtIncrease      => damageDealtIncrease.GetValue(star),
-            UnitStatKind.DamageReduction          => damageReduction.GetValue(star),
             _ => 0f
         };
     }

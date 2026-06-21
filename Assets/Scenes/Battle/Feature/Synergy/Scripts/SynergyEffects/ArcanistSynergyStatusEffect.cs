@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────
 // ArcanistSynergyStatusEffect: 비전 마법사 시너지 SSE.
-// 시너지 보유 유닛의 MagicAttack에 arcanistSpellPower Flat 수정자를 적용한다.
+// 시너지 보유 유닛의 공격력에 arcanistSpellPower Flat 수정자를 적용한다.
 // ─────────────────────────────────────────────
 using Common.Data.StatusEffects;
 using Common.Data.Synergies;
@@ -9,7 +9,7 @@ using Scenes.Battle.Feature.Units.UnitStats;
 namespace Scenes.Battle.Feature.Synergy.SynergyEffects
 {
     /// <summary>
-    /// 비전 마법사 시너지 SSE. 보유 유닛에 arcanistSpellPower 값의 MagicAttack Flat 수정자를 적용한다.
+    /// 비전 마법사 시너지 SSE. 보유 유닛에 arcanistSpellPower 값의 공격력 Flat 수정자를 적용한다.
     /// 티어 상수: "arcanistSpellPower" (25, 50, 70)
     /// </summary>
     public class ArcanistSynergyStatusEffect : SynergyStatusEffect<SynergyStatusEffectContext>
@@ -39,20 +39,20 @@ namespace Scenes.Battle.Feature.Synergy.SynergyEffects
             RemoveModifier();
         }
 
-        /// <summary>티어 상수에서 arcanistSpellPower를 읽어 MagicAttack에 Flat 수정자를 추가한다.</summary>
+        /// <summary>티어 상수에서 arcanistSpellPower를 읽어 공격력에 Flat 수정자를 추가한다.</summary>
         private void ApplyModifier(SynergyTier tier)
         {
             float? spellPower = tier.Get(ArcanistSpellPowerKey);
             if (!spellPower.HasValue) return;
 
-            SynergyContext.Unit.StatSheet.MagicAttack.AddModifier(
+            SynergyContext.Unit.StatSheet.Attack.AddModifier(
                 new StatModifier(this, StatModifierType.Flat, spellPower.Value));
         }
 
         /// <summary>이 SSE가 추가한 수정자를 모두 제거한다.</summary>
         private void RemoveModifier()
         {
-            SynergyContext.Unit.StatSheet.MagicAttack.RemoveModifiersBySource(this);
+            SynergyContext.Unit.StatSheet.Attack.RemoveModifiersBySource(this);
         }
     }
 }

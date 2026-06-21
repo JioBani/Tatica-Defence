@@ -24,7 +24,7 @@ MonoBehaviour:
     values:
     - baseValue: 50
       scalings:
-      - statKind: 2
+      - statKind: 1
         coefficient: 1.5
     - baseValue: 0
       scalings:

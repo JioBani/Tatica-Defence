@@ -42,10 +42,8 @@ namespace Scenes.Battle.Feature.Ui.StatInfoPanel
         private static readonly UnitStatKind[] MainStats =
         {
             UnitStatKind.MaxHealth,
-            UnitStatKind.PhysicalAttack,
-            UnitStatKind.PhysicalDefense,
-            UnitStatKind.MagicAttack,
-            UnitStatKind.MagicDefense,
+            UnitStatKind.Attack,
+            UnitStatKind.Defense,
             UnitStatKind.AttackSpeed,
             UnitStatKind.CooldownReduction,
             UnitStatKind.AttackRange,
@@ -57,9 +55,7 @@ namespace Scenes.Battle.Feature.Ui.StatInfoPanel
             UnitStatKind.MoveSpeed,
             UnitStatKind.CriticalChance,
             UnitStatKind.CriticalDamageMultiplier,
-            UnitStatKind.StatusResistance,
             UnitStatKind.DamageDealtIncrease,
-            UnitStatKind.DamageReduction,
         };
 
         private void Awake()
