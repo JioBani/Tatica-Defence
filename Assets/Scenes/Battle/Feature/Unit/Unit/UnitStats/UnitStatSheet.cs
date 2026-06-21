@@ -29,21 +29,38 @@ namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
         /// <summary>현재 강화 단계. 강화 합성 시 증가한다. 기본 승급 시 0으로 리셋된다.</summary>
         public int Reinforcement { get; private set; }
 
-        // ── 10종 능력치 (수정자 지원) ──
-        public readonly UnitStat MaxHealth = new();
-        public readonly UnitStat Attack = new();
-        // 방어력은 증감을 분리해 곱하는 합산식을 쓴다(기존 물리/마법 방어력 모드 계승).
-        public readonly UnitStat Defense = new(StatCalculationMode.SeparatedMultiplicative);
-        public readonly UnitStat AttackSpeed = new();
-        public readonly UnitStat AttackRange = new();
-        public readonly UnitStat MoveSpeed = new();
-        public readonly UnitStat CriticalChance = new();
-        public readonly UnitStat CriticalDamageMultiplier = new();
-        public readonly UnitStat CooldownReduction = new();
-        public readonly UnitStat DamageDealtIncrease = new();
+        /// <summary>능력치 종류별 단위·범위·기본값·합산 방식의 단일 진실.</summary>
+        private readonly UnitStatMetadataCatalog _catalog = new();
+
+        // ── 10종 능력치 (수정자 지원, 단위·범위 강제는 메타데이터 주입으로 수행) ──
+        public readonly UnitStat MaxHealth;
+        public readonly UnitStat Attack;
+        public readonly UnitStat Defense;
+        public readonly UnitStat AttackSpeed;
+        public readonly UnitStat AttackRange;
+        public readonly UnitStat MoveSpeed;
+        public readonly UnitStat CriticalChance;
+        public readonly UnitStat CriticalDamageMultiplier;
+        public readonly UnitStat CooldownReduction;
+        public readonly UnitStat DamageDealtIncrease;
 
         // ── 현재 체력 (런타임 값, 수정자 대상 아님) ──
         public readonly RxValue<float> Health = new(0f);
+
+        public UnitStatSheet()
+        {
+            // 각 능력치를 자기 종류의 메타데이터(단위·범위·기본값·합산 방식)와 함께 생성한다.
+            MaxHealth = new UnitStat(_catalog.Get(UnitStatKind.MaxHealth));
+            Attack = new UnitStat(_catalog.Get(UnitStatKind.Attack));
+            Defense = new UnitStat(_catalog.Get(UnitStatKind.Defense));
+            AttackSpeed = new UnitStat(_catalog.Get(UnitStatKind.AttackSpeed));
+            AttackRange = new UnitStat(_catalog.Get(UnitStatKind.AttackRange));
+            MoveSpeed = new UnitStat(_catalog.Get(UnitStatKind.MoveSpeed));
+            CriticalChance = new UnitStat(_catalog.Get(UnitStatKind.CriticalChance));
+            CriticalDamageMultiplier = new UnitStat(_catalog.Get(UnitStatKind.CriticalDamageMultiplier));
+            CooldownReduction = new UnitStat(_catalog.Get(UnitStatKind.CooldownReduction));
+            DamageDealtIncrease = new UnitStat(_catalog.Get(UnitStatKind.DamageDealtIncrease));
+        }
 
         /// <summary>
         /// 현재 체력을 설정한다. 0 ~ MaxHealth 범위로 clamp된다.
@@ -66,7 +83,7 @@ namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
             foreach (var (kind, stat) in Enumerate())
             {
                 stat.ClearModifiers();
-                stat.SetBaseValue(data.GetStat(kind, effectiveStar));
+                stat.SetBaseValue(ResolveBaseValue(data, kind, effectiveStar));
             }
 
             // 중복 등록 방지: 기존 핸들러를 해제한 뒤 재등록한다
@@ -144,10 +161,19 @@ namespace Scenes.Battle.Feature.Units.UnitStats.UnitStatSheets
             int effectiveStar = Star + Reinforcement;
             foreach (var (kind, stat) in Enumerate())
             {
-                stat.SetBaseValue(_data.GetStat(kind, effectiveStar));
+                stat.SetBaseValue(ResolveBaseValue(_data, kind, effectiveStar));
             }
 
             SetCurrentHealth(MaxHealth.CurrentValue);
+        }
+
+        /// <summary>성급 기준값을 조회하되, 자산에 미입력이면 메타데이터 기본값으로 대체한다.</summary>
+        private float ResolveBaseValue(UnitStatsByLevelData data, UnitStatKind kind, int effectiveStar)
+        {
+            // 미입력(빈 record)을 0으로 떨어뜨리지 않고 단위 정의의 기본값을 쓴다(무력화 방지 — 예: 치명타 배수 0 → 데미지 0).
+            return data.HasStat(kind)
+                ? data.GetStat(kind, effectiveStar)
+                : _catalog.Get(kind).Default;
         }
     }
 }

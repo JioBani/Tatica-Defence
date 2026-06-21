@@ -1,4 +1,5 @@
 using Common.Data.Units.UnitStatsByLevel;
+using Scenes.Battle.Feature.Units.UnitStats;
 
 namespace Scenes.Battle.Feature.Ui.StatInfoPanel
 {
@@ -19,16 +20,15 @@ namespace Scenes.Battle.Feature.Ui.StatInfoPanel
             _ => kind.ToString()
         };
 
-        public static string FormatStatValue(this UnitStatKind kind, float value)
+        /// <summary>능력치 단위 정의에 맞는 표기 문자열을 반환한다. 값 강제와 같은 단위 정의를 참조한다.</summary>
+        public static string FormatStatValue(this StatUnit unit, float value)
         {
-            return kind switch
+            return unit switch
             {
-                UnitStatKind.CriticalChance or
-                UnitStatKind.CooldownReduction or
-                UnitStatKind.DamageDealtIncrease => $"{value * 100f:F0}%",
-                UnitStatKind.AttackSpeed => $"{value:F2}",
-                UnitStatKind.CriticalDamageMultiplier => $"{value:F1}x",
-                _ => $"{value:F0}"
+                StatUnit.Percent => $"{value * 100f:F0}%",
+                StatUnit.Multiplier => $"{value:F1}x",
+                StatUnit.Float => $"{value:F2}",
+                _ => $"{value:F0}"   // Integer
             };
         }
     }

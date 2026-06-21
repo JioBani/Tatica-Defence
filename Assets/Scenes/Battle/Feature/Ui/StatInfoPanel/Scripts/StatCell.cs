@@ -13,7 +13,7 @@ namespace Scenes.Battle.Feature.Ui.StatInfoPanel
         public void Bind(UnitStatKind kind, UnitStat stat)
         {
             statLabel.text = kind.GetDisplayName();
-            statValue.text = kind.FormatStatValue(stat.CurrentValue);
+            statValue.text = stat.Metadata.Unit.FormatStatValue(stat.CurrentValue);
         }
     }
 }

@@ -104,6 +104,22 @@ namespace Common.Data.Units.UnitStatsByLevel
             UnitStatKind.DamageDealtIncrease      => damageDealtIncrease.GetValue(star),
             _ => 0f
         };
+
+        /// <summary>해당 능력치의 성급 기준값이 자산에 입력돼 있는지 반환한다.</summary>
+        public bool HasStat(UnitStatKind kind) => kind switch
+        {
+            UnitStatKind.MaxHealth                => maxHealth.HasAnyValue,
+            UnitStatKind.Attack                   => attack.HasAnyValue,
+            UnitStatKind.Defense                  => defense.HasAnyValue,
+            UnitStatKind.AttackSpeed              => attackSpeed.HasAnyValue,
+            UnitStatKind.AttackRange              => attackRange.HasAnyValue,
+            UnitStatKind.MoveSpeed                => moveSpeed.HasAnyValue,
+            UnitStatKind.CriticalChance           => criticalChance.HasAnyValue,
+            UnitStatKind.CriticalDamageMultiplier => criticalDamageMultiplier.HasAnyValue,
+            UnitStatKind.CooldownReduction        => cooldownReduction.HasAnyValue,
+            UnitStatKind.DamageDealtIncrease      => damageDealtIncrease.HasAnyValue,
+            _ => false
+        };
     }
 
     // ──────────────────────────────────────────────────────────────

@@ -12,16 +12,19 @@ namespace Scenes.Battle.Feature.Units.UnitStats
 
     public class UnitStat
     {
-        private readonly StatCalculationMode _mode;
+        private readonly UnitStatMetadata _metadata;
         private float _baseValue;
         private float _currentValue;
         private readonly List<StatModifier> _modifiers = new();
 
         public event Action<float> OnChange;
 
-        public UnitStat(StatCalculationMode mode = StatCalculationMode.Additive)
+        /// <summary>능력치 종류의 단위·범위·기본값·합산 방식 정의.</summary>
+        public UnitStatMetadata Metadata => _metadata;
+
+        public UnitStat(UnitStatMetadata metadata)
         {
-            _mode = mode;
+            _metadata = metadata;
         }
 
         public float BaseValue => _baseValue;
@@ -59,14 +62,21 @@ namespace Scenes.Battle.Feature.Units.UnitStats
 
         private void Recalculate()
         {
-            float newValue = _mode switch
+            float rawValue = _metadata.CalculationMode switch
             {
                 StatCalculationMode.Additive => CalculateAdditive(),
                 StatCalculationMode.SeparatedMultiplicative => CalculateSeparatedMultiplicative(),
                 _ => _baseValue,
             };
 
-            if (Mathf.Approximately(_currentValue, newValue)) return;
+            // 단위·범위 정의에 맞게 최종값을 강제한다(범위 클램프 + 정수 단위면 정수화).
+            float newValue = _metadata.Normalize(rawValue);
+
+            if (Mathf.Approximately(_currentValue, newValue))
+            {
+                return;
+            }
+
             _currentValue = newValue;
             OnChange?.Invoke(_currentValue);
         }
