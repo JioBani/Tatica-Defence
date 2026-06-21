@@ -35,7 +35,7 @@ namespace Tests.Editor
 
         private const float Tier1SpellPower = 15f;
         private const float Tier1ArcanistSpellPower = 25f;
-        private const float BaseMagicAttack = 10f;
+        private const float BaseAttack = 10f;
 
         [SetUp]
         public void SetUp()
@@ -56,11 +56,11 @@ namespace Tests.Editor
 
             _arcanistGo = new GameObject("ArcanistUnit");
             _arcanistDefender = CreateDefenderWithSynergy(_arcanistGo, _definition, unitId: 1);
-            _arcanistDefender.StatSheet.MagicAttack.SetBaseValue(BaseMagicAttack);
+            _arcanistDefender.StatSheet.Attack.SetBaseValue(BaseAttack);
 
             _nonArcanistGo = new GameObject("NonArcanistUnit");
             _nonArcanistDefender = CreateDefenderWithSynergy(_nonArcanistGo, synergy: null, unitId: 2);
-            _nonArcanistDefender.StatSheet.MagicAttack.SetBaseValue(BaseMagicAttack);
+            _nonArcanistDefender.StatSheet.Attack.SetBaseValue(BaseAttack);
 
             _controller = new ArcanistSynergyController(_activation, null);
         }
@@ -86,8 +86,8 @@ namespace Tests.Editor
         {
             PublishPlacement(_arcanistDefender, Placement.BattleArea);
 
-            float expected = BaseMagicAttack + Tier1ArcanistSpellPower;
-            Assert.AreEqual(expected, _arcanistDefender.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            float expected = BaseAttack + Tier1ArcanistSpellPower;
+            Assert.AreEqual(expected, _arcanistDefender.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         // ── 비보유 Defender가 전장 진입 시 SpellPowerEffect가 적용된다 ──
@@ -99,8 +99,8 @@ namespace Tests.Editor
             PublishPlacement(_arcanistDefender, Placement.BattleArea);
             PublishPlacement(_nonArcanistDefender, Placement.BattleArea);
 
-            float expected = BaseMagicAttack + Tier1SpellPower;
-            Assert.AreEqual(expected, _nonArcanistDefender.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            float expected = BaseAttack + Tier1SpellPower;
+            Assert.AreEqual(expected, _nonArcanistDefender.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         // ── 비보유 Defender가 퇴장 시 SpellPowerEffect가 해제된다 ──
@@ -113,7 +113,7 @@ namespace Tests.Editor
 
             PublishPlacement(_nonArcanistDefender, Placement.WaitingArea);
 
-            Assert.AreEqual(BaseMagicAttack, _nonArcanistDefender.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseAttack, _nonArcanistDefender.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         // ── 헬퍼 ──

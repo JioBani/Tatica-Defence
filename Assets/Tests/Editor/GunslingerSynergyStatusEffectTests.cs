@@ -26,7 +26,7 @@ namespace Tests.Editor
         private const float Tier1ExtraDamage = 100f;
         private const float Tier2AttackPercent = 0.40f;
         private const float Tier2ExtraDamage = 200f;
-        private const float BasePhysicalAttack = 50f;
+        private const float BaseAttack = 50f;
 
         [SetUp]
         public void SetUp()
@@ -50,7 +50,7 @@ namespace Tests.Editor
 
             _gameObject = new GameObject("TestUnit");
             _unit = _gameObject.AddComponent<StubUnit>();
-            _unit.StatSheet.PhysicalAttack.SetBaseValue(BasePhysicalAttack);
+            _unit.StatSheet.Attack.SetBaseValue(BaseAttack);
         }
 
         [TearDown]
@@ -68,8 +68,8 @@ namespace Tests.Editor
             _activation.Recalculate(2);
             CreateAndApplyEffect();
 
-            float expected = BasePhysicalAttack * (1f + Tier1AttackPercent);
-            Assert.AreEqual(expected, _unit.StatSheet.PhysicalAttack.CurrentValue, 0.1f);
+            float expected = BaseAttack * (1f + Tier1AttackPercent);
+            Assert.AreEqual(expected, _unit.StatSheet.Attack.CurrentValue, 0.1f);
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace Tests.Editor
 
             _activation.Recalculate(4);
 
-            float expected = BasePhysicalAttack * (1f + Tier2AttackPercent);
-            Assert.AreEqual(expected, _unit.StatSheet.PhysicalAttack.CurrentValue, 0.1f);
+            float expected = BaseAttack * (1f + Tier2AttackPercent);
+            Assert.AreEqual(expected, _unit.StatSheet.Attack.CurrentValue, 0.1f);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Tests.Editor
 
             _activation.Recalculate(0);
 
-            Assert.AreEqual(BasePhysicalAttack, _unit.StatSheet.PhysicalAttack.CurrentValue, 0.1f);
+            Assert.AreEqual(BaseAttack, _unit.StatSheet.Attack.CurrentValue, 0.1f);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Tests.Editor
 
             effect.OnRemove();
 
-            Assert.AreEqual(BasePhysicalAttack, _unit.StatSheet.PhysicalAttack.CurrentValue, 0.1f);
+            Assert.AreEqual(BaseAttack, _unit.StatSheet.Attack.CurrentValue, 0.1f);
         }
 
         // ── 4회 공격 추가 피해 ──

@@ -13,23 +13,19 @@ namespace Tests.Editor
         private UnitStatSheet _sheet;
         private UnitStatsByLevelData _data;
 
-        // 테스트용 스탯 기대값 (star 1)
+        // 테스트용 스탯 기대값 (star 1) — 10종 단일화 기준
         private static readonly Dictionary<string, float> TestValues = new()
         {
             { "maxHealth", 100f },
-            { "physicalAttack", 50f },
-            { "magicAttack", 40f },
-            { "physicalDefense", 0.2f },
-            { "magicDefense", 0.15f },
+            { "attack", 50f },
+            { "defense", 0.2f },
             { "attackSpeed", 1.5f },
             { "attackRange", 3f },
             { "moveSpeed", 2f },
             { "criticalChance", 0.1f },
             { "criticalDamageMultiplier", 1.5f },
             { "cooldownReduction", 0f },
-            { "statusResistance", 0f },
             { "damageDealtIncrease", 0f },
-            { "damageReduction", 0f },
         };
 
         [SetUp]
@@ -62,19 +58,15 @@ namespace Tests.Editor
             _sheet.Init(_data);
 
             Assert.AreEqual(100f, _sheet.MaxHealth.CurrentValue, 0.01f);
-            Assert.AreEqual(50f, _sheet.PhysicalAttack.CurrentValue, 0.01f);
-            Assert.AreEqual(40f, _sheet.MagicAttack.CurrentValue, 0.01f);
-            Assert.AreEqual(0.2f, _sheet.PhysicalDefense.CurrentValue, 0.01f);
-            Assert.AreEqual(0.15f, _sheet.MagicDefense.CurrentValue, 0.01f);
+            Assert.AreEqual(50f, _sheet.Attack.CurrentValue, 0.01f);
+            Assert.AreEqual(0.2f, _sheet.Defense.CurrentValue, 0.01f);
             Assert.AreEqual(1.5f, _sheet.AttackSpeed.CurrentValue, 0.01f);
             Assert.AreEqual(3f, _sheet.AttackRange.CurrentValue, 0.01f);
             Assert.AreEqual(2f, _sheet.MoveSpeed.CurrentValue, 0.01f);
             Assert.AreEqual(0.1f, _sheet.CriticalChance.CurrentValue, 0.01f);
             Assert.AreEqual(1.5f, _sheet.CriticalDamageMultiplier.CurrentValue, 0.01f);
             Assert.AreEqual(0f, _sheet.CooldownReduction.CurrentValue, 0.01f);
-            Assert.AreEqual(0f, _sheet.StatusResistance.CurrentValue, 0.01f);
             Assert.AreEqual(0f, _sheet.DamageDealtIncrease.CurrentValue, 0.01f);
-            Assert.AreEqual(0f, _sheet.DamageReduction.CurrentValue, 0.01f);
         }
 
         [Test]
@@ -88,13 +80,13 @@ namespace Tests.Editor
         [Test]
         public void Init_ClearsExistingModifiers()
         {
-            _sheet.PhysicalAttack.AddModifier(
+            _sheet.Attack.AddModifier(
                 new StatModifier("buff", StatModifierType.Flat, 999f));
-            Assert.AreEqual(999f, _sheet.PhysicalAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(999f, _sheet.Attack.CurrentValue, 0.01f);
 
             _sheet.Init(_data);
 
-            Assert.AreEqual(50f, _sheet.PhysicalAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(50f, _sheet.Attack.CurrentValue, 0.01f);
         }
 
         // ── Health 검증 ──

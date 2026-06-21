@@ -11,7 +11,8 @@ using UnityEngine;
 namespace Tests.Editor
 {
     /// <summary>
-    /// WarmongerSynergyStatusEffect(전쟁기계)의 조건부 DamageReduction 적용/갱신/해제를 검증한다.
+    /// WarmongerSynergyStatusEffect(전쟁기계)의 조건부 방어력(Defense) 경감 수정자 적용/갱신/해제를 검증한다.
+    /// (받는 피해 감소 스탯 제거로 단일 Defense 에 재배선됨 — DoD-S7.)
     /// </summary>
     public class WarmongerSynergyStatusEffectTests
     {
@@ -53,7 +54,7 @@ namespace Tests.Editor
             _gameObject = new GameObject("TestUnit");
             _unit = _gameObject.AddComponent<StubUnit>();
             _unit.StatSheet.MaxHealth.SetBaseValue(BaseMaxHealth);
-            _unit.StatSheet.DamageReduction.SetBaseValue(BaseDamageReduction);
+            _unit.StatSheet.Defense.SetBaseValue(BaseDamageReduction);
             _unit.StatSheet.SetCurrentHealth(BaseMaxHealth);
         }
 
@@ -72,7 +73,7 @@ namespace Tests.Editor
             _activation.Recalculate(2);
             var effect = CreateAndApplyEffect();
 
-            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 체력 50% 미만에서 lowDamageReduction 적용 ──
@@ -84,7 +85,7 @@ namespace Tests.Editor
             _activation.Recalculate(2);
             var effect = CreateAndApplyEffect();
 
-            Assert.AreEqual(Tier1LowReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier1LowReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 체력 변화로 임계값 하향 교차 시 수정자 전환 ──
@@ -97,7 +98,7 @@ namespace Tests.Editor
 
             _unit.StatSheet.SetCurrentHealth(BaseMaxHealth * 0.4f);
 
-            Assert.AreEqual(Tier1LowReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier1LowReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 체력 변화로 임계값 상향 교차 시 수정자 전환 ──
@@ -111,7 +112,7 @@ namespace Tests.Editor
 
             _unit.StatSheet.SetCurrentHealth(BaseMaxHealth * 0.6f);
 
-            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 임계값 내 체력 변화 시 수정자 유지 ──
@@ -124,7 +125,7 @@ namespace Tests.Editor
 
             _unit.StatSheet.SetCurrentHealth(BaseMaxHealth * 0.7f);
 
-            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier1HighReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 티어 변경 시 수정자 값 갱신 ──
@@ -137,7 +138,7 @@ namespace Tests.Editor
 
             _activation.Recalculate(4);
 
-            Assert.AreEqual(Tier2HighReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(Tier2HighReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 비활성화 시 수정자 제거 ──
@@ -150,7 +151,7 @@ namespace Tests.Editor
 
             _activation.Recalculate(0);
 
-            Assert.AreEqual(BaseDamageReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseDamageReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── OnRemove 시 수정자 제거 (안전장치) ──
@@ -163,7 +164,7 @@ namespace Tests.Editor
 
             effect.OnRemove();
 
-            Assert.AreEqual(BaseDamageReduction, _unit.StatSheet.DamageReduction.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseDamageReduction, _unit.StatSheet.Defense.CurrentValue, 0.01f);
         }
 
         // ── 헬퍼 ──

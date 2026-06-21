@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Tests.Editor
 {
     /// <summary>
-    /// ArcanistSpellPowerEffect(비전 마법사 부수 효과)의 MagicAttack Flat 수정자 적용/갱신/해제를 검증한다.
+    /// ArcanistSpellPowerEffect(비전 마법사 부수 효과)의 Attack Flat 수정자 적용/갱신/해제를 검증한다.
     /// </summary>
     public class ArcanistSpellPowerEffectTests
     {
@@ -22,7 +22,7 @@ namespace Tests.Editor
 
         private const float Tier1SpellPower = 15f;
         private const float Tier2SpellPower = 20f;
-        private const float BaseMagicAttack = 10f;
+        private const float BaseAttack = 10f;
 
         [SetUp]
         public void SetUp()
@@ -43,7 +43,7 @@ namespace Tests.Editor
 
             _gameObject = new GameObject("TestUnit");
             _unit = _gameObject.AddComponent<StubUnit>();
-            _unit.StatSheet.MagicAttack.SetBaseValue(BaseMagicAttack);
+            _unit.StatSheet.Attack.SetBaseValue(BaseAttack);
         }
 
         [TearDown]
@@ -54,14 +54,14 @@ namespace Tests.Editor
         }
 
         [Test]
-        public void OnTierActivated_AddsFlatModifierToMagicAttack()
+        public void OnTierActivated_AddsFlatModifierToAttack()
         {
             _activation.Recalculate(2);
             var effect = new ArcanistSpellPowerEffect(null);
             ApplyEffect(effect);
 
-            float expected = BaseMagicAttack + Tier1SpellPower;
-            Assert.AreEqual(expected, _unit.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            float expected = BaseAttack + Tier1SpellPower;
+            Assert.AreEqual(expected, _unit.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         [Test]
@@ -73,8 +73,8 @@ namespace Tests.Editor
 
             _activation.Recalculate(4);
 
-            float expected = BaseMagicAttack + Tier2SpellPower;
-            Assert.AreEqual(expected, _unit.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            float expected = BaseAttack + Tier2SpellPower;
+            Assert.AreEqual(expected, _unit.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace Tests.Editor
 
             _activation.Recalculate(0);
 
-            Assert.AreEqual(BaseMagicAttack, _unit.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseAttack, _unit.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Tests.Editor
 
             effect.OnRemove();
 
-            Assert.AreEqual(BaseMagicAttack, _unit.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseAttack, _unit.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace Tests.Editor
             var effect = new ArcanistSpellPowerEffect(null);
             ApplyEffect(effect);
 
-            Assert.AreEqual(BaseMagicAttack, _unit.StatSheet.MagicAttack.CurrentValue, 0.01f);
+            Assert.AreEqual(BaseAttack, _unit.StatSheet.Attack.CurrentValue, 0.01f);
         }
 
         private void ApplyEffect(ArcanistSpellPowerEffect effect)

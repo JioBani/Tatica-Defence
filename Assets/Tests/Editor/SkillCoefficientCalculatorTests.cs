@@ -14,8 +14,8 @@ namespace Tests.Editor
         public void SetUp()
         {
             _statSheet = new UnitStatSheet();
-            _statSheet.MagicAttack.SetBaseValue(100f);
-            _statSheet.PhysicalAttack.SetBaseValue(50f);
+            _statSheet.Attack.SetBaseValue(100f);
+            _statSheet.MaxHealth.SetBaseValue(50f);
             _statSheet.AttackSpeed.SetBaseValue(1.2f);
         }
 
@@ -54,7 +54,7 @@ namespace Tests.Editor
                 baseValue = 50f,
                 scalings = new[]
                 {
-                    new StatScaling { statKind = UnitStatKind.MagicAttack, coefficient = 1.5f }
+                    new StatScaling { statKind = UnitStatKind.Attack, coefficient = 1.5f }
                 }
             };
 
@@ -66,14 +66,14 @@ namespace Tests.Editor
         [Test]
         public void MultipleScalings_SumsAll()
         {
-            // 10 + (100 * 1.0) + (50 * 0.5) = 10 + 100 + 25 = 135
+            // 10 + (Attack 100 * 1.0) + (MaxHealth 50 * 0.5) = 10 + 100 + 25 = 135
             var coefficient = new SkillCoefficient
             {
                 baseValue = 10f,
                 scalings = new[]
                 {
-                    new StatScaling { statKind = UnitStatKind.MagicAttack, coefficient = 1.0f },
-                    new StatScaling { statKind = UnitStatKind.PhysicalAttack, coefficient = 0.5f }
+                    new StatScaling { statKind = UnitStatKind.Attack, coefficient = 1.0f },
+                    new StatScaling { statKind = UnitStatKind.MaxHealth, coefficient = 0.5f }
                 }
             };
 
@@ -93,7 +93,7 @@ namespace Tests.Editor
                 scalings = new[]
                 {
                     new StatScaling { statKind = (UnitStatKind)999, coefficient = 5.0f },
-                    new StatScaling { statKind = UnitStatKind.MagicAttack, coefficient = 2.0f }
+                    new StatScaling { statKind = UnitStatKind.Attack, coefficient = 2.0f }
                 }
             };
 
