@@ -25,6 +25,9 @@ namespace Scenes.Battle.Feature.Markets
 
         [SerializeField] private int index;
 
+        /// <summary>이 슬롯의 번호(0~3, QA 가 slotIndex 로 슬롯 버튼을 찾을 때 사용).</summary>
+        public int Index => index;
+
         /// <summary>현재 슬롯에 장착된 마켓 데이터 (유닛 + 성급).</summary>
         private MarketDefenderSlot _slotData;
         private bool IsPurchased { get; set; } = false;

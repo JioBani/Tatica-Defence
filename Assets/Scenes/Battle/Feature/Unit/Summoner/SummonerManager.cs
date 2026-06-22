@@ -22,6 +22,9 @@ namespace Scenes.Battle.Feature.Unit.Summoners
         /// <summary>편성에 포함된 소환술사 로드아웃 목록.</summary>
         public IReadOnlyList<SummonerLoadOutData> Summoners => _formation.Summoners;
 
+        /// <summary>스폰된 소환술사 인스턴스 목록(QA 관측용 read-only).</summary>
+        public IReadOnlyList<Summoner> SpawnedSummoners => _summoners;
+
         protected override void OnAwakeSingleton()
         {
             // 편성 데이터가 외부에서 주입되지 않았으면 테스트 데이터로 생성한다.
